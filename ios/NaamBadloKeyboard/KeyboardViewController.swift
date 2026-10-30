@@ -13,21 +13,23 @@ final class KeyboardViewController: UIInputViewController {
     private var metaKey: UIButton!
     private var lastKey = ""
 
-    // Ambedkar blue
-    private let blue = UIColor(red: 0x14 / 255, green: 0x46 / 255, blue: 0xA0 / 255, alpha: 1)
-    private let blueDeep = UIColor(red: 0x0B / 255, green: 0x2E / 255, blue: 0x6B / 255, alpha: 1)
-    private let blueSoft = UIColor(red: 0x2C / 255, green: 0x5D / 255, blue: 0xBF / 255, alpha: 1)
-    private let mutedOnBlue = UIColor(red: 0xB9 / 255, green: 0xC8 / 255, blue: 0xEA / 255, alpha: 1)
+    private let blueDeep = Brand.blueDeep
+    private let blueSoft = Brand.glass
+    private let mutedOnBlue = Brand.onBlueMuted
 
-    private func serif(_ size: CGFloat, bold: Bool = false) -> UIFont {
-        let base = UIFont.systemFont(ofSize: size, weight: bold ? .semibold : .regular)
-        guard let d = base.fontDescriptor.withDesign(.serif) else { return base }
-        return UIFont(descriptor: d, size: size)
-    }
+    private func serif(_ size: CGFloat, bold: Bool = false) -> UIFont { Brand.text(size, bold: bold) }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = blueDeep
+        let bg = GradientView([Brand.navy, Brand.blueDeep, Brand.blue])
+        bg.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(bg)
+        NSLayoutConstraint.activate([
+            bg.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bg.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bg.topAnchor.constraint(equalTo: view.topAnchor),
+            bg.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
 
         let root = UIStackView()
         root.axis = .vertical

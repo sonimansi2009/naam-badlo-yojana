@@ -51,6 +51,7 @@ class FloatingButtonService : AccessibilityService() {
 
     override fun onServiceConnected() {
         super.onServiceConnected()
+        Ui.init(this)
         wm = getSystemService(WINDOW_SERVICE) as WindowManager
         createPill()
     }
@@ -176,7 +177,7 @@ class FloatingButtonService : AccessibilityService() {
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.5f)
             maxLines = 1
             setPadding(Ui.dp(context, 16), Ui.dp(context, 10), Ui.dp(context, 16), Ui.dp(context, 10))
-            background = Ui.rounded(Ui.BLUE, 24, context, 0x33FFFFFF)
+            background = Ui.gradient(context, 26).apply { setStroke(Ui.dp(context, 1), 0x40FFFFFF) }
             elevation = Ui.dp(context, 8).toFloat()
             contentDescription = "Make it Meta friendly"
         }

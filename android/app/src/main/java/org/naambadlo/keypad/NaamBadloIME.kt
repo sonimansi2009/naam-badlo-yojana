@@ -33,8 +33,12 @@ class NaamBadloIME : InputMethodService() {
 
     override fun onCreateInputView(): View {
         val ctx: Context = this
+        Ui.init(ctx)
         val root = Ui.vertical(ctx).apply {
-            setBackgroundColor(Ui.BLUE_DEEP)
+            background = android.graphics.drawable.GradientDrawable(
+                android.graphics.drawable.GradientDrawable.Orientation.TL_BR,
+                intArrayOf(Ui.NAVY, Ui.BLUE_DEEP, Ui.BLUE),
+            )
             setPadding(Ui.dp(ctx, 8), Ui.dp(ctx, 10), Ui.dp(ctx, 8), Ui.dp(ctx, 10))
         }
 

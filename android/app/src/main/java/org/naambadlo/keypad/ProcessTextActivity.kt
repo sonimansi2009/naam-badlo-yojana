@@ -50,7 +50,7 @@ class ProcessTextActivity : Activity() {
 
     private fun build(): View {
         val root = Ui.vertical(this, 20).apply { setBackgroundColor(Ui.PAGE) }
-        root.addView(Ui.label(this, NameStore.APP_NAME, 21f, Ui.BLUE_DEEP, bold = true))
+        root.addView(Ui.heading(this, NameStore.APP_NAME, 24f, Ui.BLUE_DEEP))
         root.addView(Ui.spacer(this, 10))
 
         if (matches.isEmpty()) {
@@ -68,7 +68,7 @@ class ProcessTextActivity : Activity() {
         root.addView(preview)
 
         banner = Ui.label(this, "✓  ${NameStore.CONGRATS}", 14f, Ui.ON_BLUE, bold = true).apply {
-            background = Ui.rounded(Ui.BLUE, 12, this@ProcessTextActivity)
+            background = Ui.gradient(this@ProcessTextActivity, 14)
             val p = Ui.dp(this@ProcessTextActivity, 12)
             setPadding(p, p, p, p)
             visibility = View.GONE

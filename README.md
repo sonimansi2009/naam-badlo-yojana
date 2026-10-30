@@ -121,6 +121,10 @@ Every build is signed with the same key (`android/keystore/naam-chupao.jks`), so
 
 Swapped names make posts harder for simple keyword filters to catch. They do not change what a post means, and the law treats a decoded post the same as the original.
 
+## Fonts
+
+Playfair Display and Lora are bundled under the SIL Open Font License (see `fonts-license/`).
+
 ## Licence
 
 MIT

@@ -7,9 +7,15 @@ struct NaamBadloApp: App {
     }
 }
 
-private let ambedkarBlue = Color(red: 0x14 / 255, green: 0x46 / 255, blue: 0xA0 / 255)
-private let blueDeep = Color(red: 0x0B / 255, green: 0x2E / 255, blue: 0x6B / 255)
-private let blueTint = Color(red: 0xE8 / 255, green: 0xEE / 255, blue: 0xFA / 255)
+private let ambedkarBlue = Color(Brand.blue)
+private let navy = Color(Brand.navy)
+private let azure = Color(Brand.azure)
+private let blueTint = Color(Brand.tint)
+private let brandGradient = LinearGradient(colors: [navy, ambedkarBlue, azure], startPoint: .topLeading, endPoint: .bottomTrailing)
+private let buttonGradient = LinearGradient(colors: [ambedkarBlue, azure], startPoint: .topLeading, endPoint: .bottomTrailing)
+
+private func display(_ size: CGFloat) -> Font { Brand.registerFonts(); return .custom("PlayfairDisplay-Bold", size: size) }
+private func lora(_ size: CGFloat, bold: Bool = false) -> Font { Brand.registerFonts(); return .custom(bold ? "Lora-SemiBold" : "Lora-Regular", size: size) }
 
 struct ContentView: View {
     @State private var sample = ""
@@ -22,21 +28,21 @@ struct ContentView: View {
                 // Header band
                 VStack(alignment: .leading, spacing: 6) {
                     Text(NameDictionary.appName)
-                        .font(.system(size: 30, weight: .bold, design: .serif))
+                        .font(display(34))
                     Text("नाम छुपाओ योजना")
-                        .font(.system(size: 17, design: .serif)).opacity(0.75)
+                        .font(lora(17)).opacity(0.75)
                     Text("Swap ministers' and party names with code names before you post. \(dict.entities.reduce(0) { $0 + $1.alternates.count }) code names for \(dict.entities.count) names. Works offline.")
-                        .font(.system(size: 14, design: .serif)).opacity(0.75)
+                        .font(lora(14)).opacity(0.75)
                         .padding(.top, 6)
                 }
                 .foregroundColor(.white)
                 .padding(.horizontal, 22).padding(.vertical, 28)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(blueDeep)
+                .background(brandGradient)
 
                 VStack(spacing: 14) {
                     card {
-                        Text("Turn it on").font(.system(size: 19, weight: .bold, design: .serif))
+                        Text("Turn it on").font(display(22))
                         step(1, "Open Settings → General → Keyboard → Keyboards → Add New Keyboard.")
                         step(2, "Pick “Naam Chupao Yojana”. Full Access is not needed.")
                         Button {
@@ -45,9 +51,9 @@ struct ContentView: View {
                             }
                         } label: {
                             Text("Open Settings")
-                                .font(.system(size: 16, weight: .semibold, design: .serif))
+                                .font(lora(16, bold: true))
                                 .frame(maxWidth: .infinity).padding(.vertical, 13)
-                                .background(ambedkarBlue).foregroundColor(.white)
+                                .background(buttonGradient).foregroundColor(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 14))
                         }
                         .padding(.top, 4)
@@ -55,7 +61,7 @@ struct ContentView: View {
                     .opacity(appeared ? 1 : 0).offset(y: appeared ? 0 : 10)
 
                     card {
-                        Text("Use it").font(.system(size: 19, weight: .bold, design: .serif))
+                        Text("Use it").font(display(22))
                         step(1, "Type on your usual keyboard.")
                         step(2, "Tap 🌐 to switch to Naam Chupao.")
                         step(3, "Tap “Make it Meta friendly”. Tap again for fresh names. Tap 🌐 to go back.")
@@ -63,9 +69,9 @@ struct ContentView: View {
                     .opacity(appeared ? 1 : 0).offset(y: appeared ? 0 : 10)
 
                     card {
-                        Text("Try it here").font(.system(size: 19, weight: .bold, design: .serif))
+                        Text("Try it here").font(display(22))
                         TextEditor(text: $sample)
-                            .font(.system(size: 16, design: .serif))
+                            .font(lora(16))
                             .frame(minHeight: 120)
                             .padding(8)
                             .background(blueTint)
@@ -74,7 +80,7 @@ struct ContentView: View {
                     .opacity(appeared ? 1 : 0).offset(y: appeared ? 0 : 10)
 
                     Text("No network access. Nothing you type is stored or sent anywhere.")
-                        .font(.system(size: 12.5, design: .serif)).foregroundColor(.secondary)
+                        .font(lora(12.5)).foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                         .padding(.vertical, 8)
                 }
@@ -97,10 +103,10 @@ struct ContentView: View {
 
     private func step(_ n: Int, _ text: String) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 10) {
-            Text("\(n)").font(.system(size: 13, weight: .bold, design: .serif))
+            Text("\(n)").font(lora(13, bold: true))
                 .foregroundColor(ambedkarBlue)
                 .frame(width: 22, height: 22).background(blueTint).clipShape(Circle())
-            Text(text).font(.system(size: 15, design: .serif)).foregroundColor(.primary.opacity(0.85))
+            Text(text).font(lora(15)).foregroundColor(.primary.opacity(0.85))
         }
     }
 }

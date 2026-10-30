@@ -16,27 +16,42 @@ import android.widget.LinearLayout
 import android.widget.TextView
 
 /**
- * Design system: Ambedkar blue, serif type, quiet motion.
+ * Design system: Ambedkar-blue gradients, Playfair Display + Lora, quiet motion.
  * Everything is built in code, so there are no layout files to keep in sync.
  */
 object Ui {
-    // Colour
-    const val BLUE = 0xFF1446A0.toInt()        // Ambedkar blue
-    const val BLUE_DEEP = 0xFF0B2E6B.toInt()   // keyboard panel, header
-    const val BLUE_SOFT = 0xFF2C5DBF.toInt()   // chips on the dark panel
-    const val BLUE_TINT = 0xFFE8EEFA.toInt()   // soft fill on light surfaces
-    const val PAGE = 0xFFF5F7FB.toInt()
+    // Colour: a modern take on Ambedkar blue, used as gradients
+    const val NAVY = 0xFF081A4A.toInt()        // deepest end of the gradient
+    const val BLUE = 0xFF1A4FD6.toInt()        // core blue
+    const val AZURE = 0xFF3D8BFF.toInt()       // bright end of the gradient
+    const val BLUE_DEEP = 0xFF0C2366.toInt()   // text on white, keyboard keys
+    const val BLUE_SOFT = 0x33FFFFFF           // glass chips on the gradient
+    const val BLUE_TINT = 0xFFEAF0FF.toInt()   // soft fill on light surfaces
+    const val PAGE = 0xFFF4F7FE.toInt()
     const val SURFACE = 0xFFFFFFFF.toInt()
-    const val INK = 0xFF0F1A2E.toInt()
-    const val MUTED = 0xFF5A6884.toInt()
-    const val LINE = 0xFFD9E1EF.toInt()
+    const val INK = 0xFF0B1533.toInt()
+    const val MUTED = 0xFF5D6B8A.toInt()
+    const val LINE = 0xFFE1E7F5.toInt()
     const val ON_BLUE = 0xFFFFFFFF.toInt()
-    const val ON_BLUE_MUTED = 0xFFB9C8EA.toInt()
-    const val GOOD = 0xFF1E8E5A.toInt()
+    const val ON_BLUE_MUTED = 0xFFC3D3FF.toInt()
+    const val GOOD = 0xFF12925E.toInt()
 
-    // Type
-    val SERIF: Typeface = Typeface.create(Typeface.SERIF, Typeface.NORMAL)
-    val SERIF_BOLD: Typeface = Typeface.create(Typeface.SERIF, Typeface.BOLD)
+    // Type: Playfair Display for headings, Lora for everything else (bundled)
+    private var appCtx: Context? = null
+    fun init(ctx: Context) { appCtx = ctx.applicationContext }
+    private fun font(file: String, fallbackStyle: Int): Typeface =
+        appCtx?.let { runCatching { Typeface.createFromAsset(it.assets, "fonts/$file") }.getOrNull() }
+            ?: Typeface.create(Typeface.SERIF, fallbackStyle)
+    val DISPLAY: Typeface by lazy { font("playfair_bold.ttf", Typeface.BOLD) }
+    val SERIF: Typeface by lazy { font("lora_regular.ttf", Typeface.NORMAL) }
+    val SERIF_BOLD: Typeface by lazy { font("lora_semibold.ttf", Typeface.BOLD) }
+
+    /** Diagonal brand gradient. */
+    fun gradient(ctx: Context, radiusDp: Int, from: Int = BLUE, to: Int = AZURE,
+                 orientation: GradientDrawable.Orientation = GradientDrawable.Orientation.TL_BR) =
+        GradientDrawable(orientation, intArrayOf(from, to)).apply {
+            cornerRadius = dp(ctx, radiusDp).toFloat()
+        }
 
     fun dp(ctx: Context, v: Int): Int =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), ctx.resources.displayMetrics).toInt()
@@ -53,7 +68,15 @@ object Ui {
             setTextColor(color)
             setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp)
             typeface = if (bold) SERIF_BOLD else SERIF
-            setLineSpacing(0f, 1.18f)
+            setLineSpacing(0f, 1.22f)
+        }
+
+    /** Headline in Playfair Display. */
+    fun heading(ctx: Context, text: String, sizeSp: Float, color: Int = INK) =
+        label(ctx, text, sizeSp, color).apply {
+            typeface = DISPLAY
+            setLineSpacing(0f, 1.08f)
+            letterSpacing = -0.005f
         }
 
     enum class Style { PRIMARY, OUTLINE, ON_DARK, ON_DARK_PRIMARY }
@@ -69,10 +92,10 @@ object Ui {
             ellipsize = TextUtils.TruncateAt.END
             setPadding(dp(ctx, 18), dp(ctx, 12), dp(ctx, 18), dp(ctx, 12))
             when (style) {
-                Style.PRIMARY -> { background = rounded(BLUE, 14, ctx); setTextColor(ON_BLUE) }
-                Style.OUTLINE -> { background = rounded(SURFACE, 14, ctx, LINE); setTextColor(BLUE) }
-                Style.ON_DARK -> { background = rounded(BLUE_SOFT, 12, ctx); setTextColor(ON_BLUE) }
-                Style.ON_DARK_PRIMARY -> { background = rounded(SURFACE, 12, ctx); setTextColor(BLUE_DEEP) }
+                Style.PRIMARY -> { background = gradient(ctx, 16); setTextColor(ON_BLUE); elevation = dp(ctx, 3).toFloat() }
+                Style.OUTLINE -> { background = rounded(SURFACE, 16, ctx, LINE); setTextColor(BLUE) }
+                Style.ON_DARK -> { background = rounded(BLUE_SOFT, 14, ctx, 0x22FFFFFF); setTextColor(ON_BLUE) }
+                Style.ON_DARK_PRIMARY -> { background = rounded(SURFACE, 14, ctx); setTextColor(BLUE_DEEP) }
             }
             isClickable = true
             setOnClickListener { onClick() }
@@ -99,8 +122,8 @@ object Ui {
     fun styleChip(v: TextView, selected: Boolean, dark: Boolean) {
         val ctx = v.context
         when {
-            dark -> { v.background = rounded(BLUE_SOFT, 20, ctx); v.setTextColor(ON_BLUE) }
-            selected -> { v.background = rounded(BLUE, 20, ctx); v.setTextColor(ON_BLUE) }
+            dark -> { v.background = rounded(BLUE_SOFT, 20, ctx, 0x2EFFFFFF); v.setTextColor(ON_BLUE) }
+            selected -> { v.background = gradient(ctx, 20); v.setTextColor(ON_BLUE) }
             else -> { v.background = rounded(SURFACE, 20, ctx, LINE); v.setTextColor(INK) }
         }
     }
@@ -145,8 +168,9 @@ object Ui {
     }
 
     /** White card with a hairline border. */
-    fun card(ctx: Context) = vertical(ctx, 18).apply {
-        background = rounded(SURFACE, 18, ctx, LINE)
+    fun card(ctx: Context) = vertical(ctx, 20).apply {
+        background = rounded(SURFACE, 22, ctx, LINE)
+        elevation = dp(ctx, 2).toFloat()
         layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply { setMargins(0, 0, 0, dp(ctx, 14)) }

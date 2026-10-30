@@ -23,7 +23,7 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = Ui.BLUE_DEEP
+        window.statusBarColor = Ui.NAVY
         val ents = NameStore.entities(this)
         val total = ents.sumOf { it.alternates.size }
 
@@ -31,10 +31,13 @@ class MainActivity : Activity() {
 
         // Header band
         val header = Ui.vertical(this).apply {
-            setBackgroundColor(Ui.BLUE_DEEP)
-            setPadding(Ui.dp(context, 22), Ui.dp(context, 30), Ui.dp(context, 22), Ui.dp(context, 28))
+            background = android.graphics.drawable.GradientDrawable(
+                android.graphics.drawable.GradientDrawable.Orientation.TL_BR,
+                intArrayOf(Ui.NAVY, Ui.BLUE, Ui.AZURE),
+            )
+            setPadding(Ui.dp(context, 24), Ui.dp(context, 36), Ui.dp(context, 24), Ui.dp(context, 34))
         }
-        header.addView(Ui.label(this, NameStore.APP_NAME, 29f, Ui.ON_BLUE, bold = true))
+        header.addView(Ui.heading(this, NameStore.APP_NAME, 34f, Ui.ON_BLUE))
         header.addView(Ui.label(this, "नाम छुपाओ योजना", 17f, Ui.ON_BLUE_MUTED))
         header.addView(Ui.spacer(this, 10))
         header.addView(Ui.label(this,
@@ -48,7 +51,7 @@ class MainActivity : Activity() {
         // Card 1: floating button
         val c1 = Ui.card(this)
         c1.addView(row(
-            Ui.label(this, "Floating button", 19f, Ui.INK, bold = true),
+            Ui.heading(this, "Floating button", 22f),
             Ui.label(this, "RECOMMENDED", 11f, Ui.BLUE, bold = true).apply {
                 letterSpacing = 0.08f
                 background = Ui.rounded(Ui.BLUE_TINT, 8, context)
@@ -95,7 +98,7 @@ class MainActivity : Activity() {
 
         // Card 2: try it
         val c2 = Ui.card(this)
-        c2.addView(Ui.label(this, "Try it here", 19f, Ui.INK, bold = true))
+        c2.addView(Ui.heading(this, "Try it here", 22f))
         c2.addView(Ui.spacer(this, 8))
         c2.addView(EditText(this).apply {
             hint = "Type: Modi aur Amit Shah ne kaha…"
@@ -114,7 +117,7 @@ class MainActivity : Activity() {
 
         // Card 3: other ways
         val c3 = Ui.card(this)
-        c3.addView(Ui.label(this, "Other ways", 19f, Ui.INK, bold = true))
+        c3.addView(Ui.heading(this, "Other ways", 22f))
         c3.addView(Ui.spacer(this, 10))
         c3.addView(Ui.label(this, "Select text", 15.5f, Ui.BLUE, bold = true))
         c3.addView(Ui.label(this,
