@@ -56,7 +56,7 @@ final class KeyboardViewController: UIInputViewController {
         globe.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
         globe.isHidden = !needsInputModeSwitchKey
         bar.addArrangedSubview(globe)
-        bar.addArrangedSubview(makeKey("Sab badlo", weight: 2, accent: true) { [weak self] in self?.replaceAll() })
+        bar.addArrangedSubview(makeKey("Make it Meta friendly", weight: 3, accent: true) { [weak self] in self?.replaceAll() })
         bar.addArrangedSubview(makeKey("space", weight: 2) { [weak self] in self?.textDocumentProxy.insertText(" ") })
         bar.addArrangedSubview(makeKey("⌫", weight: 1) { [weak self] in self?.textDocumentProxy.deleteBackward() })
         bar.addArrangedSubview(makeKey("↵", weight: 1) { [weak self] in self?.textDocumentProxy.insertText("\n") })
@@ -87,7 +87,7 @@ final class KeyboardViewController: UIInputViewController {
         guard let m = dict.matchAtEnd(text) else {
             let n = dict.findAll(text).count
             titleLabel.text = n > 0
-                ? "\(n) name(s) found. Tap “Sab badlo” to swap them all."
+                ? "\(n) name(s) found. Tap “Make it Meta friendly”."
                 : "Type a name on your usual keyboard, then tap 🌐 to come here."
             return
         }

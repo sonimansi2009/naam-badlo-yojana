@@ -48,9 +48,19 @@ class NaamBadloIME : InputMethodService() {
                     setMargins(Ui.dp(ctx, 3), 0, Ui.dp(ctx, 3), 0)
                 }
             }
-        bar.addView(key("⌨ Back", 1.4f) { switchBack() })
-        bar.addView(key("Sab badlo", 1.6f, accent = true) { replaceAllBeforeCursor() })
-        bar.addView(key("␣", 1.4f) { currentInputConnection?.commitText(" ", 1) })
+        // Big one-tap button on its own row, small keys under it
+        val meta = LinearLayout(ctx).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(0, Ui.dp(ctx, 6), 0, 0)
+        }
+        meta.addView(key("✦ Make it Meta friendly", 1f, accent = true) {
+            replaceAllBeforeCursor()
+            switchBack()
+        })
+        root.addView(meta)
+
+        bar.addView(key("⌨ Back", 1.6f) { switchBack() })
+        bar.addView(key("␣", 2f) { currentInputConnection?.commitText(" ", 1) })
         bar.addView(key("⌫", 1f) { backspace() })
         bar.addView(key("↵", 1f) { enter() })
         root.addView(bar)
@@ -81,7 +91,7 @@ class NaamBadloIME : InputMethodService() {
         if (m == null) {
             val count = matcher.findAll(text).size
             title.text = if (count > 0)
-                "$count name(s) in your text. Tap “Sab badlo” to swap them all."
+                "$count name(s) in your text. Tap “Make it Meta friendly”."
             else
                 "Type a name on your usual keyboard, then switch here."
             return

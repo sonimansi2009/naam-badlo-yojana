@@ -10,20 +10,22 @@ It covers **34 names, 1700 alternates in total**: Narendra Modi, BJP, Amit Shah,
 
 ## How it works with your existing keyboard
 
-Phones don't let one keyboard plug into another, so Naam Badlo works alongside yours.
+You keep your normal keyboard (Gboard, SwiftKey, Samsung, Apple). Naam Badlo works on top of it.
 
 | | Android | iPhone |
 |---|---|---|
-| **Select text** (any keyboard) | Select your text → tap ⋮ in the pop-up → **Naam Badlo** → pick swaps → Done | — |
-| **Add-on keyboard** | Type on Gboard/SwiftKey → switch to Naam Badlo → tap a swap → it jumps back to your keyboard | Type normally → tap 🌐 → tap a swap → tap 🌐 to go back |
-| **Sab badlo** button | Swaps every name before the cursor in one tap | Same |
+| **Floating button** (easiest) | Type a name in Instagram, WhatsApp or any app → a **✦ Make it Meta friendly** button appears → tap it, every name in the box is swapped. Hold to undo, drag to move. Can be limited to Meta apps only. | Not allowed by Apple |
+| **Select text** | Select text → ⋮ → **Naam Badlo** → pick each swap → Done | — |
+| **Add-on keyboard** | Switch to it → **Make it Meta friendly** or pick from 50 swaps → it jumps back to your keyboard | Tap 🌐 → **Make it Meta friendly** or pick a swap → 🌐 back |
+
+The floating button uses Android's accessibility service, because that is the only way an app can edit the text box of another app. It reads only the box you are typing in, skips password fields, and the app has no internet permission, so nothing leaves the phone. Google Play reviews apps that use this closely, so for now the APK is shared directly.
 
 ## Install
 
 ### Android
 1. Open the [latest release](../../releases/latest) and download `NaamBadlo.apk` (or get it from the **Actions** tab → latest run → *NaamBadlo-apk*).
 2. Open the file on your phone. Allow "install from this source" when asked.
-3. Open **Naam Badlo** and tap **Turn on the add-on**.
+3. Open **Naam Badlo** and tap **Turn on floating button**. In Settings, open Installed apps → Naam Badlo floating button → On.
 
 ### iPhone
 Apple only allows apps from the App Store or from a developer account. Until it is on the App Store:
