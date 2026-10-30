@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Builds names.json from source.json.
 
+"popular" = how many of the first alternates are hand-picked, recognisable code names.
+"ask" = triggers that are only a first name or a common surname; the app asks before swapping them.
+
 Every entity ends up with exactly 50 alternates:
   1. the hand-picked "curated" list first,
   2. then generated jumbles of the name (spoonerisms, letter swaps,
@@ -192,6 +195,7 @@ def build():
 
         for a in e.get("curated", []):
             add(a, False)
+        popular = min(len(alts), TARGET)   # hand-picked, recognisable code names come first
         gen = acronym_jumbles(e["acronym"]) if "acronym" in e else name_jumbles(e["first"], e["last"], e.get("key"), e.get("with_first", False))
         for a in gen:
             if len(alts) >= TARGET:
@@ -200,8 +204,10 @@ def build():
         if len(alts) < TARGET:
             raise SystemExit(f"{e['id']}: only {len(alts)} alternates, add more curated ones")
         alts = alts[:TARGET]
+        ask = [t for t in e.get("ask", []) if norm(t) in {norm(x) for x in e["triggers"]}]
         out_entities.append({"id": e["id"], "label": e["label"],
-                             "triggers": e["triggers"], "alternates": alts})
+                             "triggers": e["triggers"], "alternates": alts,
+                             "popular": popular, "ask": ask})
         report.append((e["id"], len(e.get("curated", [])), len(alts)))
 
     data = {"version": src["version"], "updated": src["updated"], "entities": out_entities}

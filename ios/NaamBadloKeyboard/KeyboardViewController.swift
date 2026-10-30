@@ -12,6 +12,10 @@ final class KeyboardViewController: UIInputViewController {
     private let scroll = UIScrollView()
     private var metaKey: UIButton!
     private var lastKey = ""
+    private var confirmed: Set<String> = []
+    private var declined: Set<String> = []
+    private var undoState: (original: String, replaced: String)?
+    private let undoButton = UIButton(type: .system)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,13 +92,24 @@ final class KeyboardViewController: UIInputViewController {
         banner.textColor = .white
         banner.translatesAutoresizingMaskIntoConstraints = false
         bannerBox.addSubview(banner)
+        var ucfg = UIButton.Configuration.filled()
+        ucfg.baseBackgroundColor = .white
+        ucfg.baseForegroundColor = Brand.black
+        ucfg.cornerStyle = .capsule
+        var ut = AttributedString("Undo"); ut.font = Brand.sans(14, .semibold); ucfg.attributedTitle = ut
+        undoButton.configuration = ucfg
+        undoButton.translatesAutoresizingMaskIntoConstraints = false
+        undoButton.addAction(UIAction { [weak self] _ in self?.undo() }, for: .touchUpInside)
+        bannerBox.addSubview(undoButton)
         view.addSubview(bannerBox)
         NSLayoutConstraint.activate([
             bannerBox.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             bannerBox.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             bannerBox.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
             banner.leadingAnchor.constraint(equalTo: bannerBox.leadingAnchor, constant: 16),
-            banner.trailingAnchor.constraint(equalTo: bannerBox.trailingAnchor, constant: -16),
+            banner.trailingAnchor.constraint(equalTo: undoButton.leadingAnchor, constant: -10),
+            undoButton.trailingAnchor.constraint(equalTo: bannerBox.trailingAnchor, constant: -8),
+            undoButton.centerYAnchor.constraint(equalTo: bannerBox.centerYAnchor),
             banner.topAnchor.constraint(equalTo: bannerBox.topAnchor, constant: 12),
             banner.bottomAnchor.constraint(equalTo: bannerBox.bottomAnchor, constant: -12),
         ])
@@ -125,7 +140,10 @@ final class KeyboardViewController: UIInputViewController {
         setCTATitle((real == 0 && !all.isEmpty) ? "Fresh names" : "Make it Meta friendly")
         metaKey.alpha = all.isEmpty ? 0.6 : 1
 
-        let m = dict.matchAtEnd(text)
+        let mm = dict.matchAtEnd(text)
+        let m = mm.flatMap { (x: NameMatch) -> NameMatch? in
+            (x.ask && !x.fromMemory && declined.contains(NameDictionary.normalize(String(text[x.range])))) ? nil : x
+        }
         let key = m.map { "\($0.entity.id):\(text.distance(from: text.startIndex, to: $0.range.lowerBound)):\(text.count)" } ?? "none:\(all.count)"
         guard key != lastKey else { return }
         lastKey = key
@@ -136,8 +154,18 @@ final class KeyboardViewController: UIInputViewController {
                 : "\(all.count) name(s) in your text"
             return
         }
+        let word = NameDictionary.normalize(String(text[m.range]))
+        if m.ask && !m.fromMemory && !confirmed.contains(word) {
+            titleLabel.text = "“\(text[m.range])” means \(m.entity.label)?"
+            chipStack.addArrangedSubview(makeAnswer("Yes, \(m.entity.label)") { [weak self] in
+                self?.confirmed.insert(word); self?.lastKey = ""; self?.refresh() })
+            chipStack.addArrangedSubview(makeAnswer("No, someone else") { [weak self] in
+                self?.declined.insert(word); self?.lastKey = ""; self?.refresh() })
+            return
+        }
         titleLabel.text = "“\(text[m.range])” · \(m.entity.label) · pick a code name"
-        for (i, alt) in m.entity.alternates.shuffled().enumerated() {
+        let ordered = (m.entity.recognisable.shuffled() + m.entity.alternates.shuffled()).reduce(into: [String]()) { if !$0.contains($1) { $0.append($1) } }
+        for (i, alt) in ordered.enumerated() {
             let chip = makeChip(alt)
             chipStack.addArrangedSubview(chip)
             if i < 6 {
@@ -158,15 +186,18 @@ final class KeyboardViewController: UIInputViewController {
         dict.remember(alt, as: m.entity)
         deleteBackward(count: text[m.range.lowerBound...].count)
         textDocumentProxy.insertText(alt + tail)
+        undoState = (text, String(text[..<m.range.lowerBound]) + alt + tail)
         celebrate()
     }
 
     private func makeFriendly() {
         let text = before
         guard !dict.findAll(text).isEmpty else { return }
-        let out = dict.replaceAll(text)
+        let out = dict.replaceAll(text, confirmed: confirmed)
+        guard out != text else { return }
         deleteBackward(count: text.count)
         textDocumentProxy.insertText(out)
+        undoState = (text, out)
         celebrate()
     }
 
@@ -177,9 +208,30 @@ final class KeyboardViewController: UIInputViewController {
         UIView.animate(withDuration: 0.28) {
             self.bannerBox.alpha = 1; self.bannerBox.transform = .identity
         }
-        UIView.animate(withDuration: 0.25, delay: 2.6, options: []) {
+        UIView.animate(withDuration: 0.25, delay: 3.4, options: [.allowUserInteraction]) {
             self.bannerBox.alpha = 0
         }
+    }
+
+    private func undo() {
+        guard let u = undoState, before == u.replaced else { return }
+        deleteBackward(count: u.replaced.count)
+        textDocumentProxy.insertText(u.original)
+        undoState = nil
+        bannerBox.layer.removeAllAnimations()
+        bannerBox.alpha = 0
+        lastKey = ""
+        refresh()
+    }
+
+    private func makeAnswer(_ title: String, action: @escaping () -> Void) -> UIButton {
+        var cfg = UIButton.Configuration.filled()
+        cfg.baseBackgroundColor = Brand.black
+        cfg.baseForegroundColor = .white
+        cfg.cornerStyle = .capsule
+        cfg.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 16, bottom: 7, trailing: 16)
+        var t = AttributedString(title); t.font = Brand.sans(15, .medium); cfg.attributedTitle = t
+        return UIButton(configuration: cfg, primaryAction: UIAction { _ in action() })
     }
 
     private func deleteBackward(count: Int) {

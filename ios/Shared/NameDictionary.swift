@@ -6,6 +6,12 @@ struct NameEntity: Decodable {
     let label: String
     let triggers: [String]
     let alternates: [String]
+    /// The first `popular` alternates are hand-picked, recognisable code names.
+    let popular: Int?
+    /// Bare first names / common surnames: ask before swapping.
+    let ask: [String]?
+
+    var recognisable: [String] { Array(alternates.prefix(max(1, min(popular ?? alternates.count, alternates.count)))) }
 }
 
 private struct NameFile: Decodable {
@@ -17,16 +23,19 @@ struct NameMatch {
     let range: Range<String.Index>
     /// True when this is a code name the app put in earlier, not the real name.
     let fromMemory: Bool
+    /// True for a bare first name or common surname: confirm before swapping.
+    var ask: Bool = false
 }
 
 /// Loads names.json from the bundle and finds names in text. Works offline.
 final class NameDictionary {
     static let shared = NameDictionary()
     static let appName = "Naam Chupao Yojana"
-    static let congrats = "Congratulations. Your text is encrypted against Meta's violation of Freedom of speech"
+    static let congrats = "Badhai ho! Aapka post ab Meta-friendly hai."
 
     private(set) var entities: [NameEntity] = []
     private var map: [String: NameEntity] = [:]
+    private var askSet: Set<String> = []
     private var maxWords = 1
     /// Code names the app inserted, so "Fresh names" can shuffle them again.
     private var memory: [String: NameEntity] = [:]
@@ -46,6 +55,7 @@ final class NameDictionary {
                 map[k] = e
                 maxWords = max(maxWords, k.split(separator: " ").count)
             }
+            for a in e.ask ?? [] { askSet.insert(Self.normalize(a)) }
         }
     }
 
@@ -61,10 +71,11 @@ final class NameDictionary {
         memoryWords = max(memoryWords, k.split(separator: " ").count)
     }
 
-    /// A random code name that differs from the one there now.
+    /// A random recognisable code name that differs from the one there now.
     static func freshPick(_ e: NameEntity, current: String) -> String {
         let cur = normalize(current)
-        let options = e.alternates.filter { normalize($0) != cur }
+        var options = e.recognisable.filter { normalize($0) != cur }
+        if options.isEmpty { options = e.alternates.filter { normalize($0) != cur } }
         return (options.isEmpty ? e.alternates : options).randomElement() ?? current
     }
 
@@ -104,10 +115,12 @@ final class NameDictionary {
     }
 
     /// Replace every name with a fresh code name and remember the picks.
-    func replaceAll(_ text: String) -> String {
+    /// Bare first names / surnames are skipped unless listed in `confirmed`.
+    func replaceAll(_ text: String, confirmed: Set<String> = []) -> String {
         var out = ""
         var last = text.startIndex
         for m in findAll(text) {
+            if m.ask && !m.fromMemory && !confirmed.contains(Self.normalize(String(text[m.range]))) { continue }
             let alt = Self.freshPick(m.entity, current: String(text[m.range]))
             remember(alt, as: m.entity)
             out += text[last..<m.range.lowerBound]
@@ -121,7 +134,7 @@ final class NameDictionary {
     private func lookup(_ text: String, _ lo: String.Index, _ hi: String.Index,
                         _ rawLo: String.Index, _ rawHi: String.Index) -> NameMatch? {
         let cand = Self.normalize(String(text[lo..<hi]))
-        if let e = map[cand] { return NameMatch(entity: e, range: lo..<hi, fromMemory: false) }
+        if let e = map[cand] { return NameMatch(entity: e, range: lo..<hi, fromMemory: false, ask: askSet.contains(cand)) }
         if !memory.isEmpty {
             var a = rawLo
             while a <= lo {
@@ -139,7 +152,8 @@ final class NameDictionary {
         }
         for suf in Self.possessives where cand.hasSuffix(suf) {
             if let e = map[String(cand.dropLast(suf.count))] {
-                return NameMatch(entity: e, range: lo..<text.index(hi, offsetBy: -suf.count), fromMemory: false)
+                return NameMatch(entity: e, range: lo..<text.index(hi, offsetBy: -suf.count), fromMemory: false,
+                                 ask: askSet.contains(String(cand.dropLast(suf.count))))
             }
         }
         return nil

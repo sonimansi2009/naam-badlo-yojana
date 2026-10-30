@@ -8,7 +8,7 @@ import org.junit.Test
 
 class MatcherTest {
     private val modi = Entity("modi", "Narendra Modi", listOf("modi", "narendra modi", "मोदी"), listOf("Bodi", "Odiji", "Naru"))
-    private val shah = Entity("amit-shah", "Amit Shah", listOf("amit shah", "shah"), listOf("Mota Bhai", "Chanakya"))
+    private val shah = Entity("amit-shah", "Amit Shah", listOf("amit shah", "shah"), listOf("Mota Bhai", "Chanakya"), popular = 1, ask = setOf("shah"))
     private val eci = Entity("eci", "ECI", listOf("eci", "भारत निर्वाचन आयोग"), listOf("Ayog ji", "Vote Ghar"))
     private val m = Matcher(listOf(modi, shah, eci))
 
@@ -24,6 +24,17 @@ class MatcherTest {
         "Bodi aur Mota Bhai, Ayog ji!",
         m.replaceAll("Modi aur Amit Shah, ECI!") { e, _ -> e.alternates[0] },
     )
+
+    @Test fun bareSurnameAsksFirst() {
+        assertTrue(m.findAll("Shah Rukh ki film").single().ask)
+        assertEquals("Shah Rukh ki film", m.replaceAll("Shah Rukh ki film"))
+        assertTrue(!m.findAll("Amit Shah bola").single().ask)
+    }
+
+    @Test fun tiers() {
+        assertEquals(listOf("Mota Bhai"), shah.recognisable)
+        assertEquals(listOf("Chanakya"), shah.stealth)
+    }
 
     @Test fun shuffleKeepsWorking() {
         val mem = AltMemory()

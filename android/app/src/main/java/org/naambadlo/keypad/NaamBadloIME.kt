@@ -5,7 +5,7 @@ import android.inputmethodservice.InputMethodService
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.view.Gravity
+import android.text.TextUtils
 import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
 import android.view.View
@@ -15,16 +15,18 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 
 /**
  * Naam Chupao keyboard. Keep typing on your usual keyboard; switch here after
- * a name. Tap "Make it Meta friendly" to swap every name (again for fresh
- * code names), or pick one of 50 code names for the last word.
+ * a name. "Make it Meta friendly" swaps every name (again for fresh code names),
+ * or pick a code name for the last word. Long-press a code name to star it.
+ * Bare first names / common surnames ("Shah") ask first.
  */
 class NaamBadloIME : InputMethodService() {
 
     private lateinit var title: TextView
-    private lateinit var banner: TextView
+    private lateinit var banner: LinearLayout
     private lateinit var chips: LinearLayout
     private lateinit var metaLabel: TextView
     private lateinit var metaKey: View
@@ -32,27 +34,38 @@ class NaamBadloIME : InputMethodService() {
     private val matcher by lazy { NameStore.matcher(this) }
     private val memory get() = NameStore.memory
     private var lastKey = ""
+    private val confirmed = HashSet<String>()
+    private val declined = HashSet<String>()
+    private var undoState: Pair<String, String>? = null   // before-cursor text: original to replaced
 
     override fun onCreateInputView(): View {
         val ctx: Context = this
         Ui.init(ctx)
+        NameStore.matcher(ctx)
         val root = Ui.vertical(ctx).apply {
             background = Ui.pageBackground()
             setPadding(Ui.dp(ctx, 10), Ui.dp(ctx, 12), Ui.dp(ctx, 10), Ui.dp(ctx, 10))
         }
 
-        // Title line, with the congratulations banner layered over it
+        // Title line, with the confirmation banner (message + Undo) layered over it
         val top = FrameLayout(ctx)
         title = Ui.label(ctx, "", 13.5f, Ui.MUTED, Ui.W.MED).apply {
             setPadding(Ui.dp(ctx, 8), Ui.dp(ctx, 2), Ui.dp(ctx, 8), Ui.dp(ctx, 8))
             maxLines = 1
-            ellipsize = android.text.TextUtils.TruncateAt.END
+            ellipsize = TextUtils.TruncateAt.END
         }
-        banner = Ui.label(ctx, "✓  ${NameStore.CONGRATS}", 14f, Ui.WHITE, Ui.W.MED).apply {
+        banner = Ui.horizontal(ctx).apply {
             background = Ui.rounded(Ui.BLACK, 18, ctx)
-            setPadding(Ui.dp(ctx, 16), Ui.dp(ctx, 11), Ui.dp(ctx, 16), Ui.dp(ctx, 11))
+            setPadding(Ui.dp(ctx, 16), Ui.dp(ctx, 8), Ui.dp(ctx, 8), Ui.dp(ctx, 8))
             visibility = View.GONE
             elevation = Ui.dp(ctx, 6).toFloat()
+            addView(Ui.label(ctx, "✓  ${NameStore.CONGRATS}", 14f, Ui.WHITE, Ui.W.MED),
+                LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            addView(Ui.label(ctx, "Undo", 14f, Ui.BLACK, Ui.W.SEMI).apply {
+                background = Ui.rounded(Ui.WHITE, 16, ctx)
+                setPadding(Ui.dp(ctx, 14), Ui.dp(ctx, 7), Ui.dp(ctx, 14), Ui.dp(ctx, 7))
+                setOnClickListener { undo() }
+            })
         }
         top.addView(title)
         top.addView(banner, FrameLayout.LayoutParams(
@@ -64,7 +77,6 @@ class NaamBadloIME : InputMethodService() {
         scroll.minimumHeight = Ui.dp(ctx, 52)
         root.addView(scroll)
 
-        // Big Meta-blue action
         val meta = Ui.cta(ctx, "Make it Meta friendly", R.drawable.ic_sparkle) { makeFriendly() }
         metaLabel = meta.getChildAt(0) as TextView
         metaKey = meta
@@ -92,6 +104,7 @@ class NaamBadloIME : InputMethodService() {
     override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
         super.onStartInputView(info, restarting)
         lastKey = ""
+        if (!restarting) { confirmed.clear(); declined.clear() }
         refresh()
     }
 
@@ -106,28 +119,56 @@ class NaamBadloIME : InputMethodService() {
     private fun before(): String =
         currentInputConnection?.getTextBeforeCursor(2000, 0)?.toString() ?: ""
 
+    private fun wordKey(text: String, m: Match) = Matcher.normalize(text.substring(m.start, m.end))
+    private fun ready(text: String, m: Match) = m.fromMemory || !m.ask || wordKey(text, m) in confirmed
+    private fun pending(text: String, m: Match) =
+        m.ask && !m.fromMemory && wordKey(text, m) !in confirmed && wordKey(text, m) !in declined
+
     private fun refresh() {
         if (!::chips.isInitialized) return
         val text = before()
         val all = matcher.findAll(text, memory)
-        val real = all.count { !it.fromMemory }
-        metaLabel.text = if (real == 0 && all.isNotEmpty()) "Fresh names" else "Make it Meta friendly"
-        metaKey.alpha = if (all.isEmpty()) 0.6f else 1f
+        val usable = all.filter { ready(text, it) }
+        val real = usable.count { !it.fromMemory }
+        metaLabel.text = if (real == 0 && usable.isNotEmpty()) "Fresh names" else "Make it Meta friendly"
+        metaKey.alpha = if (usable.isEmpty()) 0.6f else 1f
 
-        val m = matcher.matchAtEnd(text, memory)
-        val key = m?.let { "${it.entity.id}:${it.start}:${text.length}" } ?: "none:${all.size}"
+        val m = matcher.matchAtEnd(text, memory)?.takeIf { it.fromMemory || !it.ask || !declined.contains(wordKey(text, it)) }
+        val key = m?.let { "${it.entity.id}:${it.start}:${text.length}:${pending(text, it)}" } ?: "none:${all.size}"
         if (key == lastKey) return
         lastKey = key
         chips.removeAllViews()
         if (m == null) {
-            title.text = if (all.isNotEmpty()) "${all.size} name(s) in your text"
-            else "Type a name on your usual keyboard, then switch here"
+            val ask = all.firstOrNull { pending(text, it) }
+            title.text = when {
+                ask != null -> "“${text.substring(ask.start, ask.end)}”: put the cursor after it to choose"
+                all.isNotEmpty() -> "${usable.size} name(s) in your text"
+                else -> "Type a name on your usual keyboard, then switch here"
+            }
             return
         }
         val word = text.substring(m.start, m.end)
-        title.text = "“$word” · ${m.entity.label} · pick a code name"
-        m.entity.alternates.shuffled().forEachIndexed { i, alt ->
-            val c = Ui.chip(this, alt) { swap(alt) }
+        if (pending(text, m)) {
+            title.text = "“$word” means ${m.entity.label}?"
+            chips.addView(Ui.chip(this, "Yes, ${m.entity.label}", selected = true) {
+                confirmed.add(wordKey(text, m)); lastKey = ""; refresh()
+            })
+            chips.addView(Ui.chip(this, "No, someone else") {
+                declined.add(wordKey(text, m)); lastKey = ""; refresh()
+            })
+            return
+        }
+        title.text = "“$word” · ${m.entity.label} · hold a code name to star it"
+        val favs = Prefs.favourites(this, m.entity.id)
+        NameStore.ordered(this, m.entity).forEachIndexed { i, alt ->
+            val c = Ui.chip(this, if (alt in favs) "★ $alt" else alt) { swap(alt) }
+            c.setOnLongClickListener {
+                val added = Prefs.toggleFavourite(this, m.entity.id, alt)
+                c.text = if (added) "★ $alt" else alt
+                c.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                Toast.makeText(this, if (added) "Starred. Used first from now on." else "Unstarred", Toast.LENGTH_SHORT).show()
+                true
+            }
             chips.addView(c)
             if (i < 6) Ui.enter(c, i * 35L, rise = 6)
         }
@@ -140,27 +181,42 @@ class NaamBadloIME : InputMethodService() {
         val m = matcher.matchAtEnd(text, memory) ?: return
         val tail = text.substring(m.end)
         memory.add(alt, m.entity)
-        ic.beginBatchEdit()
-        ic.deleteSurroundingText(text.length - m.start, 0)
-        ic.commitText(alt + tail, 1)
-        ic.endBatchEdit()
-        celebrate()
+        val out = text.substring(0, m.start) + alt + tail
+        replaceBefore(ic, text, out)
+        celebrate(text, out)
     }
 
     private fun makeFriendly() {
         val ic = currentInputConnection ?: return
         val text = before()
-        if (matcher.findAll(text, memory).isEmpty()) return
-        val out = matcher.replaceAll(text, memory)
-        ic.beginBatchEdit()
-        ic.deleteSurroundingText(text.length, 0)
-        ic.commitText(out, 1)
-        ic.endBatchEdit()
-        celebrate()
+        val out = matcher.replaceAll(text, memory, include = { m, _ -> ready(text, m) }, pick = NameStore::pick)
+        if (out == text) return
+        replaceBefore(ic, text, out)
+        celebrate(text, out)
     }
 
-    /** Show the congratulations banner, then go back to the user's keyboard. */
-    private fun celebrate() {
+    private fun replaceBefore(ic: android.view.inputmethod.InputConnection, old: String, new: String) {
+        ic.beginBatchEdit()
+        ic.deleteSurroundingText(old.length, 0)
+        ic.commitText(new, 1)
+        ic.endBatchEdit()
+    }
+
+    private fun undo() {
+        val (original, replaced) = undoState ?: return
+        val ic = currentInputConnection ?: return
+        if (before() != replaced) return
+        replaceBefore(ic, replaced, original)
+        undoState = null
+        handler.removeCallbacksAndMessages(null)
+        banner.animate().alpha(0f).setDuration(150).withEndAction { banner.visibility = View.GONE }.start()
+        lastKey = ""
+        refresh()
+    }
+
+    /** Message with Undo, then back to the user's keyboard. */
+    private fun celebrate(original: String, replaced: String) {
+        undoState = original to replaced
         handler.removeCallbacksAndMessages(null)
         banner.visibility = View.VISIBLE
         banner.alpha = 0f
@@ -169,8 +225,9 @@ class NaamBadloIME : InputMethodService() {
         banner.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
         handler.postDelayed({
             banner.animate().alpha(0f).setDuration(200).withEndAction { banner.visibility = View.GONE }.start()
+            undoState = null
             switchBack()
-        }, 2400)
+        }, 3200)
     }
 
     private fun backspace() {
@@ -205,4 +262,5 @@ class NaamBadloIME : InputMethodService() {
     private fun showPicker() {
         (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker()
     }
+
 }

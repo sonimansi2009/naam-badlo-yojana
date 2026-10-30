@@ -20,10 +20,21 @@ You keep your normal keyboard (Gboard, SwiftKey, Samsung, Apple). Naam Chupao Yo
 
 The floating button uses Android's accessibility service, because that is the only way an app can edit the text box of another app. It reads only the box you are typing in, skips password fields, and the app has no internet permission, so nothing leaves the phone. Google Play reviews apps that use this closely, so for now the APK is shared directly.
 
+## Two versions
+
+| | Full | Lite |
+|---|---|---|
+| Floating “Make it Meta friendly” button | ✓ | — |
+| Add-on keyboard | ✓ | ✓ |
+| Select text → Naam Chupao | ✓ | ✓ |
+| Installs without Play Protect blocking it | No (pause Play Protect once) | Yes |
+
+Google's anti-fraud pilot in India blocks sideloaded apps that ask for accessibility. Lite leaves that out, so most people should start with Lite.
+
 ## Install
 
 ### Android
-1. Open the [latest release](../../releases/latest) and download `NaamChupaoYojana.apk` (or get it from the **Actions** tab → latest run → *NaamChupaoYojana-apk*).
+1. Open the [latest release](../../releases/latest) and download `NaamChupaoYojana-Lite.apk` (or `NaamChupaoYojana.apk` for the floating button) (or get it from the **Actions** tab → latest run → *NaamChupaoYojana-apk*).
    If you installed an older test build, **uninstall it first** (old builds used a different signing key).
 2. Open the file on your phone. Allow "install from this source" when asked.
 3. Open **Naam Chupao Yojana** and tap **Turn on floating button**. In Settings, open Installed apps → Naam Chupao button → On.

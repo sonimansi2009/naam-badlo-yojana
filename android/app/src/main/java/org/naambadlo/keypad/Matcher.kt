@@ -9,10 +9,23 @@ data class Entity(
     val label: String,
     val triggers: List<String>,
     val alternates: List<String>,
-)
+    /** The first [popular] alternates are hand-picked, recognisable code names. */
+    val popular: Int = alternates.size,
+    /** Triggers that are only a first name or common surname: ask before swapping. */
+    val ask: Set<String> = emptySet(),
+) {
+    val recognisable: List<String> get() = alternates.take(popular.coerceIn(1, alternates.size))
+    val stealth: List<String> get() = alternates.drop(popular).ifEmpty { alternates }
+}
 
-/** fromMemory = this is a swap the app put in earlier, not the real name. */
-data class Match(val entity: Entity, val start: Int, val end: Int, val fromMemory: Boolean = false)
+/**
+ * fromMemory = a code name the app put in earlier, not the real name.
+ * ask = only a first name or common surname, so confirm before swapping.
+ */
+data class Match(
+    val entity: Entity, val start: Int, val end: Int,
+    val fromMemory: Boolean = false, val ask: Boolean = false,
+)
 
 /**
  * Remembers the alternates the app has inserted, so tapping again can
@@ -37,6 +50,7 @@ class AltMemory {
 
 class Matcher(entities: List<Entity>) {
     private val map = HashMap<String, Entity>()
+    private val askSet = HashSet<String>()
     private val maxWords: Int
 
     init {
@@ -46,6 +60,7 @@ class Matcher(entities: List<Entity>) {
             map[k] = e
             mw = maxOf(mw, k.split(' ').size)
         }
+        for (e in entities) for (a in e.ask) askSet.add(normalize(a))
         maxWords = mw
     }
 
@@ -90,11 +105,13 @@ class Matcher(entities: List<Entity>) {
     fun replaceAll(
         text: String,
         mem: AltMemory? = null,
+        include: (Match, String) -> Boolean = { m, _ -> !m.ask },
         pick: (Entity, String) -> String = ::freshPick,
     ): String {
         val sb = StringBuilder()
         var last = 0
         for (m in findAll(text, mem)) {
+            if (!include(m, text.substring(m.start, m.end))) continue
             val alt = pick(m.entity, text.substring(m.start, m.end))
             mem?.add(alt, m.entity)
             sb.append(text, last, m.start).append(alt)
@@ -106,7 +123,7 @@ class Matcher(entities: List<Entity>) {
 
     private fun lookup(text: String, lo: Int, hi: Int, rawLo: Int, rawHi: Int, mem: AltMemory?): Match? {
         val cand = normalize(text.substring(lo, hi))
-        map[cand]?.let { return Match(it, lo, hi) }
+        map[cand]?.let { return Match(it, lo, hi, ask = cand in askSet) }
         if (mem != null) {
             // Code names can start or end with symbols, e.g. (B)(J)(P) or B.J.P.
             // Try the span with its symbols first, then without.
@@ -117,7 +134,7 @@ class Matcher(entities: List<Entity>) {
         for (suf in POSSESSIVES) {
             if (cand.endsWith(suf)) {
                 val base = cand.dropLast(suf.length)
-                map[base]?.let { return Match(it, lo, hi - suf.length) }
+                map[base]?.let { return Match(it, lo, hi - suf.length, ask = base in askSet) }
                 mem?.map?.get(base)?.let { return Match(it, lo, hi - suf.length, fromMemory = true) }
             }
         }

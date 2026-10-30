@@ -11,8 +11,8 @@ android {
         applicationId = "org.naambadlo.keypad"
         minSdk = 24
         targetSdk = 34
-        versionCode = 5
-        versionName = "0.5.0"
+        versionCode = 6
+        versionName = "0.6.0"
     }
 
     // One fixed key, so every new build installs over the previous one.
@@ -27,6 +27,24 @@ android {
             keyPassword = System.getenv("NC_KEY_PASSWORD") ?: "naamchupao"
             enableV1Signing = true
             enableV2Signing = true
+        }
+    }
+
+    buildFeatures { buildConfig = true }
+
+    // Two editions from the same code:
+    //   full = floating button (accessibility service) + keyboard + select text
+    //   lite = keyboard + select text only; installs without Play Protect blocking it
+    flavorDimensions += "edition"
+    productFlavors {
+        create("full") {
+            dimension = "edition"
+            buildConfigField("boolean", "HAS_FLOATING", "true")
+        }
+        create("lite") {
+            dimension = "edition"
+            versionNameSuffix = "-lite"
+            buildConfigField("boolean", "HAS_FLOATING", "false")
         }
     }
 

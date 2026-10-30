@@ -46,25 +46,36 @@ jobs:
 
       - name: Test and build
         working-directory: android
-        run: gradle --no-daemon testDebugUnitTest assembleDebug assembleRelease
+        run: gradle --no-daemon testFullDebugUnitTest assembleFullRelease assembleLiteRelease
 
-      - name: Rename APK
-        run: cp android/app/build/outputs/apk/release/app-release.apk NaamChupaoYojana.apk
+      - name: Rename APKs
+        run: |
+          cp android/app/build/outputs/apk/full/release/app-full-release.apk NaamChupaoYojana.apk
+          cp android/app/build/outputs/apk/lite/release/app-lite-release.apk NaamChupaoYojana-Lite.apk
 
-      - name: Check the APK is signed and installable
+      - name: Check both APKs are signed, and Lite has no accessibility service
         run: |
           BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
-          $BT/apksigner verify --verbose --print-certs NaamChupaoYojana.apk > sig.txt
-          echo "::notice title=Signature::$(grep -E 'Verified using v2|Signer #1 certificate SHA-256' sig.txt | tr '\n' ' ')"
-          echo "::notice title=Package::$($BT/aapt2 dump badging NaamChupaoYojana.apk | grep -E '^package|sdkVersion' | tr '\n' ' ')"
+          for f in NaamChupaoYojana.apk NaamChupaoYojana-Lite.apk; do
+            $BT/apksigner verify $f
+            echo "::notice title=$f::$($BT/apksigner verify --verbose $f | grep -E 'Verified using v2' | tr '\n' ' ') $($BT/aapt2 dump badging $f | grep -E '^package' | tr '\n' ' ')"
+          done
+          FULL=$($BT/aapt2 dump xmltree --file AndroidManifest.xml NaamChupaoYojana.apk | grep -c BIND_ACCESSIBILITY_SERVICE || true)
+          LITE=$($BT/aapt2 dump xmltree --file AndroidManifest.xml NaamChupaoYojana-Lite.apk | grep -c BIND_ACCESSIBILITY_SERVICE || true)
+          echo "::notice title=Accessibility::full=$FULL lite=$LITE"
+          if [ "$LITE" != "0" ] || [ "$FULL" = "0" ]; then echo "::error::Lite must have no accessibility service and Full must have it"; exit 1; fi
 
       - uses: actions/upload-artifact@v4
         with:
           name: NaamChupaoYojana-apk
-          path: NaamChupaoYojana.apk
+          path: |
+            NaamChupaoYojana.apk
+            NaamChupaoYojana-Lite.apk
 
       - name: Attach APK to release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: NaamChupaoYojana.apk
+          files: |
+            NaamChupaoYojana.apk
+            NaamChupaoYojana-Lite.apk
