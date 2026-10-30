@@ -21,9 +21,17 @@ jobs:
           brew install xcodegen
           xcodegen generate
 
+      - name: Show available SDKs
+        run: xcodebuild -version && xcodebuild -showsdks
+
       - name: Build for simulator (unsigned)
         working-directory: ios
         run: |
-          xcodebuild -project NaamBadlo.xcodeproj -scheme NaamBadlo \
-            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO build
+          set -o pipefail
+          xcodebuild -project NaamBadlo.xcodeproj -target NaamBadlo \
+            -sdk iphonesimulator -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build 2>&1 | tee build.log
+      - name: Show build errors
+        if: failure()
+        working-directory: ios
+        run: grep -E "error:|warning: .*deprecated" build.log | head -40 || true
