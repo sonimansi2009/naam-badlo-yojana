@@ -3,72 +3,88 @@ package org.naambadlo.keypad
 import android.content.Context
 import android.inputmethodservice.InputMethodService
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 
 /**
- * A slim add-on keyboard. You keep typing on your normal keyboard
- * (Gboard, SwiftKey, Samsung). When you want a swap, switch to this one:
- * it reads the word just before the cursor and offers 50 alternates.
- * Tap one and it switches you straight back to your normal keyboard.
+ * A slim add-on keyboard. Keep typing on your usual keyboard; switch here
+ * after a name. Tap "Make it Meta friendly" to swap every name (tap again
+ * for fresh code names), or pick one of 50 code names for the last word.
  */
 class NaamBadloIME : InputMethodService() {
 
     private lateinit var title: TextView
+    private lateinit var banner: TextView
     private lateinit var chips: LinearLayout
+    private lateinit var metaKey: TextView
+    private val handler = Handler(Looper.getMainLooper())
     private val matcher by lazy { NameStore.matcher(this) }
+    private val memory get() = NameStore.memory
+    private var lastKey = ""
 
     override fun onCreateInputView(): View {
         val ctx: Context = this
-        val root = Ui.vertical(ctx, 8).apply { setBackgroundColor(Ui.BG) }
-
-        title = Ui.label(ctx, "", 13f, Ui.MUTED).apply {
-            setPadding(Ui.dp(ctx, 6), 0, 0, Ui.dp(ctx, 4))
+        val root = Ui.vertical(ctx).apply {
+            setBackgroundColor(Ui.BLUE_DEEP)
+            setPadding(Ui.dp(ctx, 8), Ui.dp(ctx, 10), Ui.dp(ctx, 8), Ui.dp(ctx, 10))
         }
-        root.addView(title)
+
+        // Title line, with the congratulations banner layered over it
+        val top = FrameLayout(ctx)
+        title = Ui.label(ctx, "", 13.5f, Ui.ON_BLUE_MUTED).apply {
+            setPadding(Ui.dp(ctx, 6), Ui.dp(ctx, 2), Ui.dp(ctx, 6), Ui.dp(ctx, 6))
+            maxLines = 1
+        }
+        banner = Ui.label(ctx, "✓  ${NameStore.CONGRATS}", 14f, Ui.BLUE_DEEP, bold = true).apply {
+            background = Ui.rounded(Ui.SURFACE, 12, ctx)
+            setPadding(Ui.dp(ctx, 14), Ui.dp(ctx, 10), Ui.dp(ctx, 14), Ui.dp(ctx, 10))
+            visibility = View.GONE
+        }
+        top.addView(title)
+        top.addView(banner, FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT))
+        root.addView(top)
 
         val (scroll, row) = Ui.chipRow(ctx)
         chips = row
-        scroll.minimumHeight = Ui.dp(ctx, 52)
+        scroll.minimumHeight = Ui.dp(ctx, 50)
         root.addView(scroll)
+
+        fun key(text: String, weight: Float, style: Ui.Style, action: () -> Unit) =
+            Ui.button(ctx, text, style, action).apply {
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+                layoutParams = LinearLayout.LayoutParams(0, Ui.dp(ctx, 48), weight).apply {
+                    setMargins(Ui.dp(ctx, 3), Ui.dp(ctx, 6), Ui.dp(ctx, 3), 0)
+                }
+            }
+
+        metaKey = key("✦  Make it Meta friendly", 1f, Ui.Style.ON_DARK_PRIMARY) { makeFriendly() }
+        root.addView(LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL; addView(metaKey) })
 
         val bar = LinearLayout(ctx).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setPadding(0, Ui.dp(ctx, 6), 0, 0)
         }
-        fun key(text: String, weight: Float, accent: Boolean = false, action: () -> Unit) =
-            Ui.chip(ctx, text, accent, action).apply {
-                layoutParams = LinearLayout.LayoutParams(0, Ui.dp(ctx, 46), weight).apply {
-                    setMargins(Ui.dp(ctx, 3), 0, Ui.dp(ctx, 3), 0)
-                }
-            }
-        // Big one-tap button on its own row, small keys under it
-        val meta = LinearLayout(ctx).apply {
-            orientation = LinearLayout.HORIZONTAL
-            setPadding(0, Ui.dp(ctx, 6), 0, 0)
-        }
-        meta.addView(key("✦ Make it Meta friendly", 1f, accent = true) {
-            replaceAllBeforeCursor()
-            switchBack()
-        })
-        root.addView(meta)
-
-        bar.addView(key("⌨ Back", 1.6f) { switchBack() })
-        bar.addView(key("␣", 2f) { currentInputConnection?.commitText(" ", 1) })
-        bar.addView(key("⌫", 1f) { backspace() })
-        bar.addView(key("↵", 1f) { enter() })
+        bar.addView(key("⌨  Back", 1.6f, Ui.Style.ON_DARK) { switchBack() })
+        bar.addView(key("space", 2f, Ui.Style.ON_DARK) { currentInputConnection?.commitText(" ", 1) })
+        bar.addView(key("⌫", 1f, Ui.Style.ON_DARK) { backspace() })
+        bar.addView(key("↵", 1f, Ui.Style.ON_DARK) { enter() })
         root.addView(bar)
         return root
     }
 
     override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
         super.onStartInputView(info, restarting)
+        lastKey = ""
         refresh()
     }
 
@@ -81,50 +97,79 @@ class NaamBadloIME : InputMethodService() {
     }
 
     private fun before(): String =
-        currentInputConnection?.getTextBeforeCursor(1000, 0)?.toString() ?: ""
+        currentInputConnection?.getTextBeforeCursor(2000, 0)?.toString() ?: ""
 
     private fun refresh() {
         if (!::chips.isInitialized) return
-        chips.removeAllViews()
         val text = before()
-        val m = matcher.matchAtEnd(text)
+        val all = matcher.findAll(text, memory)
+        val real = all.count { !it.fromMemory }
+        metaKey.text = when {
+            real > 0 -> "✦  Make it Meta friendly"
+            all.isNotEmpty() -> "↻  Fresh names"
+            else -> "✦  Make it Meta friendly"
+        }
+        metaKey.alpha = if (all.isEmpty()) 0.55f else 1f
+
+        val m = matcher.matchAtEnd(text, memory)
+        val key = m?.let { "${it.entity.id}:${it.start}:${text.length}" } ?: "none:${all.size}"
+        if (key == lastKey) return
+        lastKey = key
+        chips.removeAllViews()
         if (m == null) {
-            val count = matcher.findAll(text).size
-            title.text = if (count > 0)
-                "$count name(s) in your text. Tap “Make it Meta friendly”."
-            else
-                "Type a name on your usual keyboard, then switch here."
+            title.text = when {
+                all.isNotEmpty() -> "${all.size} name(s) in your text"
+                else -> "Type a name on your usual keyboard, then switch here"
+            }
             return
         }
         val word = text.substring(m.start, m.end)
-        title.text = "“$word” → pick a swap (${m.entity.alternates.size})"
-        for (alt in m.entity.alternates.shuffled()) {
-            chips.addView(Ui.chip(this, alt) { swap(alt) })
+        title.text = "“$word”  ·  ${m.entity.label}  ·  pick a code name"
+        m.entity.alternates.shuffled().forEachIndexed { i, alt ->
+            val c = Ui.chip(this, alt, dark = true) { swap(alt) }
+            chips.addView(c)
+            if (i < 6) Ui.enter(c, i * 35L, rise = 6)
         }
+        (chips.parent as? View)?.scrollTo(0, 0)
     }
 
     private fun swap(alt: String) {
         val ic = currentInputConnection ?: return
         val text = before()
-        val m = matcher.matchAtEnd(text) ?: return
+        val m = matcher.matchAtEnd(text, memory) ?: return
         val tail = text.substring(m.end)
+        memory.add(alt, m.entity)
         ic.beginBatchEdit()
         ic.deleteSurroundingText(text.length - m.start, 0)
         ic.commitText(alt + tail, 1)
         ic.endBatchEdit()
-        switchBack()
+        celebrate(returnAfter = true)
     }
 
-    private fun replaceAllBeforeCursor() {
+    private fun makeFriendly() {
         val ic = currentInputConnection ?: return
         val text = before()
-        val out = matcher.replaceAll(text)
-        if (out == text) return
+        if (matcher.findAll(text, memory).isEmpty()) return
+        val out = matcher.replaceAll(text, memory)
         ic.beginBatchEdit()
         ic.deleteSurroundingText(text.length, 0)
         ic.commitText(out, 1)
         ic.endBatchEdit()
-        refresh()
+        celebrate(returnAfter = true)
+    }
+
+    /** Show the congratulations banner, then go back to the user's keyboard. */
+    private fun celebrate(returnAfter: Boolean) {
+        handler.removeCallbacksAndMessages(null)
+        banner.visibility = View.VISIBLE
+        banner.alpha = 0f
+        banner.translationY = -Ui.dp(this, 8).toFloat()
+        banner.animate().alpha(1f).translationY(0f).setDuration(240).start()
+        banner.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+        handler.postDelayed({
+            banner.animate().alpha(0f).setDuration(200).withEndAction { banner.visibility = View.GONE }.start()
+            if (returnAfter) switchBack()
+        }, 2400)
     }
 
     private fun backspace() {

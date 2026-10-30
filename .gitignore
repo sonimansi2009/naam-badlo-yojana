@@ -5,6 +5,7 @@ android/app/build/
 android/local.properties
 *.apk
 *.keystore
+!android/keystore/naam-chupao.jks
 # iOS
 ios/*.xcodeproj/
 ios/build/

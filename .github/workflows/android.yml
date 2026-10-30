@@ -28,20 +28,43 @@ jobs:
         with:
           gradle-version: "8.7"
 
+      - name: Use private signing key if set
+        env:
+          KS: ${{ secrets.NC_KEYSTORE_B64 }}
+          KS_PASS: ${{ secrets.NC_KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.NC_KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.NC_KEY_PASSWORD }}
+        run: |
+          if [ -n "$KS" ]; then
+            echo "$KS" | base64 -d > "$RUNNER_TEMP/release.jks"
+            echo "NC_KEYSTORE_FILE=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+            echo "NC_KEYSTORE_PASSWORD=$KS_PASS" >> "$GITHUB_ENV"
+            echo "NC_KEY_ALIAS=$KS_ALIAS" >> "$GITHUB_ENV"
+            echo "NC_KEY_PASSWORD=$KEY_PASS" >> "$GITHUB_ENV"
+            echo "::notice::Signing with private key from secrets"
+          fi
+
       - name: Test and build
         working-directory: android
         run: gradle --no-daemon testDebugUnitTest assembleDebug assembleRelease
 
       - name: Rename APK
-        run: cp android/app/build/outputs/apk/release/app-release.apk NaamBadlo.apk
+        run: cp android/app/build/outputs/apk/release/app-release.apk NaamChupaoYojana.apk
+
+      - name: Check the APK is signed and installable
+        run: |
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          $BT/apksigner verify --verbose --print-certs NaamChupaoYojana.apk > sig.txt
+          echo "::notice title=Signature::$(grep -E 'Verified using v2|Signer #1 certificate SHA-256' sig.txt | tr '\n' ' ')"
+          echo "::notice title=Package::$($BT/aapt2 dump badging NaamChupaoYojana.apk | grep -E '^package|sdkVersion' | tr '\n' ' ')"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: NaamBadlo-apk
-          path: NaamBadlo.apk
+          name: NaamChupaoYojana-apk
+          path: NaamChupaoYojana.apk
 
       - name: Attach APK to release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: NaamBadlo.apk
+          files: NaamChupaoYojana.apk

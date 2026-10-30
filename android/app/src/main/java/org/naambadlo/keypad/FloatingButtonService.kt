@@ -8,6 +8,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
@@ -15,6 +17,7 @@ import android.view.ViewConfiguration
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import android.view.animation.OvershootInterpolator
 import android.widget.TextView
 import android.widget.Toast
 import kotlin.math.abs
@@ -23,23 +26,26 @@ import kotlin.math.abs
  * The floating "Make it Meta friendly" button.
  *
  * Keep typing on your normal keyboard. When the text box you are typing in
- * contains a name from the list, a small pill appears. Tap it and every name
- * in that box is swapped. Long-press to undo. Drag it anywhere.
+ * contains a name from the list, a small pill appears. Tap it to swap every
+ * name; tap again for fresh code names. Hold to undo. Drag it anywhere.
  *
  * Privacy: this service only looks at the text box you are typing in, never
- * password fields, and the app has no internet permission, so nothing leaves
- * the phone.
+ * password fields, and the app has no internet permission.
  */
 class FloatingButtonService : AccessibilityService() {
 
     private val handler = Handler(Looper.getMainLooper())
     private val matcher by lazy { NameStore.matcher(this) }
+    private val memory get() = NameStore.memory
     private lateinit var wm: WindowManager
     private var pill: TextView? = null
     private var params: WindowManager.LayoutParams? = null
     private var shown = false
     private var currentPkg: String? = null
-    private var undo: Pair<String, String>? = null   // original text to replaced text
+
+    private var undoOriginal: String? = null   // text before the first swap
+    private var lastOut: String? = null        // text after the latest swap
+    private var celebrateUntil = 0L
 
     private val check = Runnable { evaluate() }
 
@@ -52,14 +58,15 @@ class FloatingButtonService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         val pkg = event?.packageName?.toString()
         if (pkg != null && pkg != packageName && pkg != "com.android.systemui") currentPkg = pkg
+        if (pkg == packageName) currentPkg = packageName
         handler.removeCallbacks(check)
-        handler.postDelayed(check, 250)
+        handler.postDelayed(check, 220)
     }
 
     override fun onInterrupt() {}
 
     override fun onDestroy() {
-        handler.removeCallbacks(check)
+        handler.removeCallbacksAndMessages(null)
         pill?.let { runCatching { wm.removeView(it) } }
         pill = null
         super.onDestroy()
@@ -80,18 +87,20 @@ class FloatingButtonService : AccessibilityService() {
 
     private fun allowedHere(): Boolean {
         val pkg = currentPkg ?: return false
-        if (pkg == packageName) return true            // our own test box
+        if (pkg == packageName) return true            // the app's own test box
         return !Prefs.metaOnly(this) || pkg in Prefs.META_APPS
     }
 
     private fun evaluate() {
+        if (SystemClock.uptimeMillis() < celebrateUntil) return
         if (!allowedHere()) return hide()
         val node = focusedField() ?: return hide()
         val text = fieldText(node)
-        val count = matcher.findAll(text).size
+        val found = matcher.findAll(text, memory)
+        val real = found.count { !it.fromMemory }
         when {
-            count > 0 -> show("✦ Make it Meta friendly · $count")
-            undo?.second == text && text.isNotEmpty() -> show("✓ Meta friendly · hold to undo")
+            real > 0 -> show("✦  Make it Meta friendly · $real")
+            found.isNotEmpty() -> show("↻  Fresh names · ${found.size}")
             else -> hide()
         }
     }
@@ -101,29 +110,29 @@ class FloatingButtonService : AccessibilityService() {
     private fun makeFriendly() {
         val node = focusedField() ?: return toast("Tap into the text box first")
         val text = fieldText(node)
-        val out = matcher.replaceAll(text)
-        if (out == text) return
+        if (matcher.findAll(text, memory).isEmpty()) return
+        val out = matcher.replaceAll(text, memory)
         if (setText(node, out)) {
-            undo = text to out
-            pill?.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            if (text != lastOut || undoOriginal == null) undoOriginal = text
+            lastOut = out
+            celebrate()
         } else {
             // Some apps block direct editing. Fall back to the clipboard.
             val cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-            cm.setPrimaryClip(ClipData.newPlainText("Naam Badlo", out))
+            cm.setPrimaryClip(ClipData.newPlainText(NameStore.APP_NAME, out))
             toast("Copied. Select all in the box and paste.")
         }
-        handler.postDelayed(check, 200)
     }
 
     private fun undoLast() {
-        val (original, replaced) = undo ?: return
+        val original = undoOriginal ?: return toast("Nothing to undo")
         val node = focusedField() ?: return
-        if (fieldText(node) != replaced) return toast("Nothing to undo here")
+        if (fieldText(node) != lastOut) return toast("Nothing to undo here")
         if (setText(node, original)) {
-            undo = null
+            undoOriginal = null; lastOut = null; celebrateUntil = 0
             toast("Undone")
         }
-        handler.postDelayed(check, 200)
+        handler.postDelayed(check, 150)
     }
 
     private fun setText(node: AccessibilityNodeInfo, value: String): Boolean {
@@ -144,13 +153,31 @@ class FloatingButtonService : AccessibilityService() {
 
     // ---- The pill ----
 
+    private fun celebrate() {
+        val v = pill ?: return
+        celebrateUntil = SystemClock.uptimeMillis() + 3800
+        v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+        v.maxWidth = (resources.displayMetrics.widthPixels * 0.78).toInt()
+        v.maxLines = 3
+        show("✓  ${NameStore.CONGRATS}")
+        v.scaleX = 0.9f; v.scaleY = 0.9f
+        v.animate().scaleX(1f).scaleY(1f).setDuration(320).setInterpolator(OvershootInterpolator(2.2f)).start()
+        handler.postDelayed({
+            celebrateUntil = 0
+            v.maxLines = 1
+            evaluate()
+        }, 3850)
+    }
+
     private fun createPill() {
         val v = TextView(this).apply {
-            setTextColor(0xFF1D1C1A.toInt())
-            textSize = 14f
-            setPadding(Ui.dp(context, 14), Ui.dp(context, 9), Ui.dp(context, 14), Ui.dp(context, 9))
-            background = Ui.rounded(Ui.ACCENT, 22, context)
-            elevation = Ui.dp(context, 6).toFloat()
+            setTextColor(Ui.ON_BLUE)
+            typeface = Ui.SERIF_BOLD
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.5f)
+            maxLines = 1
+            setPadding(Ui.dp(context, 16), Ui.dp(context, 10), Ui.dp(context, 16), Ui.dp(context, 10))
+            background = Ui.rounded(Ui.BLUE, 24, context, 0x33FFFFFF)
+            elevation = Ui.dp(context, 8).toFloat()
             contentDescription = "Make it Meta friendly"
         }
         val dm = resources.displayMetrics
@@ -163,7 +190,7 @@ class FloatingButtonService : AccessibilityService() {
             PixelFormat.TRANSLUCENT,
         ).apply {
             gravity = Gravity.TOP or Gravity.START
-            x = if (sx >= 0) sx else dm.widthPixels / 3
+            x = if (sx >= 0) sx else dm.widthPixels / 4
             y = if (sy >= 0) sy else (dm.heightPixels * 0.30).toInt()
         }
         attachTouch(v, lp)
@@ -176,13 +203,18 @@ class FloatingButtonService : AccessibilityService() {
         val longPress = ViewConfiguration.getLongPressTimeout().toLong()
         var downX = 0f; var downY = 0f; var startX = 0; var startY = 0
         var dragging = false; var longFired = false
-        val longRunnable = Runnable { longFired = true; v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS); undoLast() }
+        val longRunnable = Runnable {
+            longFired = true
+            v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            undoLast()
+        }
 
         v.setOnTouchListener { _, e ->
             when (e.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
                     downX = e.rawX; downY = e.rawY; startX = lp.x; startY = lp.y
                     dragging = false; longFired = false
+                    v.animate().scaleX(0.94f).scaleY(0.94f).setDuration(90).start()
                     handler.postDelayed(longRunnable, longPress)
                 }
                 MotionEvent.ACTION_MOVE -> {
@@ -199,6 +231,8 @@ class FloatingButtonService : AccessibilityService() {
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     handler.removeCallbacks(longRunnable)
+                    v.animate().scaleX(1f).scaleY(1f).setDuration(160)
+                        .setInterpolator(OvershootInterpolator(2f)).start()
                     if (dragging) Prefs.setButtonPos(this, lp.x, lp.y)
                     else if (!longFired && e.actionMasked == MotionEvent.ACTION_UP) makeFriendly()
                 }
@@ -210,16 +244,23 @@ class FloatingButtonService : AccessibilityService() {
     private fun show(label: String) {
         val v = pill ?: return
         v.text = label
-        if (!shown) {
-            runCatching { wm.addView(v, params) }.onSuccess { shown = true }
+        if (shown) return
+        shown = true
+        v.animate().cancel()
+        if (!v.isAttachedToWindow) {
+            if (runCatching { wm.addView(v, params) }.isFailure) { shown = false; return }
         }
+        v.alpha = 0f; v.scaleX = 0.85f; v.scaleY = 0.85f
+        v.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(220)
+            .setInterpolator(OvershootInterpolator(1.6f)).start()
     }
 
     private fun hide() {
         val v = pill ?: return
-        if (shown) {
-            runCatching { wm.removeView(v) }
-            shown = false
-        }
+        if (!shown) return
+        shown = false
+        v.animate().alpha(0f).scaleX(0.85f).scaleY(0.85f).setDuration(160).withEndAction {
+            if (!shown) runCatching { wm.removeView(v) }
+        }.start()
     }
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-/// A real name the keyboard watches for, and its 50 alternates.
+/// A real name the keyboard watches for, and its 50 code names.
 struct NameEntity: Decodable {
     let id: String
     let label: String
@@ -15,15 +15,23 @@ private struct NameFile: Decodable {
 struct NameMatch {
     let entity: NameEntity
     let range: Range<String.Index>
+    /// True when this is a code name the app put in earlier, not the real name.
+    let fromMemory: Bool
 }
 
 /// Loads names.json from the bundle and finds names in text. Works offline.
 final class NameDictionary {
     static let shared = NameDictionary()
+    static let appName = "Naam Chupao Yojana"
+    static let congrats = "Congratulations. Your text is encrypted against Meta's violation of Freedom of speech"
 
     private(set) var entities: [NameEntity] = []
     private var map: [String: NameEntity] = [:]
     private var maxWords = 1
+    /// Code names the app inserted, so "Fresh names" can shuffle them again.
+    private var memory: [String: NameEntity] = [:]
+    private var memoryWords = 1
+
     private static let punct: Set<Character> = Set(".,!?;:\"'()[]{}#@*_~“”‘’…-|।")
     private static let possessives = ["'s", "’s"]
 
@@ -45,56 +53,93 @@ final class NameDictionary {
         s.lowercased().split(whereSeparator: { $0.isWhitespace }).joined(separator: " ")
     }
 
-    /// The name that ends right before the cursor, if any.
+    func remember(_ alt: String, as e: NameEntity) {
+        if memory.count > 3000 { memory.removeAll(); memoryWords = 1 }
+        let k = Self.normalize(alt)
+        guard !k.isEmpty else { return }
+        memory[k] = e
+        memoryWords = max(memoryWords, k.split(separator: " ").count)
+    }
+
+    /// A random code name that differs from the one there now.
+    static func freshPick(_ e: NameEntity, current: String) -> String {
+        let cur = normalize(current)
+        let options = e.alternates.filter { normalize($0) != cur }
+        return (options.isEmpty ? e.alternates : options).randomElement() ?? current
+    }
+
+    private var words: Int { max(maxWords, memoryWords) }
+
+    /// The name (or earlier code name) that ends right before the cursor.
     func matchAtEnd(_ text: String) -> NameMatch? {
         let toks = tokens(text)
         let n = toks.count
         guard n > 0 else { return nil }
-        for k in stride(from: min(maxWords, n), through: 1, by: -1) {
+        for k in stride(from: min(words, n), through: 1, by: -1) {
             let lo = trimLower(text, toks[n - k])
             let hi = trimUpper(text, toks[n - 1])
-            if lo < hi, let m = lookup(text, lo, hi) { return m }
+            if lo < hi, let m = lookup(text, lo, hi, toks[n - k].lowerBound, toks[n - 1].upperBound) { return m }
         }
         return nil
     }
 
-    /// Every name in the text, left to right.
+    /// Every name (and earlier code name) in the text, left to right.
     func findAll(_ text: String) -> [NameMatch] {
         let toks = tokens(text)
         var out: [NameMatch] = []
         var i = 0
         while i < toks.count {
             var step = 1
-            for k in stride(from: min(maxWords, toks.count - i), through: 1, by: -1) {
+            for k in stride(from: min(words, toks.count - i), through: 1, by: -1) {
                 let lo = trimLower(text, toks[i])
                 let hi = trimUpper(text, toks[i + k - 1])
                 guard lo < hi else { continue }
-                if let m = lookup(text, lo, hi) { out.append(m); step = k; break }
+                if let m = lookup(text, lo, hi, toks[i].lowerBound, toks[i + k - 1].upperBound) {
+                    out.append(m); step = k; break
+                }
             }
             i += step
         }
         return out
     }
 
-    /// Replace every name with a random alternate.
+    /// Replace every name with a fresh code name and remember the picks.
     func replaceAll(_ text: String) -> String {
         var out = ""
         var last = text.startIndex
         for m in findAll(text) {
+            let alt = Self.freshPick(m.entity, current: String(text[m.range]))
+            remember(alt, as: m.entity)
             out += text[last..<m.range.lowerBound]
-            out += m.entity.alternates.randomElement() ?? ""
+            out += alt
             last = m.range.upperBound
         }
         out += text[last...]
         return out
     }
 
-    private func lookup(_ text: String, _ lo: String.Index, _ hi: String.Index) -> NameMatch? {
+    private func lookup(_ text: String, _ lo: String.Index, _ hi: String.Index,
+                        _ rawLo: String.Index, _ rawHi: String.Index) -> NameMatch? {
         let cand = Self.normalize(String(text[lo..<hi]))
-        if let e = map[cand] { return NameMatch(entity: e, range: lo..<hi) }
+        if let e = map[cand] { return NameMatch(entity: e, range: lo..<hi, fromMemory: false) }
+        if !memory.isEmpty {
+            var a = rawLo
+            while a <= lo {
+                var b = hi
+                while b <= rawHi {
+                    if let e = memory[Self.normalize(String(text[a..<b]))] {
+                        return NameMatch(entity: e, range: a..<b, fromMemory: true)
+                    }
+                    if b == rawHi { break }
+                    b = text.index(after: b)
+                }
+                if a == lo { break }
+                a = text.index(after: a)
+            }
+        }
         for suf in Self.possessives where cand.hasSuffix(suf) {
             if let e = map[String(cand.dropLast(suf.count))] {
-                return NameMatch(entity: e, range: lo..<text.index(hi, offsetBy: -suf.count))
+                return NameMatch(entity: e, range: lo..<text.index(hi, offsetBy: -suf.count), fromMemory: false)
             }
         }
         return nil

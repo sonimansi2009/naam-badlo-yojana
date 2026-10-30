@@ -7,6 +7,12 @@ import org.json.JSONObject
 object NameStore {
     @Volatile private var cached: Pair<List<Entity>, Matcher>? = null
 
+    /** Swaps the app has put in, shared by the button, keyboard and menu. */
+    val memory = AltMemory()
+
+    const val CONGRATS = "Congratulations. Your text is encrypted against Meta's violation of Freedom of speech"
+    const val APP_NAME = "Naam Chupao Yojana"
+
     fun matcher(ctx: Context): Matcher = load(ctx).second
     fun entities(ctx: Context): List<Entity> = load(ctx).first
 

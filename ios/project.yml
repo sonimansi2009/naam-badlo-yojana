@@ -25,7 +25,7 @@ targets:
     info:
       path: NaamBadlo/Info.plist
       properties:
-        CFBundleDisplayName: Naam Badlo
+        CFBundleDisplayName: Naam Chupao Yojana
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
     dependencies:
@@ -45,7 +45,7 @@ targets:
     info:
       path: NaamBadloKeyboard/Info.plist
       properties:
-        CFBundleDisplayName: Naam Badlo
+        CFBundleDisplayName: Naam Chupao Yojana
         NSExtension:
           NSExtensionPointIdentifier: com.apple.keyboard-service
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).KeyboardViewController

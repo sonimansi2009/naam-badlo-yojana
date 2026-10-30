@@ -34,4 +34,5 @@ jobs:
       - name: Show build errors
         if: failure()
         working-directory: ios
-        run: grep -E "error:|warning: .*deprecated" build.log | head -40 || true
+        run: |
+          grep -E "error:" build.log | head -40 || true

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Naam Badlo</string>
-    <string name="ime_name">Naam Badlo add-on</string>
-    <string name="process_label">Naam Badlo</string>
-    <string name="a11y_name">Naam Badlo floating button</string>
+    <string name="app_name">Naam Chupao Yojana</string>
+    <string name="ime_name">Naam Chupao keyboard</string>
+    <string name="process_label">Naam Chupao</string>
+    <string name="a11y_name">Naam Chupao button</string>
     <string name="a11y_summary">Shows a “Make it Meta friendly” button when your text has a name from the list.</string>
-    <string name="a11y_description">Shows a floating “Make it Meta friendly” button while you type. It reads only the text box you are typing in (never password fields) to find names from the list, and swaps them when you tap the button. Naam Badlo has no internet permission, so nothing you type can leave your phone.</string>
+    <string name="a11y_description">Shows a floating “Make it Meta friendly” button while you type. It reads only the text box you are typing in (never password fields) to find names from the list, and swaps them when you tap the button. Naam Chupao Yojana has no internet permission, so nothing you type can leave your phone.</string>
 </resources>

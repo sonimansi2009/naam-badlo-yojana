@@ -11,16 +11,32 @@ android {
         applicationId = "org.naambadlo.keypad"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
+    }
+
+    // One fixed key, so every new build installs over the previous one.
+    // If the env vars below are set (from GitHub secrets), that private key is
+    // used instead of the shared one in android/keystore/.
+    signingConfigs {
+        create("fixed") {
+            val envFile = System.getenv("NC_KEYSTORE_FILE")
+            storeFile = if (envFile != null) file(envFile) else rootProject.file("keystore/naam-chupao.jks")
+            storePassword = System.getenv("NC_KEYSTORE_PASSWORD") ?: "naamchupao"
+            keyAlias = System.getenv("NC_KEY_ALIAS") ?: "naamchupao"
+            keyPassword = System.getenv("NC_KEY_PASSWORD") ?: "naamchupao"
+            enableV1Signing = true
+            enableV2Signing = true
+        }
     }
 
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("fixed")
+        }
         release {
             isMinifyEnabled = false
-            // Signed with the debug key so the release APK installs directly.
-            // Swap for your own keystore before publishing on Play Store.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("fixed")
         }
     }
     compileOptions {

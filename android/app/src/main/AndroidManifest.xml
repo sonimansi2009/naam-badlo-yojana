@@ -6,7 +6,7 @@
         android:allowBackup="false"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.Material">
+        android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
         <activity
             android:name=".MainActivity"
@@ -23,7 +23,7 @@
             android:exported="true"
             android:label="@string/process_label"
             android:excludeFromRecents="true"
-            android:theme="@android:style/Theme.Material.Dialog.NoActionBar">
+            android:theme="@android:style/Theme.Material.Light.Dialog.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.PROCESS_TEXT" />
                 <category android:name="android.intent.category.DEFAULT" />
