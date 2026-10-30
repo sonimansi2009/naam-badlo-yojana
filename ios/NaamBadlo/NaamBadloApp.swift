@@ -13,7 +13,7 @@ private let muted = Color(Brand.muted)
 private let soft = Color(Brand.soft)
 private let line = Color(Brand.line)
 private let black = Color(Brand.black)
-private let butter = Color(Brand.butter)
+private let metaBlue = Color(Brand.meta)
 
 private func sans(_ size: CGFloat, _ w: Brand.Weight = .regular) -> Font {
     switch w {
@@ -35,9 +35,9 @@ struct ContentView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // Headline with one italic word
-                (Text("Naam ").font(sans(46, .medium))
-                 + Text("Chupao,").font(serifItalic(50))
-                 + Text("\nYojana here").font(sans(46, .medium)))
+                (Text("Naam ").font(sans(48, .medium))
+                 + Text("Chupao").font(serifItalic(52))
+                 + Text("\nYojana").font(sans(48, .medium)))
                     .foregroundColor(ink)
                     .tracking(-1.2)
                     .lineSpacing(-6)
@@ -76,7 +76,7 @@ struct ContentView: View {
                         panel {
                             step(1, "Type on your usual keyboard.")
                             step(2, "Tap 🌐 to switch to Naam Chupao.")
-                            step(3, "Tap the yellow button. Tap again for fresh names.")
+                            step(3, "Tap the blue button. Tap again for fresh names.")
                         }
                     case .privacy:
                         header("lock.shield", "Your privacy", "Kept simple")
@@ -158,12 +158,12 @@ struct ContentView: View {
     private func cta(_ title: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 12) {
-                Text(title).font(sans(15.5, .semibold)).foregroundColor(ink)
-                Image(systemName: "arrow.right").font(.system(size: 14, weight: .bold)).foregroundColor(.white)
-                    .frame(width: 38, height: 38).background(black).clipShape(Circle())
+                Text(title).font(sans(15.5, .semibold)).foregroundColor(.white)
+                Image(systemName: "arrow.right").font(.system(size: 14, weight: .bold)).foregroundColor(metaBlue)
+                    .frame(width: 38, height: 38).background(Color.white).clipShape(Circle())
             }
             .padding(.leading, 20).padding(.trailing, 6).padding(.vertical, 6)
-            .background(butter).clipShape(Capsule())
+            .background(metaBlue).clipShape(Capsule())
         }
     }
 }

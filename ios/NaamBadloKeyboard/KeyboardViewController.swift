@@ -204,17 +204,17 @@ final class KeyboardViewController: UIInputViewController {
         return b
     }
 
-    /// Butter-yellow pill with a round black sparkle on the right.
+    /// Meta-blue pill with a round white sparkle on the right.
     private func makeCTA(_ title: String, action: @escaping () -> Void) -> UIButton {
         var cfg = UIButton.Configuration.filled()
-        cfg.baseBackgroundColor = Brand.butter
-        cfg.baseForegroundColor = Brand.ink
+        cfg.baseBackgroundColor = Brand.meta
+        cfg.baseForegroundColor = .white
         cfg.cornerStyle = .capsule
         cfg.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 6)
         let dot = UIGraphicsImageRenderer(size: CGSize(width: 38, height: 38)).image { _ in
-            Brand.black.setFill()
+            UIColor.white.setFill()
             UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 38, height: 38)).fill()
-            if let s = UIImage(systemName: "sparkles")?.withTintColor(.white, renderingMode: .alwaysOriginal) {
+            if let s = UIImage(systemName: "sparkles")?.withTintColor(Brand.meta, renderingMode: .alwaysOriginal) {
                 s.draw(in: CGRect(x: 10, y: 10, width: 18, height: 18))
             }
         }

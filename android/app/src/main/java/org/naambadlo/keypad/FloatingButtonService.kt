@@ -172,13 +172,13 @@ class FloatingButtonService : AccessibilityService() {
 
     private fun createPill() {
         val dot = Ui.dp(this, 32)
-        val sparkle = getDrawable(R.drawable.ic_sparkle)!!.mutate().apply { setTint(Ui.WHITE) }
+        val sparkle = getDrawable(R.drawable.ic_sparkle)!!.mutate().apply { setTint(Ui.META) }
         val badge = android.graphics.drawable.LayerDrawable(arrayOf(
-            Ui.oval(Ui.BLACK),
+            Ui.oval(Ui.WHITE),
             android.graphics.drawable.InsetDrawable(sparkle, Ui.dp(this, 8)),
         )).apply { setBounds(0, 0, dot, dot) }
         val v = TextView(this).apply {
-            setTextColor(Ui.INK)
+            setTextColor(Ui.WHITE)
             typeface = Ui.SANS_SEMI
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
             maxLines = 1
@@ -186,7 +186,7 @@ class FloatingButtonService : AccessibilityService() {
             setCompoundDrawables(badge, null, null, null)
             compoundDrawablePadding = Ui.dp(context, 10)
             setPadding(Ui.dp(context, 6), Ui.dp(context, 6), Ui.dp(context, 18), Ui.dp(context, 6))
-            background = Ui.rounded(Ui.BUTTER, 28, context)
+            background = Ui.rounded(Ui.META, 28, context)
             elevation = Ui.dp(context, 10).toFloat()
             contentDescription = "Make it Meta friendly"
         }

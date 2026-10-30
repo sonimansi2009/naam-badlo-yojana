@@ -1,7 +1,7 @@
 import UIKit
 import CoreText
 
-/// Brand: soft periwinkle ground, white cards, black active pills, butter-yellow actions.
+/// Brand: soft periwinkle ground, white cards, black active pills, Meta-blue actions.
 /// Type: Instrument Sans, with Instrument Serif Italic for one accent word.
 enum Brand {
     static let bgTop = UIColor(red: 0xD8 / 255, green: 0xDF / 255, blue: 0xF1 / 255, alpha: 1)
@@ -11,7 +11,7 @@ enum Brand {
     static let ink = UIColor(red: 0x10 / 255, green: 0x12 / 255, blue: 0x17 / 255, alpha: 1)
     static let muted = UIColor(red: 0x6A / 255, green: 0x71 / 255, blue: 0x84 / 255, alpha: 1)
     static let black = UIColor(red: 0x12 / 255, green: 0x13 / 255, blue: 0x16 / 255, alpha: 1)
-    static let butter = UIColor(red: 0xF7 / 255, green: 0xD4 / 255, blue: 0x7F / 255, alpha: 1)
+    static let meta = UIColor(red: 0x08 / 255, green: 0x66 / 255, blue: 0xFF / 255, alpha: 1)
 
     private static var registered = false
 

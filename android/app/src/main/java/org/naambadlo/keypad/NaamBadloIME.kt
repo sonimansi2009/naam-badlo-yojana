@@ -64,7 +64,7 @@ class NaamBadloIME : InputMethodService() {
         scroll.minimumHeight = Ui.dp(ctx, 52)
         root.addView(scroll)
 
-        // Big yellow action
+        // Big Meta-blue action
         val meta = Ui.cta(ctx, "Make it Meta friendly", R.drawable.ic_sparkle) { makeFriendly() }
         metaLabel = meta.getChildAt(0) as TextView
         metaKey = meta

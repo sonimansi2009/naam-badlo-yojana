@@ -25,7 +25,7 @@ import android.widget.TextView
 
 /**
  * Design system: soft periwinkle ground, big white cards, black active pills,
- * a butter-yellow call to action with a round black arrow.
+ * a Meta-blue call to action with a round white arrow.
  * Type: Instrument Sans, with Instrument Serif Italic for the one accent word.
  */
 object Ui {
@@ -39,7 +39,7 @@ object Ui {
     const val MUTED = 0xFF6A7184.toInt()
     const val LINE = 0xFFDDE3F0.toInt()
     const val BLACK = 0xFF121316.toInt()
-    const val BUTTER = 0xFFF7D47F.toInt()      // call to action
+    const val META = 0xFF0866FF.toInt()        // Meta blue, the call to action
     const val BLUE = 0xFF1A4FD6.toInt()        // Ambedkar blue, used sparingly
     const val GOOD = 0xFF13925F.toInt()
     const val WHITE = 0xFFFFFFFF.toInt()
@@ -157,17 +157,17 @@ object Ui {
         background = rounded(SURFACE, 16, ctx, LINE)
     }
 
-    /** Butter-yellow call to action with a round black arrow. */
+    /** Meta-blue call to action with a round white arrow. */
     fun cta(ctx: Context, text: String, iconRes: Int = R.drawable.ic_arrow, onClick: () -> Unit) =
         LinearLayout(ctx).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            background = rounded(BUTTER, 28, ctx)
+            background = rounded(META, 28, ctx)
             setPadding(dp(ctx, 20), dp(ctx, 6), dp(ctx, 6), dp(ctx, 6))
-            elevation = dp(ctx, 2).toFloat()
-            val t = label(ctx, text, 15f, INK, W.SEMI).apply { maxLines = 1 }
+            elevation = dp(ctx, 3).toFloat()
+            val t = label(ctx, text, 15f, WHITE, W.SEMI).apply { maxLines = 1 }
             addView(t)
-            val circle = iconCircle(ctx, iconRes, BLACK, WHITE, 36)
+            val circle = iconCircle(ctx, iconRes, WHITE, META, 36)
             (circle.layoutParams as LinearLayout.LayoutParams).setMargins(dp(ctx, 12), 0, 0, 0)
             addView(circle)
             isClickable = true

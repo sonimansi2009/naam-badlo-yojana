@@ -147,7 +147,7 @@ class MainActivity : Activity() {
         val ents = NameStore.entities(this)
         val total = ents.sumOf { it.alternates.size }
 
-        content.addView(Ui.headline(this, "Naam *Chupao,*\nYojana here", 44f).apply {
+        content.addView(Ui.headline(this, "Naam *Chupao*\nYojana", 48f).apply {
             setPadding(0, Ui.dp(context, 26), 0, Ui.dp(context, 6))
         })
         content.addView(Ui.label(this, "नाम छुपाओ योजना · code names for ministers and parties", 14f, Ui.MUTED).apply {
@@ -193,7 +193,7 @@ class MainActivity : Activity() {
         val steps = when (way) {
             Way.FLOATING -> listOf(
                 "Keep your normal keyboard.",
-                "Type a name. A yellow button appears.",
+                "Type a name. A blue button appears.",
                 "Tap it to swap. Tap again for fresh names.",
                 "Hold it to undo. Drag it anywhere.",
             )
@@ -263,7 +263,7 @@ class MainActivity : Activity() {
         // Try it
         val tryCard = Ui.card(this, 18)
         tryCard.addView(Ui.label(this, "Try it here", 17f, Ui.INK, Ui.W.SEMI))
-        tryCard.addView(Ui.label(this, "Type a minister's name. The yellow button shows up if it is on.", 13f, Ui.MUTED).apply {
+        tryCard.addView(Ui.label(this, "Type a minister's name. The blue button shows up if it is on.", 13f, Ui.MUTED).apply {
             setPadding(0, Ui.dp(context, 2), 0, Ui.dp(context, 12))
         })
         tryCard.addView(EditText(this).apply {
