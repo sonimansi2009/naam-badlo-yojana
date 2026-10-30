@@ -96,7 +96,6 @@ struct ContentView: View {
                         .font(sans(16))
                         .frame(minHeight: 120)
                         .padding(10)
-                        .scrollContentBackgroundHidden()
                         .background(soft)
                         .clipShape(RoundedRectangle(cornerRadius: 20))
                 }
