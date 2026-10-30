@@ -100,8 +100,8 @@ class FloatingButtonService : AccessibilityService() {
         val found = matcher.findAll(text, memory)
         val real = found.count { !it.fromMemory }
         when {
-            real > 0 -> show("✦  Make it Meta friendly · $real")
-            found.isNotEmpty() -> show("↻  Fresh names · ${found.size}")
+            real > 0 -> show("Make it Meta friendly · $real")
+            found.isNotEmpty() -> show("Fresh names · ${found.size}")
             else -> hide()
         }
     }
@@ -160,7 +160,7 @@ class FloatingButtonService : AccessibilityService() {
         v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
         v.maxWidth = (resources.displayMetrics.widthPixels * 0.78).toInt()
         v.maxLines = 3
-        show("✓  ${NameStore.CONGRATS}")
+        show(NameStore.CONGRATS)
         v.scaleX = 0.9f; v.scaleY = 0.9f
         v.animate().scaleX(1f).scaleY(1f).setDuration(320).setInterpolator(OvershootInterpolator(2.2f)).start()
         handler.postDelayed({
@@ -171,14 +171,23 @@ class FloatingButtonService : AccessibilityService() {
     }
 
     private fun createPill() {
+        val dot = Ui.dp(this, 32)
+        val sparkle = getDrawable(R.drawable.ic_sparkle)!!.mutate().apply { setTint(Ui.WHITE) }
+        val badge = android.graphics.drawable.LayerDrawable(arrayOf(
+            Ui.oval(Ui.BLACK),
+            android.graphics.drawable.InsetDrawable(sparkle, Ui.dp(this, 8)),
+        )).apply { setBounds(0, 0, dot, dot) }
         val v = TextView(this).apply {
-            setTextColor(Ui.ON_BLUE)
-            typeface = Ui.SERIF_BOLD
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.5f)
+            setTextColor(Ui.INK)
+            typeface = Ui.SANS_SEMI
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
             maxLines = 1
-            setPadding(Ui.dp(context, 16), Ui.dp(context, 10), Ui.dp(context, 16), Ui.dp(context, 10))
-            background = Ui.gradient(context, 26).apply { setStroke(Ui.dp(context, 1), 0x40FFFFFF) }
-            elevation = Ui.dp(context, 8).toFloat()
+            gravity = Gravity.CENTER_VERTICAL
+            setCompoundDrawables(badge, null, null, null)
+            compoundDrawablePadding = Ui.dp(context, 10)
+            setPadding(Ui.dp(context, 6), Ui.dp(context, 6), Ui.dp(context, 18), Ui.dp(context, 6))
+            background = Ui.rounded(Ui.BUTTER, 28, context)
+            elevation = Ui.dp(context, 10).toFloat()
             contentDescription = "Make it Meta friendly"
         }
         val dm = resources.displayMetrics

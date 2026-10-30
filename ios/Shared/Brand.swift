@@ -1,15 +1,17 @@
 import UIKit
 import CoreText
 
-/// Brand: Ambedkar-blue gradients, Playfair Display for headings, Lora for text.
+/// Brand: soft periwinkle ground, white cards, black active pills, butter-yellow actions.
+/// Type: Instrument Sans, with Instrument Serif Italic for one accent word.
 enum Brand {
-    static let navy = UIColor(red: 0x08 / 255, green: 0x1A / 255, blue: 0x4A / 255, alpha: 1)
-    static let blueDeep = UIColor(red: 0x0C / 255, green: 0x23 / 255, blue: 0x66 / 255, alpha: 1)
-    static let blue = UIColor(red: 0x1A / 255, green: 0x4F / 255, blue: 0xD6 / 255, alpha: 1)
-    static let azure = UIColor(red: 0x3D / 255, green: 0x8B / 255, blue: 0xFF / 255, alpha: 1)
-    static let tint = UIColor(red: 0xEA / 255, green: 0xF0 / 255, blue: 0xFF / 255, alpha: 1)
-    static let onBlueMuted = UIColor(red: 0xC3 / 255, green: 0xD3 / 255, blue: 0xFF / 255, alpha: 1)
-    static let glass = UIColor.white.withAlphaComponent(0.2)
+    static let bgTop = UIColor(red: 0xD8 / 255, green: 0xDF / 255, blue: 0xF1 / 255, alpha: 1)
+    static let bg = UIColor(red: 0xCA / 255, green: 0xD3 / 255, blue: 0xEB / 255, alpha: 1)
+    static let soft = UIColor(red: 0xE8 / 255, green: 0xEC / 255, blue: 0xF6 / 255, alpha: 1)
+    static let line = UIColor(red: 0xDD / 255, green: 0xE3 / 255, blue: 0xF0 / 255, alpha: 1)
+    static let ink = UIColor(red: 0x10 / 255, green: 0x12 / 255, blue: 0x17 / 255, alpha: 1)
+    static let muted = UIColor(red: 0x6A / 255, green: 0x71 / 255, blue: 0x84 / 255, alpha: 1)
+    static let black = UIColor(red: 0x12 / 255, green: 0x13 / 255, blue: 0x16 / 255, alpha: 1)
+    static let butter = UIColor(red: 0xF7 / 255, green: 0xD4 / 255, blue: 0x7F / 255, alpha: 1)
 
     private static var registered = false
 
@@ -18,48 +20,42 @@ enum Brand {
         guard !registered else { return }
         registered = true
         let bundle = Bundle(for: NameDictionary.self)
-        for name in ["playfair_bold", "lora_regular", "lora_semibold"] {
+        for name in ["isans_regular", "isans_medium", "isans_semibold", "iserif_italic"] {
             if let url = bundle.url(forResource: name, withExtension: "ttf") {
                 CTFontManagerRegisterFontsForURL(url as CFURL, .process, nil)
             }
         }
     }
 
-    static func display(_ size: CGFloat) -> UIFont {
+    enum Weight { case regular, medium, semibold }
+
+    static func sans(_ size: CGFloat, _ w: Weight = .regular) -> UIFont {
         registerFonts()
-        return UIFont(name: "PlayfairDisplay-Bold", size: size) ?? serifFallback(size, bold: true)
+        let name: String
+        switch w {
+        case .regular: name = "InstrumentSans-Regular"
+        case .medium: name = "InstrumentSans-Medium"
+        case .semibold: name = "InstrumentSans-SemiBold"
+        }
+        let sys: UIFont.Weight = w == .regular ? .regular : (w == .medium ? .medium : .semibold)
+        return UIFont(name: name, size: size) ?? .systemFont(ofSize: size, weight: sys)
     }
 
-    static func text(_ size: CGFloat, bold: Bool = false) -> UIFont {
+    static func serifItalic(_ size: CGFloat) -> UIFont {
         registerFonts()
-        return UIFont(name: bold ? "Lora-SemiBold" : "Lora-Regular", size: size) ?? serifFallback(size, bold: bold)
-    }
-
-    private static func serifFallback(_ size: CGFloat, bold: Bool) -> UIFont {
-        let base = UIFont.systemFont(ofSize: size, weight: bold ? .semibold : .regular)
-        guard let d = base.fontDescriptor.withDesign(.serif) else { return base }
-        return UIFont(descriptor: d, size: size)
-    }
-
-    static func gradientLayer(_ colors: [UIColor], start: CGPoint = CGPoint(x: 0, y: 0),
-                              end: CGPoint = CGPoint(x: 1, y: 1)) -> CAGradientLayer {
-        let g = CAGradientLayer()
-        g.colors = colors.map { $0.cgColor }
-        g.startPoint = start
-        g.endPoint = end
-        return g
+        return UIFont(name: "InstrumentSerif-Italic", size: size) ?? .italicSystemFont(ofSize: size)
     }
 }
 
-/// A view whose whole background is a gradient (resizes with the view).
+/// A view whose whole background is a vertical gradient.
 final class GradientView: UIView {
     override class var layerClass: AnyClass { CAGradientLayer.self }
     init(_ colors: [UIColor]) {
         super.init(frame: .zero)
         let g = layer as! CAGradientLayer
         g.colors = colors.map { $0.cgColor }
-        g.startPoint = CGPoint(x: 0, y: 0)
-        g.endPoint = CGPoint(x: 1, y: 1)
+        g.startPoint = CGPoint(x: 0.5, y: 0)
+        g.endPoint = CGPoint(x: 0.5, y: 1)
     }
     required init?(coder: NSCoder) { fatalError() }
 }

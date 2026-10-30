@@ -5,10 +5,11 @@ import android.inputmethodservice.InputMethodService
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.util.TypedValue
 import android.view.Gravity
+import android.view.HapticFeedbackConstants
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
@@ -16,16 +17,17 @@ import android.widget.LinearLayout
 import android.widget.TextView
 
 /**
- * A slim add-on keyboard. Keep typing on your usual keyboard; switch here
- * after a name. Tap "Make it Meta friendly" to swap every name (tap again
- * for fresh code names), or pick one of 50 code names for the last word.
+ * Naam Chupao keyboard. Keep typing on your usual keyboard; switch here after
+ * a name. Tap "Make it Meta friendly" to swap every name (again for fresh
+ * code names), or pick one of 50 code names for the last word.
  */
 class NaamBadloIME : InputMethodService() {
 
     private lateinit var title: TextView
     private lateinit var banner: TextView
     private lateinit var chips: LinearLayout
-    private lateinit var metaKey: TextView
+    private lateinit var metaLabel: TextView
+    private lateinit var metaKey: View
     private val handler = Handler(Looper.getMainLooper())
     private val matcher by lazy { NameStore.matcher(this) }
     private val memory get() = NameStore.memory
@@ -35,23 +37,22 @@ class NaamBadloIME : InputMethodService() {
         val ctx: Context = this
         Ui.init(ctx)
         val root = Ui.vertical(ctx).apply {
-            background = android.graphics.drawable.GradientDrawable(
-                android.graphics.drawable.GradientDrawable.Orientation.TL_BR,
-                intArrayOf(Ui.NAVY, Ui.BLUE_DEEP, Ui.BLUE),
-            )
-            setPadding(Ui.dp(ctx, 8), Ui.dp(ctx, 10), Ui.dp(ctx, 8), Ui.dp(ctx, 10))
+            background = Ui.pageBackground()
+            setPadding(Ui.dp(ctx, 10), Ui.dp(ctx, 12), Ui.dp(ctx, 10), Ui.dp(ctx, 10))
         }
 
         // Title line, with the congratulations banner layered over it
         val top = FrameLayout(ctx)
-        title = Ui.label(ctx, "", 13.5f, Ui.ON_BLUE_MUTED).apply {
-            setPadding(Ui.dp(ctx, 6), Ui.dp(ctx, 2), Ui.dp(ctx, 6), Ui.dp(ctx, 6))
+        title = Ui.label(ctx, "", 13.5f, Ui.MUTED, Ui.W.MED).apply {
+            setPadding(Ui.dp(ctx, 8), Ui.dp(ctx, 2), Ui.dp(ctx, 8), Ui.dp(ctx, 8))
             maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
         }
-        banner = Ui.label(ctx, "✓  ${NameStore.CONGRATS}", 14f, Ui.BLUE_DEEP, bold = true).apply {
-            background = Ui.rounded(Ui.SURFACE, 12, ctx)
-            setPadding(Ui.dp(ctx, 14), Ui.dp(ctx, 10), Ui.dp(ctx, 14), Ui.dp(ctx, 10))
+        banner = Ui.label(ctx, "✓  ${NameStore.CONGRATS}", 14f, Ui.WHITE, Ui.W.MED).apply {
+            background = Ui.rounded(Ui.BLACK, 18, ctx)
+            setPadding(Ui.dp(ctx, 16), Ui.dp(ctx, 11), Ui.dp(ctx, 16), Ui.dp(ctx, 11))
             visibility = View.GONE
+            elevation = Ui.dp(ctx, 6).toFloat()
         }
         top.addView(title)
         top.addView(banner, FrameLayout.LayoutParams(
@@ -60,28 +61,30 @@ class NaamBadloIME : InputMethodService() {
 
         val (scroll, row) = Ui.chipRow(ctx)
         chips = row
-        scroll.minimumHeight = Ui.dp(ctx, 50)
+        scroll.minimumHeight = Ui.dp(ctx, 52)
         root.addView(scroll)
 
-        fun key(text: String, weight: Float, style: Ui.Style, action: () -> Unit) =
-            Ui.button(ctx, text, style, action).apply {
-                setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-                layoutParams = LinearLayout.LayoutParams(0, Ui.dp(ctx, 48), weight).apply {
-                    setMargins(Ui.dp(ctx, 3), Ui.dp(ctx, 6), Ui.dp(ctx, 3), 0)
+        // Big yellow action
+        val meta = Ui.cta(ctx, "Make it Meta friendly", R.drawable.ic_sparkle) { makeFriendly() }
+        metaLabel = meta.getChildAt(0) as TextView
+        metaKey = meta
+        root.addView(meta, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Ui.dp(ctx, 52)).apply {
+            setMargins(Ui.dp(ctx, 2), Ui.dp(ctx, 8), Ui.dp(ctx, 2), 0)
+        })
+        metaLabel.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+
+        fun key(text: String, weight: Float, action: () -> Unit) =
+            Ui.lightButton(ctx, text, action).apply {
+                setPadding(0, 0, 0, 0)
+                layoutParams = LinearLayout.LayoutParams(0, Ui.dp(ctx, 46), weight).apply {
+                    setMargins(Ui.dp(ctx, 3), Ui.dp(ctx, 8), Ui.dp(ctx, 3), 0)
                 }
             }
-
-        metaKey = key("✦  Make it Meta friendly", 1f, Ui.Style.ON_DARK_PRIMARY) { makeFriendly() }
-        root.addView(LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL; addView(metaKey) })
-
-        val bar = LinearLayout(ctx).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-        }
-        bar.addView(key("⌨  Back", 1.6f, Ui.Style.ON_DARK) { switchBack() })
-        bar.addView(key("space", 2f, Ui.Style.ON_DARK) { currentInputConnection?.commitText(" ", 1) })
-        bar.addView(key("⌫", 1f, Ui.Style.ON_DARK) { backspace() })
-        bar.addView(key("↵", 1f, Ui.Style.ON_DARK) { enter() })
+        val bar = Ui.horizontal(ctx)
+        bar.addView(key("⌨  Back", 1.6f) { switchBack() })
+        bar.addView(key("space", 2.2f) { currentInputConnection?.commitText(" ", 1) })
+        bar.addView(key("⌫", 1f) { backspace() })
+        bar.addView(key("↵", 1f) { enter() })
         root.addView(bar)
         return root
     }
@@ -108,12 +111,8 @@ class NaamBadloIME : InputMethodService() {
         val text = before()
         val all = matcher.findAll(text, memory)
         val real = all.count { !it.fromMemory }
-        metaKey.text = when {
-            real > 0 -> "✦  Make it Meta friendly"
-            all.isNotEmpty() -> "↻  Fresh names"
-            else -> "✦  Make it Meta friendly"
-        }
-        metaKey.alpha = if (all.isEmpty()) 0.55f else 1f
+        metaLabel.text = if (real == 0 && all.isNotEmpty()) "Fresh names" else "Make it Meta friendly"
+        metaKey.alpha = if (all.isEmpty()) 0.6f else 1f
 
         val m = matcher.matchAtEnd(text, memory)
         val key = m?.let { "${it.entity.id}:${it.start}:${text.length}" } ?: "none:${all.size}"
@@ -121,16 +120,14 @@ class NaamBadloIME : InputMethodService() {
         lastKey = key
         chips.removeAllViews()
         if (m == null) {
-            title.text = when {
-                all.isNotEmpty() -> "${all.size} name(s) in your text"
-                else -> "Type a name on your usual keyboard, then switch here"
-            }
+            title.text = if (all.isNotEmpty()) "${all.size} name(s) in your text"
+            else "Type a name on your usual keyboard, then switch here"
             return
         }
         val word = text.substring(m.start, m.end)
-        title.text = "“$word”  ·  ${m.entity.label}  ·  pick a code name"
+        title.text = "“$word” · ${m.entity.label} · pick a code name"
         m.entity.alternates.shuffled().forEachIndexed { i, alt ->
-            val c = Ui.chip(this, alt, dark = true) { swap(alt) }
+            val c = Ui.chip(this, alt) { swap(alt) }
             chips.addView(c)
             if (i < 6) Ui.enter(c, i * 35L, rise = 6)
         }
@@ -147,7 +144,7 @@ class NaamBadloIME : InputMethodService() {
         ic.deleteSurroundingText(text.length - m.start, 0)
         ic.commitText(alt + tail, 1)
         ic.endBatchEdit()
-        celebrate(returnAfter = true)
+        celebrate()
     }
 
     private fun makeFriendly() {
@@ -159,20 +156,20 @@ class NaamBadloIME : InputMethodService() {
         ic.deleteSurroundingText(text.length, 0)
         ic.commitText(out, 1)
         ic.endBatchEdit()
-        celebrate(returnAfter = true)
+        celebrate()
     }
 
     /** Show the congratulations banner, then go back to the user's keyboard. */
-    private fun celebrate(returnAfter: Boolean) {
+    private fun celebrate() {
         handler.removeCallbacksAndMessages(null)
         banner.visibility = View.VISIBLE
         banner.alpha = 0f
         banner.translationY = -Ui.dp(this, 8).toFloat()
-        banner.animate().alpha(1f).translationY(0f).setDuration(240).start()
-        banner.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+        banner.animate().alpha(1f).translationY(0f).setDuration(260).start()
+        banner.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
         handler.postDelayed({
             banner.animate().alpha(0f).setDuration(200).withEndAction { banner.visibility = View.GONE }.start()
-            if (returnAfter) switchBack()
+            switchBack()
         }, 2400)
     }
 

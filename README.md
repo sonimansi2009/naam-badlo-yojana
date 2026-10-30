@@ -123,7 +123,7 @@ Swapped names make posts harder for simple keyword filters to catch. They do not
 
 ## Fonts
 
-Playfair Display and Lora are bundled under the SIL Open Font License (see `fonts-license/`).
+Instrument Sans and Instrument Serif are bundled under the SIL Open Font License (see `fonts-license/`).
 
 ## Licence
 

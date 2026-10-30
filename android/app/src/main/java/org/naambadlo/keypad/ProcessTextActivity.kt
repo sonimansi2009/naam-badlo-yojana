@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -16,7 +17,7 @@ import android.widget.Toast
 
 /**
  * Works with ANY keyboard: select text, tap "Naam Chupao" in the pop-up menu,
- * pick code names (or shuffle as often as you like), then Done.
+ * pick code names (or shuffle as often as you like), then confirm.
  */
 class ProcessTextActivity : Activity() {
 
@@ -30,6 +31,7 @@ class ProcessTextActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Ui.init(this)
         original = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString() ?: ""
         readOnly = intent.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, false)
         matches = NameStore.matcher(this).findAll(original, NameStore.memory)
@@ -49,68 +51,70 @@ class ProcessTextActivity : Activity() {
     }
 
     private fun build(): View {
-        val root = Ui.vertical(this, 20).apply { setBackgroundColor(Ui.PAGE) }
-        root.addView(Ui.heading(this, NameStore.APP_NAME, 24f, Ui.BLUE_DEEP))
-        root.addView(Ui.spacer(this, 10))
+        val root = Ui.vertical(this, 20).apply { background = Ui.pageBackground() }
+        root.addView(Ui.headline(this, "Naam *Chupao*", 32f).apply {
+            setPadding(0, Ui.dp(context, 4), 0, Ui.dp(context, 14))
+        })
 
         if (matches.isEmpty()) {
             root.addView(Ui.label(this, "No names from the list in this text.", 15f, Ui.MUTED))
-            root.addView(Ui.fullWidth(Ui.button(this, "Close") { finish() }, this, topDp = 16))
+            root.addView(Ui.fullWidth(Ui.darkButton(this, "Close") { finish() }, this, topDp = 16))
             return root
         }
 
-        preview = Ui.label(this, result(), 16.5f).apply {
-            background = Ui.rounded(Ui.SURFACE, 14, this@ProcessTextActivity, Ui.LINE)
+        val card = Ui.card(this, 16)
+        preview = Ui.label(this, result(), 17f).apply {
+            background = Ui.rounded(Ui.SOFT, 20, this@ProcessTextActivity)
             val p = Ui.dp(this@ProcessTextActivity, 14)
             setPadding(p, p, p, p)
             setTextIsSelectable(true)
         }
-        root.addView(preview)
+        card.addView(preview)
 
-        banner = Ui.label(this, "✓  ${NameStore.CONGRATS}", 14f, Ui.ON_BLUE, bold = true).apply {
-            background = Ui.gradient(this@ProcessTextActivity, 14)
-            val p = Ui.dp(this@ProcessTextActivity, 12)
+        banner = Ui.label(this, "✓  ${NameStore.CONGRATS}", 14f, Ui.WHITE, Ui.W.MED).apply {
+            background = Ui.rounded(Ui.BLACK, 18, this@ProcessTextActivity)
+            val p = Ui.dp(this@ProcessTextActivity, 13)
             setPadding(p, p, p, p)
             visibility = View.GONE
         }
-        root.addView(Ui.fullWidth(banner, this, topDp = 10))
-        root.addView(Ui.spacer(this, 12))
+        card.addView(Ui.fullWidth(banner, this, topDp = 10))
+        card.addView(Ui.spacer(this, 8))
 
         matches.forEachIndexed { i, m ->
             val word = original.substring(m.start, m.end)
-            root.addView(Ui.label(this, "“$word”  ·  ${m.entity.label}", 13f, Ui.MUTED))
+            card.addView(Ui.label(this, "“$word” · ${m.entity.label}", 13f, Ui.MUTED, Ui.W.MED).apply {
+                setPadding(Ui.dp(context, 4), Ui.dp(context, 8), 0, Ui.dp(context, 2))
+            })
             val (scroll, row) = Ui.chipRow(this)
             for (alt in m.entity.alternates) {
-                val chip = Ui.chip(this, alt, selected = alt == choices[i]) {
+                row.addView(Ui.chip(this, alt, selected = alt == choices[i]) {
                     choices[i] = alt
                     refresh()
-                }
-                row.addView(chip)
+                })
             }
             rows.add(row)
-            root.addView(scroll)
-            root.addView(Ui.spacer(this, 8))
+            card.addView(scroll)
         }
+        root.addView(card)
 
-        val bar = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
-        fun weighted(v: View, w: Float, left: Int, right: Int) = v.apply {
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, w).apply {
-                setMargins(Ui.dp(context, left), Ui.dp(context, 8), Ui.dp(context, right), 0)
-            }
-        }
-        bar.addView(weighted(Ui.button(this, "↻  Shuffle", Ui.Style.OUTLINE) { shuffle() }, 1f, 0, 6))
-        bar.addView(weighted(Ui.button(this, if (readOnly) "Copy" else "Make it Meta friendly") { done() }, 1.6f, 6, 0))
+        val bar = Ui.horizontal(this).apply { gravity = Gravity.END }
+        bar.addView(Ui.lightButton(this, "Shuffle") { shuffle() }.apply {
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .apply { setMargins(0, 0, Ui.dp(context, 8), 0) }
+        })
+        bar.addView(Ui.cta(this, if (readOnly) "Copy" else "Make it Meta friendly") { done() })
         root.addView(bar)
 
-        Ui.enter(root, 0)
-        return ScrollView(this).apply { setBackgroundColor(Ui.PAGE); addView(root) }
+        Ui.enter(card, 0)
+        Ui.enter(bar, 80)
+        return ScrollView(this).apply { background = Ui.pageBackground(); addView(root) }
     }
 
     private fun shuffle() {
         for (i in choices.indices) choices[i] = Matcher.freshPick(matches[i].entity, choices[i])
-        preview.animate().alpha(0.35f).setDuration(90).withEndAction {
+        preview.animate().alpha(0.3f).setDuration(90).withEndAction {
             refresh()
-            preview.animate().alpha(1f).setDuration(180).start()
+            preview.animate().alpha(1f).setDuration(200).start()
         }.start()
     }
 
@@ -119,7 +123,7 @@ class ProcessTextActivity : Activity() {
         rows.forEachIndexed { i, row ->
             for (k in 0 until row.childCount) {
                 val c = row.getChildAt(k) as TextView
-                Ui.styleChip(c, c.text.toString() == choices[i], dark = false)
+                Ui.styleChip(c, c.text.toString() == choices[i])
             }
         }
     }
@@ -130,12 +134,12 @@ class ProcessTextActivity : Activity() {
         if (readOnly) {
             (getSystemService(CLIPBOARD_SERVICE) as ClipboardManager)
                 .setPrimaryClip(ClipData.newPlainText(NameStore.APP_NAME, text))
+            Toast.makeText(this, "Copied", Toast.LENGTH_SHORT).show()
         } else {
             setResult(RESULT_OK, Intent().putExtra(Intent.EXTRA_PROCESS_TEXT, text))
         }
         banner.visibility = View.VISIBLE
         Ui.enter(banner, 0, rise = 6)
         Handler(Looper.getMainLooper()).postDelayed({ finish() }, 1900)
-        if (readOnly) Toast.makeText(this, "Copied", Toast.LENGTH_SHORT).show()
     }
 }

@@ -13,15 +13,9 @@ final class KeyboardViewController: UIInputViewController {
     private var metaKey: UIButton!
     private var lastKey = ""
 
-    private let blueDeep = Brand.blueDeep
-    private let blueSoft = Brand.glass
-    private let mutedOnBlue = Brand.onBlueMuted
-
-    private func serif(_ size: CGFloat, bold: Bool = false) -> UIFont { Brand.text(size, bold: bold) }
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        let bg = GradientView([Brand.navy, Brand.blueDeep, Brand.blue])
+        let bg = GradientView([Brand.bgTop, Brand.bg])
         bg.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bg)
         NSLayoutConstraint.activate([
@@ -37,21 +31,21 @@ final class KeyboardViewController: UIInputViewController {
         root.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(root)
         NSLayoutConstraint.activate([
-            root.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            root.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
-            root.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
+            root.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            root.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            root.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
             root.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8),
         ])
-        let height = view.heightAnchor.constraint(equalToConstant: 210)
+        let height = view.heightAnchor.constraint(equalToConstant: 222)
         height.priority = .defaultHigh
         height.isActive = true
 
-        titleLabel.font = serif(13.5)
-        titleLabel.textColor = mutedOnBlue
+        titleLabel.font = Brand.sans(13.5, .medium)
+        titleLabel.textColor = Brand.muted
         root.addArrangedSubview(titleLabel)
 
         chipStack.axis = .horizontal
-        chipStack.spacing = 8
+        chipStack.spacing = 6
         chipStack.translatesAutoresizingMaskIntoConstraints = false
         scroll.showsHorizontalScrollIndicator = false
         scroll.addSubview(chipStack)
@@ -65,36 +59,33 @@ final class KeyboardViewController: UIInputViewController {
         ])
         root.addArrangedSubview(scroll)
 
-        metaKey = makeKey("✦  Make it Meta friendly", primary: true) { [weak self] in self?.makeFriendly() }
-        metaKey.heightAnchor.constraint(equalToConstant: 46).isActive = true
+        metaKey = makeCTA("Make it Meta friendly") { [weak self] in self?.makeFriendly() }
+        metaKey.heightAnchor.constraint(equalToConstant: 52).isActive = true
         root.addArrangedSubview(metaKey)
 
         let bar = UIStackView()
         bar.axis = .horizontal
         bar.spacing = 6
-        bar.distribution = .fill
-        let globe = makeKey("🌐", primary: false, action: nil)
+        let globe = makeKey("🌐", action: nil)
         globe.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
         globe.isHidden = !needsInputModeSwitchKey
-        let space = makeKey("space", primary: false) { [weak self] in self?.textDocumentProxy.insertText(" ") }
-        let del = makeKey("⌫", primary: false) { [weak self] in self?.textDocumentProxy.deleteBackward() }
-        let ret = makeKey("↵", primary: false) { [weak self] in self?.textDocumentProxy.insertText("\n") }
+        let space = makeKey("space") { [weak self] in self?.textDocumentProxy.insertText(" ") }
+        let del = makeKey("⌫") { [weak self] in self?.textDocumentProxy.deleteBackward() }
+        let ret = makeKey("↵") { [weak self] in self?.textDocumentProxy.insertText("\n") }
         [globe, space, del, ret].forEach { bar.addArrangedSubview($0) }
-        globe.widthAnchor.constraint(equalToConstant: 56).isActive = true
-        del.widthAnchor.constraint(equalToConstant: 56).isActive = true
-        ret.widthAnchor.constraint(equalToConstant: 56).isActive = true
+        [globe, del, ret].forEach { $0.widthAnchor.constraint(equalToConstant: 56).isActive = true }
         bar.heightAnchor.constraint(equalToConstant: 44).isActive = true
         root.addArrangedSubview(bar)
 
         // Congratulations banner, floats over the top of the keyboard
-        bannerBox.backgroundColor = .white
-        bannerBox.layer.cornerRadius = 12
+        bannerBox.backgroundColor = Brand.black
+        bannerBox.layer.cornerRadius = 18
         bannerBox.alpha = 0
         bannerBox.translatesAutoresizingMaskIntoConstraints = false
         banner.text = "✓  " + NameDictionary.congrats
         banner.numberOfLines = 3
-        banner.font = serif(14, bold: true)
-        banner.textColor = blueDeep
+        banner.font = Brand.sans(14.5, .medium)
+        banner.textColor = .white
         banner.translatesAutoresizingMaskIntoConstraints = false
         bannerBox.addSubview(banner)
         view.addSubview(bannerBox)
@@ -102,10 +93,10 @@ final class KeyboardViewController: UIInputViewController {
             bannerBox.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             bannerBox.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             bannerBox.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
-            banner.leadingAnchor.constraint(equalTo: bannerBox.leadingAnchor, constant: 14),
-            banner.trailingAnchor.constraint(equalTo: bannerBox.trailingAnchor, constant: -14),
-            banner.topAnchor.constraint(equalTo: bannerBox.topAnchor, constant: 10),
-            banner.bottomAnchor.constraint(equalTo: bannerBox.bottomAnchor, constant: -10),
+            banner.leadingAnchor.constraint(equalTo: bannerBox.leadingAnchor, constant: 16),
+            banner.trailingAnchor.constraint(equalTo: bannerBox.trailingAnchor, constant: -16),
+            banner.topAnchor.constraint(equalTo: bannerBox.topAnchor, constant: 12),
+            banner.bottomAnchor.constraint(equalTo: bannerBox.bottomAnchor, constant: -12),
         ])
     }
 
@@ -131,8 +122,8 @@ final class KeyboardViewController: UIInputViewController {
         let text = before
         let all = dict.findAll(text)
         let real = all.filter { !$0.fromMemory }.count
-        metaKey.configuration?.title = (real == 0 && !all.isEmpty) ? "↻  Fresh names" : "✦  Make it Meta friendly"
-        metaKey.alpha = all.isEmpty ? 0.55 : 1
+        setCTATitle((real == 0 && !all.isEmpty) ? "Fresh names" : "Make it Meta friendly")
+        metaKey.alpha = all.isEmpty ? 0.6 : 1
 
         let m = dict.matchAtEnd(text)
         let key = m.map { "\($0.entity.id):\(text.distance(from: text.startIndex, to: $0.range.lowerBound)):\(text.count)" } ?? "none:\(all.count)"
@@ -145,14 +136,14 @@ final class KeyboardViewController: UIInputViewController {
                 : "\(all.count) name(s) in your text"
             return
         }
-        titleLabel.text = "“\(text[m.range])”  ·  \(m.entity.label)  ·  pick a code name"
+        titleLabel.text = "“\(text[m.range])” · \(m.entity.label) · pick a code name"
         for (i, alt) in m.entity.alternates.shuffled().enumerated() {
             let chip = makeChip(alt)
             chipStack.addArrangedSubview(chip)
             if i < 6 {
                 chip.alpha = 0
                 chip.transform = CGAffineTransform(translationX: 0, y: 6)
-                UIView.animate(withDuration: 0.25, delay: Double(i) * 0.035, options: .curveEaseOut) {
+                UIView.animate(withDuration: 0.28, delay: Double(i) * 0.035, options: .curveEaseOut) {
                     chip.alpha = 1; chip.transform = .identity
                 }
             }
@@ -183,7 +174,7 @@ final class KeyboardViewController: UIInputViewController {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         view.bringSubviewToFront(bannerBox)
         bannerBox.transform = CGAffineTransform(translationX: 0, y: -8)
-        UIView.animate(withDuration: 0.25) {
+        UIView.animate(withDuration: 0.28) {
             self.bannerBox.alpha = 1; self.bannerBox.transform = .identity
         }
         UIView.animate(withDuration: 0.25, delay: 2.6, options: []) {
@@ -199,26 +190,61 @@ final class KeyboardViewController: UIInputViewController {
 
     private func makeChip(_ title: String) -> UIButton {
         var cfg = UIButton.Configuration.filled()
-        cfg.baseBackgroundColor = blueSoft
-        cfg.baseForegroundColor = .white
+        cfg.baseBackgroundColor = .white
+        cfg.baseForegroundColor = Brand.ink
         cfg.cornerStyle = .capsule
-        cfg.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 14, bottom: 6, trailing: 14)
+        cfg.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 16, bottom: 7, trailing: 16)
         var t = AttributedString(title)
-        t.font = serif(15)
+        t.font = Brand.sans(15, .medium)
         cfg.attributedTitle = t
-        return UIButton(configuration: cfg, primaryAction: UIAction { [weak self] _ in self?.swap(to: title) })
+        let b = UIButton(configuration: cfg, primaryAction: UIAction { [weak self] _ in self?.swap(to: title) })
+        b.layer.borderColor = Brand.line.cgColor
+        b.layer.borderWidth = 1
+        b.layer.cornerRadius = 19
+        return b
     }
 
-    private func makeKey(_ title: String, primary: Bool, action: (() -> Void)?) -> UIButton {
+    /// Butter-yellow pill with a round black sparkle on the right.
+    private func makeCTA(_ title: String, action: @escaping () -> Void) -> UIButton {
         var cfg = UIButton.Configuration.filled()
-        cfg.baseBackgroundColor = primary ? .white : blueSoft
-        cfg.baseForegroundColor = primary ? blueDeep : .white
-        cfg.cornerStyle = .medium
-        cfg.title = title
-        let font = serif(16, bold: primary)
-        cfg.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { a in
-            var a = a; a.font = font; return a
+        cfg.baseBackgroundColor = Brand.butter
+        cfg.baseForegroundColor = Brand.ink
+        cfg.cornerStyle = .capsule
+        cfg.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 6)
+        let dot = UIGraphicsImageRenderer(size: CGSize(width: 38, height: 38)).image { _ in
+            Brand.black.setFill()
+            UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 38, height: 38)).fill()
+            if let s = UIImage(systemName: "sparkles")?.withTintColor(.white, renderingMode: .alwaysOriginal) {
+                s.draw(in: CGRect(x: 10, y: 10, width: 18, height: 18))
+            }
         }
+        cfg.image = dot.withRenderingMode(.alwaysOriginal)
+        cfg.imagePlacement = .trailing
+        cfg.imagePadding = 12
+        let b = UIButton(configuration: cfg)
+        b.contentHorizontalAlignment = .fill
+        b.addAction(UIAction { _ in action() }, for: .touchUpInside)
+        b.configurationUpdateHandler = nil
+        var t = AttributedString(title)
+        t.font = Brand.sans(16, .semibold)
+        b.configuration?.attributedTitle = t
+        return b
+    }
+
+    private func setCTATitle(_ title: String) {
+        var t = AttributedString(title)
+        t.font = Brand.sans(16, .semibold)
+        metaKey.configuration?.attributedTitle = t
+    }
+
+    private func makeKey(_ title: String, action: (() -> Void)?) -> UIButton {
+        var cfg = UIButton.Configuration.filled()
+        cfg.baseBackgroundColor = .white
+        cfg.baseForegroundColor = Brand.ink
+        cfg.cornerStyle = .capsule
+        var t = AttributedString(title)
+        t.font = Brand.sans(16, .medium)
+        cfg.attributedTitle = t
         let b = UIButton(configuration: cfg)
         if let action = action {
             b.addAction(UIAction { _ in action() }, for: .touchUpInside)
