@@ -1,0 +1,15 @@
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+*.apk
+*.keystore
+# iOS
+ios/*.xcodeproj/
+ios/build/
+ios/DerivedData/
+xcuserdata/
+# misc
+.DS_Store
+__pycache__/

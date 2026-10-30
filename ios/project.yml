@@ -1,0 +1,62 @@
+# Generate the Xcode project with:  brew install xcodegen && xcodegen generate
+name: NaamBadlo
+options:
+  bundleIdPrefix: org.naambadlo
+  deploymentTarget:
+    iOS: "15.0"
+settings:
+  base:
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.0"
+    # Set your Apple Team ID here (or in Xcode) to install on a phone.
+    DEVELOPMENT_TEAM: ""
+targets:
+  NaamBadlo:
+    type: application
+    platform: iOS
+    sources:
+      - NaamBadlo
+      - Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.naambadlo.keypad
+        TARGETED_DEVICE_FAMILY: "1,2"
+    info:
+      path: NaamBadlo/Info.plist
+      properties:
+        CFBundleDisplayName: Naam Badlo
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+    dependencies:
+      - target: NaamBadloKeyboard
+        embed: true
+
+  NaamBadloKeyboard:
+    type: app-extension
+    platform: iOS
+    sources:
+      - NaamBadloKeyboard
+      - Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.naambadlo.keypad.keyboard
+        TARGETED_DEVICE_FAMILY: "1,2"
+    info:
+      path: NaamBadloKeyboard/Info.plist
+      properties:
+        CFBundleDisplayName: Naam Badlo
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.keyboard-service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).KeyboardViewController
+          NSExtensionAttributes:
+            IsASCIICapable: false
+            PrefersRightToLeft: false
+            PrimaryLanguage: hi-IN
+            RequestsOpenAccess: false
+
+schemes:
+  NaamBadlo:
+    build:
+      targets:
+        NaamBadlo: all

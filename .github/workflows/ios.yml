@@ -1,0 +1,29 @@
+name: iOS build check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rebuild name dictionary
+        run: python3 dictionary/build.py
+
+      - name: Generate Xcode project
+        working-directory: ios
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Build for simulator (unsigned)
+        working-directory: ios
+        run: |
+          xcodebuild -project NaamBadlo.xcodeproj -scheme NaamBadlo \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build
