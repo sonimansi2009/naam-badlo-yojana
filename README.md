@@ -1,4 +1,8 @@
-# Naam Chupao Yojana — नाम छुपाओ योजना
+<p align="center"><img src="docs/logo.png" width="260" alt="Shadowban Suraksha Yojana seal"></p>
+
+# Shadowban Suraksha Yojana — शैडोबैन सुरक्षा योजना
+
+*Parody. Not a government scheme.*
 
 An add-on for your phone keyboard. Type a minister's or party's name, and it offers **50 alternate names** for it: nicknames already used across Instagram, X, Reddit and news comments (Feku, Mota Bhai, Kadi Ninda ji, Reel Mantri), titles (Emperor, Saheb, Supreme Leader) and jumbles (Marendra Nodi, Bodi, Sh4h, B•J•P).
 
@@ -10,12 +14,12 @@ It covers **34 names, 1700 alternates in total**: Narendra Modi, BJP, Amit Shah,
 
 ## How it works with your existing keyboard
 
-You keep your normal keyboard (Gboard, SwiftKey, Samsung, Apple). Naam Chupao Yojana works on top of it.
+You keep your normal keyboard (Gboard, SwiftKey, Samsung, Apple). Shadowban Suraksha Yojana works on top of it.
 
 | | Android | iPhone |
 |---|---|---|
 | **Floating button** (easiest) | Type a name in Instagram, WhatsApp or any app → a **✦ Make it Meta friendly** button appears → tap it, every name in the box is swapped. Tap again for fresh names. Hold to undo, drag to move. Can be limited to Meta apps only. | Not allowed by Apple |
-| **Select text** | Select text → ⋮ → **Naam Chupao** → pick each swap → Done | — |
+| **Select text** | Select text → ⋮ → **Shadowban Suraksha** → pick each swap → Done | — |
 | **Add-on keyboard** | Switch to it → **Make it Meta friendly** or pick from 50 swaps → it jumps back to your keyboard | Tap 🌐 → **Make it Meta friendly** or pick a swap → 🌐 back |
 
 The floating button uses Android's accessibility service, because that is the only way an app can edit the text box of another app. It reads only the box you are typing in, skips password fields, and the app has no internet permission, so nothing leaves the phone. Google Play reviews apps that use this closely, so for now the APK is shared directly.
@@ -37,14 +41,14 @@ Google's anti-fraud pilot in India blocks sideloaded apps that ask for accessibi
 1. Open the [latest release](../../releases/latest) and download `NaamChupaoYojana-Lite.apk` (or `NaamChupaoYojana.apk` for the floating button) (or get it from the **Actions** tab → latest run → *NaamChupaoYojana-apk*).
    If you installed an older test build, **uninstall it first** (old builds used a different signing key).
 2. Open the file on your phone. Allow "install from this source" when asked.
-3. Open **Naam Chupao Yojana** and tap **Turn on floating button**. In Settings, open Installed apps → Naam Chupao button → On.
+3. Open **Shadowban Suraksha Yojana** and tap **Turn on floating button**. In Settings, open Installed apps → Naam Chupao button → On.
 
 ### iPhone
 Apple only allows apps from the App Store or from a developer account. Until it is on the App Store:
 1. On a Mac, install Xcode and run `brew install xcodegen`.
 2. `cd ios && xcodegen generate && open NaamBadlo.xcodeproj`
 3. Pick your Apple ID under *Signing & Capabilities* for both targets, plug in your phone, press ▶.
-4. On the phone: Settings → General → Keyboard → Keyboards → Add New Keyboard → **Naam Chupao Yojana**. Full Access is **not** needed.
+4. On the phone: Settings → General → Keyboard → Keyboards → Add New Keyboard → **Shadowban Suraksha Yojana**. Full Access is **not** needed.
 
 A free Apple ID works but the app expires after 7 days. A paid developer account ($99/year) gives a year, TestFlight and the App Store.
 

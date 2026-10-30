@@ -261,8 +261,8 @@ class FloatingButtonService : AccessibilityService() {
 
     private fun createPill() {
         val dot = Ui.dp(this, 32)
-        val sparkle = getDrawable(R.drawable.ic_sparkle)!!.mutate().apply { setTint(Ui.META) }
-        val badge = LayerDrawable(arrayOf(Ui.oval(Ui.WHITE), InsetDrawable(sparkle, Ui.dp(this, 8))))
+        val chameleon = getDrawable(R.drawable.ic_chameleon)!!
+        val badge = LayerDrawable(arrayOf(Ui.oval(Ui.WHITE), InsetDrawable(chameleon, Ui.dp(this, 2))))
             .apply { setBounds(0, 0, dot, dot) }
         label = TextView(this).apply {
             setTextColor(Ui.WHITE)

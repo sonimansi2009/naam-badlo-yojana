@@ -24,24 +24,25 @@ import android.widget.LinearLayout
 import android.widget.TextView
 
 /**
- * Design system: soft periwinkle ground, big white cards, black active pills,
- * a Meta-blue call to action with a round white arrow.
+ * Design system: always dark, cards on near-black, light active pills,
+ * a Meta-blue call to action with the chameleon in a white circle.
  * Type: Instrument Sans, with Instrument Serif Italic for the one accent word.
  */
 object Ui {
-    // Colour
-    const val BG = 0xFFCAD3EB.toInt()          // periwinkle page
-    const val BG_TOP = 0xFFD8DFF1.toInt()      // lighter top of the page gradient
-    const val SURFACE = 0xFFFFFFFF.toInt()
-    const val SOFT = 0xFFE8ECF6.toInt()        // inactive pills, inner panels
-    const val SOFT_DEEP = 0xFFD9E0F0.toInt()   // keyboard panel
-    const val INK = 0xFF101217.toInt()
-    const val MUTED = 0xFF6A7184.toInt()
-    const val LINE = 0xFFDDE3F0.toInt()
-    const val BLACK = 0xFF121316.toInt()
+    // Colour: always dark. Meta blue for actions, the chameleon in a white circle.
+    const val BG = 0xFF0B0C10.toInt()          // page
+    const val BG_TOP = 0xFF12141B.toInt()      // slightly lighter top of the page
+    const val SURFACE = 0xFF171A22.toInt()     // cards
+    const val SOFT = 0xFF20242E.toInt()        // inactive pills, inner panels, text boxes
+    const val SOFT_DEEP = 0xFF1B1F28.toInt()
+    const val INK = 0xFFF2F4F8.toInt()         // main text
+    const val MUTED = 0xFF9AA1B2.toInt()
+    const val LINE = 0xFF2B303C.toInt()
+    const val BLACK = 0xFFF2F4F8.toInt()       // "active" fill: light on the dark page
+    const val ON_ACTIVE = 0xFF0B0C10.toInt()   // text on an active pill
     const val META = 0xFF0866FF.toInt()        // Meta blue, the call to action
-    const val BLUE = 0xFF1A4FD6.toInt()        // Ambedkar blue, used sparingly
-    const val GOOD = 0xFF13925F.toInt()
+    const val BLUE = META
+    const val GOOD = 0xFF35C27F.toInt()
     const val WHITE = 0xFFFFFFFF.toInt()
 
     // Type
@@ -112,7 +113,7 @@ object Ui {
 
     fun icon(ctx: Context, res: Int, tint: Int, sizeDp: Int = 22) = ImageView(ctx).apply {
         setImageResource(res)
-        imageTintList = ColorStateList.valueOf(tint)
+        if (res != R.drawable.ic_chameleon) imageTintList = ColorStateList.valueOf(tint)
         layoutParams = LinearLayout.LayoutParams(dp(ctx, sizeDp), dp(ctx, sizeDp))
     }
 
@@ -121,7 +122,7 @@ object Ui {
         FrameLayout(ctx).apply {
             background = oval(bg)
             layoutParams = LinearLayout.LayoutParams(dp(ctx, sizeDp), dp(ctx, sizeDp))
-            val i = icon(ctx, res, tint, (sizeDp * 0.45f).toInt())
+            val i = icon(ctx, res, tint, (sizeDp * if (res == R.drawable.ic_chameleon) 0.86f else 0.45f).toInt())
             addView(i, FrameLayout.LayoutParams(i.layoutParams.width, i.layoutParams.height, Gravity.CENTER))
             if (onClick != null) { isClickable = true; setOnClickListener { onClick() }; pressable(this) }
         }
@@ -144,7 +145,7 @@ object Ui {
 
     fun stylePill(v: TextView, active: Boolean) {
         v.background = rounded(if (active) BLACK else SOFT, 22, v.context)
-        v.setTextColor(if (active) WHITE else INK)
+        v.setTextColor(if (active) ON_ACTIVE else INK)
     }
 
     /** Small outlined fact tag, like "3 Beds". */
@@ -158,7 +159,7 @@ object Ui {
     }
 
     /** Meta-blue call to action with a round white arrow. */
-    fun cta(ctx: Context, text: String, iconRes: Int = R.drawable.ic_arrow, onClick: () -> Unit) =
+    fun cta(ctx: Context, text: String, iconRes: Int = R.drawable.ic_chameleon, onClick: () -> Unit) =
         LinearLayout(ctx).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -167,7 +168,7 @@ object Ui {
             elevation = dp(ctx, 3).toFloat()
             val t = label(ctx, text, 15f, WHITE, W.SEMI).apply { maxLines = 1 }
             addView(t)
-            val circle = iconCircle(ctx, iconRes, WHITE, META, 36)
+            val circle = iconCircle(ctx, iconRes, WHITE, META, 40)
             (circle.layoutParams as LinearLayout.LayoutParams).setMargins(dp(ctx, 12), 0, 0, 0)
             addView(circle)
             isClickable = true
@@ -176,7 +177,7 @@ object Ui {
         }
 
     /** Black pill button. */
-    fun darkButton(ctx: Context, text: String, onClick: () -> Unit) = label(ctx, text, 15f, WHITE, W.SEMI).apply {
+    fun darkButton(ctx: Context, text: String, onClick: () -> Unit) = label(ctx, text, 15f, ON_ACTIVE, W.SEMI).apply {
         gravity = Gravity.CENTER
         setPadding(dp(ctx, 20), dp(ctx, 13), dp(ctx, 20), dp(ctx, 13))
         background = rounded(BLACK, 26, ctx)
@@ -213,7 +214,7 @@ object Ui {
 
     fun styleChip(v: TextView, selected: Boolean) {
         v.background = rounded(if (selected) BLACK else SURFACE, 22, v.context, if (selected) null else LINE)
-        v.setTextColor(if (selected) WHITE else INK)
+        v.setTextColor(if (selected) ON_ACTIVE else INK)
     }
 
     /** Big white card. */

@@ -18,7 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 
 /**
- * Naam Chupao keyboard. Keep typing on your usual keyboard; switch here after
+ * Shadowban Suraksha keyboard. Keep typing on your usual keyboard; switch here after
  * a name. "Make it Meta friendly" swaps every name (again for fresh code names),
  * or pick a code name for the last word. Long-press a code name to star it.
  * Bare first names / common surnames ("Shah") ask first.
@@ -55,13 +55,13 @@ class NaamBadloIME : InputMethodService() {
             ellipsize = TextUtils.TruncateAt.END
         }
         banner = Ui.horizontal(ctx).apply {
-            background = Ui.rounded(Ui.BLACK, 18, ctx)
+            background = Ui.rounded(Ui.META, 18, ctx)
             setPadding(Ui.dp(ctx, 16), Ui.dp(ctx, 8), Ui.dp(ctx, 8), Ui.dp(ctx, 8))
             visibility = View.GONE
             elevation = Ui.dp(ctx, 6).toFloat()
             addView(Ui.label(ctx, "✓  ${NameStore.CONGRATS}", 14f, Ui.WHITE, Ui.W.MED),
                 LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-            addView(Ui.label(ctx, "Undo", 14f, Ui.BLACK, Ui.W.SEMI).apply {
+            addView(Ui.label(ctx, "Undo", 14f, Ui.META, Ui.W.SEMI).apply {
                 background = Ui.rounded(Ui.WHITE, 16, ctx)
                 setPadding(Ui.dp(ctx, 14), Ui.dp(ctx, 7), Ui.dp(ctx, 14), Ui.dp(ctx, 7))
                 setOnClickListener { undo() }
@@ -77,7 +77,7 @@ class NaamBadloIME : InputMethodService() {
         scroll.minimumHeight = Ui.dp(ctx, 52)
         root.addView(scroll)
 
-        val meta = Ui.cta(ctx, "Make it Meta friendly", R.drawable.ic_sparkle) { makeFriendly() }
+        val meta = Ui.cta(ctx, "Make it Meta friendly") { makeFriendly() }
         metaLabel = meta.getChildAt(0) as TextView
         metaKey = meta
         root.addView(meta, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Ui.dp(ctx, 52)).apply {

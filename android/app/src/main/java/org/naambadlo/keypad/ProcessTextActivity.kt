@@ -17,7 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 
 /**
- * Works with ANY keyboard: select text, tap "Naam Chupao" in the pop-up menu,
+ * Works with ANY keyboard: select text, tap "Shadowban Suraksha" in the pop-up menu,
  * pick code names (or shuffle as often as you like), then confirm.
  * Bare first names / common surnames start as "keep as is" until you pick a code name.
  * Long-press a code name to star it.
@@ -62,7 +62,7 @@ class ProcessTextActivity : Activity() {
 
     private fun build(): View {
         val root = Ui.vertical(this, 20).apply { background = Ui.pageBackground() }
-        root.addView(Ui.headline(this, "Naam *Chupao*", 32f).apply {
+        root.addView(Ui.headline(this, "Shadowban *Suraksha*", 30f).apply {
             setPadding(0, Ui.dp(context, 4), 0, Ui.dp(context, 14))
         })
 
@@ -82,12 +82,12 @@ class ProcessTextActivity : Activity() {
         card.addView(preview)
 
         banner = Ui.horizontal(this).apply {
-            background = Ui.rounded(Ui.BLACK, 18, this@ProcessTextActivity)
+            background = Ui.rounded(Ui.META, 18, this@ProcessTextActivity)
             setPadding(Ui.dp(context, 14), Ui.dp(context, 8), Ui.dp(context, 8), Ui.dp(context, 8))
             visibility = View.GONE
             addView(Ui.label(context, "✓  ${NameStore.CONGRATS}", 14f, Ui.WHITE, Ui.W.MED),
                 LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-            addView(Ui.label(context, "Undo", 14f, Ui.BLACK, Ui.W.SEMI).apply {
+            addView(Ui.label(context, "Undo", 14f, Ui.META, Ui.W.SEMI).apply {
                 background = Ui.rounded(Ui.WHITE, 16, context)
                 setPadding(Ui.dp(context, 14), Ui.dp(context, 7), Ui.dp(context, 14), Ui.dp(context, 7))
                 setOnClickListener { undo() }

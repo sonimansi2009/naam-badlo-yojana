@@ -11,7 +11,7 @@ object NameStore {
     val memory = AltMemory()
 
     const val CONGRATS = "Badhai ho! Aapka post ab Meta-friendly hai."
-    const val APP_NAME = "Naam Chupao Yojana"
+    const val APP_NAME = "Shadowban Suraksha Yojana"
 
     @Volatile private var appCtx: Context? = null
 

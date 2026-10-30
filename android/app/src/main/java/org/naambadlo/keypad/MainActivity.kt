@@ -47,8 +47,6 @@ class MainActivity : Activity() {
         NameStore.matcher(this)
         window.statusBarColor = Ui.BG_TOP
         window.navigationBarColor = Ui.BG
-        @Suppress("DEPRECATION")
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         val root = FrameLayout(this).apply { background = Ui.pageBackground() }
         val column = Ui.vertical(this).apply {
@@ -180,8 +178,16 @@ class MainActivity : Activity() {
     // ---- Home ----
 
     private fun home() {
-        content.addView(headline("Naam *Chupao*\nYojana", 48f))
-        content.addView(sub("नाम छुपाओ योजना · code names for ministers and parties"))
+        content.addView(ImageView(this).apply {
+            setImageResource(R.drawable.seal_white)
+            contentDescription = "Shadowban Suraksha Yojana seal: a chameleon on a lotus"
+            adjustViewBounds = true
+            layoutParams = LinearLayout.LayoutParams(Ui.dp(context, 210), Ui.dp(context, 210)).apply {
+                gravity = Gravity.CENTER_HORIZONTAL
+                setMargins(0, Ui.dp(context, 18), 0, Ui.dp(context, 8))
+            }
+        })
+        content.addView(sub("Code names for ministers and parties").apply { gravity = Gravity.CENTER })
 
         val (tabScroll, tabs) = Ui.chipRow(this)
         val labels = buildList {
@@ -237,14 +243,14 @@ class MainActivity : Activity() {
                 "Changed your mind? Tap Undo right after.",
             )
             Way.KEYBOARD -> listOf(
-                "Turn on Naam Chupao keyboard.",
+                "Turn on the Shadowban Suraksha keyboard.",
                 "After typing a name, switch keyboards.",
                 "Tap “Make it Meta friendly” or pick a code name.",
                 "Hold a code name to star it as a favourite.",
             )
             Way.SELECT -> listOf(
                 "Select your text in any app.",
-                "Tap ⋮ in the pop-up menu, then Naam Chupao.",
+                "Tap ⋮ in the pop-up menu, then Shadowban Suraksha.",
                 "Pick code names or shuffle, then confirm.",
             )
         }
@@ -355,7 +361,7 @@ class MainActivity : Activity() {
         tryCard.addView(Ui.label(this, "Try it here", 17f, Ui.INK, Ui.W.SEMI))
         tryCard.addView(Ui.label(this,
             if (hasFloating) "Type a minister's name. The blue button shows up if it is on."
-            else "Type a minister's name, then switch to the Naam Chupao keyboard.", 13f, Ui.MUTED).apply {
+            else "Type a minister's name, then switch to the Shadowban Suraksha keyboard.", 13f, Ui.MUTED).apply {
             setPadding(0, Ui.dp(context, 2), 0, Ui.dp(context, 12))
         })
         tryCard.addView(EditText(this).apply {
