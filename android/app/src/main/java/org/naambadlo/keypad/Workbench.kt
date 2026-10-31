@@ -362,7 +362,7 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
             val isKept = h.start in kept
             sb.append(if (isKept) h.code else h.real)
             if (!isKept) {
-                sb.setSpan(BackgroundColorSpan(0x337B61FF), s, sb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                sb.setSpan(BackgroundColorSpan(0x4DFF9933), s, sb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 sb.setSpan(StyleSpan(Typeface.BOLD), s, sb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             sb.setSpan(object : ClickableSpan() {

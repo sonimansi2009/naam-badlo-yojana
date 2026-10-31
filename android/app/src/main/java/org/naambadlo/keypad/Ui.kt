@@ -71,10 +71,11 @@ object Ui {
         if (strokeColor != null) setStroke(dp(ctx, 1), strokeColor)
     }
 
-    /** Pearl gradient: white into soft lavender into blue-violet. Main button and notifications. */
-    val GRADIENT = intArrayOf(0xFFFFFFFF.toInt(), 0xFFE7E1FF.toInt(), 0xFFA89BFF.toInt())
-    const val GRAD_INK = 0xFF1D1640.toInt()     // text on the gradient
-    const val GRAD_SUB = 0xFF4A4270.toInt()     // secondary text on the gradient
+    /** White into saffron. Main button and notifications. */
+    val GRADIENT = intArrayOf(0xFFFFFFFF.toInt(), 0xFFFFE9D1.toInt(), 0xFFFFA347.toInt())
+    const val GRAD_INK = 0xFF2B1A0B.toInt()     // text on the gradient
+    const val GRAD_SUB = 0xFF6B4A2B.toInt()     // secondary text on the gradient
+    const val SAFFRON = 0xFFFF9933.toInt()
 
     fun gradient(radiusDp: Int, ctx: Context) =
         GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, GRADIENT).apply { cornerRadius = dp(ctx, radiusDp).toFloat() }
@@ -174,7 +175,7 @@ object Ui {
             background = gradient(28, ctx)
             setPadding(dp(ctx, 20), dp(ctx, 6), dp(ctx, 6), dp(ctx, 6))
             elevation = dp(ctx, 6).toFloat()
-            if (android.os.Build.VERSION.SDK_INT >= 28) outlineSpotShadowColor = 0xFF7B61FF.toInt()
+            if (android.os.Build.VERSION.SDK_INT >= 28) outlineSpotShadowColor = SAFFRON
             val t = label(ctx, text, 15f, GRAD_INK, W.SEMI).apply { maxLines = 1 }
             addView(t)
             val circle = iconCircle(ctx, iconRes, WHITE, META, 40)

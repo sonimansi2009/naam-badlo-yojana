@@ -259,13 +259,31 @@ class MainActivity : Activity() {
             Prefs.Tier.MIX -> "Any of the 50 per name. More variety, a little harder to read."
             Prefs.Tier.STEALTH -> "Sound-alikes like Bodi, Gadani, Badda. Harder for filters, a little harder for readers."
         }
-        val made = ArrayList<TextView>()
+        val icons = mapOf(Prefs.Tier.RECOGNISABLE to R.drawable.ic_eye, Prefs.Tier.MIX to R.drawable.ic_shuffle, Prefs.Tier.STEALTH to R.drawable.ic_eye_off)
+        val made = ArrayList<LinearLayout>()
+        fun paint(v: LinearLayout, on: Boolean) {
+            v.background = Ui.rounded(if (on) 0xFF353A46.toInt() else Ui.SOFT, 22, this, if (on) 0xFF5A6070.toInt() else null)
+            val c = if (on) Ui.INK else Ui.MUTED
+            (v.getChildAt(0) as ImageView).imageTintList = ColorStateList.valueOf(c)
+            (v.getChildAt(1) as TextView).setTextColor(c)
+        }
         for ((t, label) in opts) {
-            val p = Ui.pill(this, label, Prefs.tier(this) == t) {
-                Prefs.setTier(this, t)
-                made.forEachIndexed { i, v -> Ui.stylePill(v, opts[i].first == t) }
-                desc.text = describe(t)
+            val p = Ui.horizontal(this).apply {
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(Ui.dp(context, 12), Ui.dp(context, 8), Ui.dp(context, 14), Ui.dp(context, 8))
+                addView(Ui.icon(context, icons.getValue(t), Ui.MUTED, 17))
+                addView(Ui.label(context, label, 14f, Ui.MUTED, Ui.W.MED).apply { setPadding(Ui.dp(context, 6), 0, 0, 0) })
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .apply { setMargins(0, 0, Ui.dp(context, 8), 0) }
+                isClickable = true
+                setOnClickListener {
+                    Prefs.setTier(this@MainActivity, t)
+                    made.forEachIndexed { i, v -> paint(v, opts[i].first == t) }
+                    desc.text = describe(t)
+                }
+                Ui.pressable(this)
             }
+            paint(p, Prefs.tier(this) == t)
             made.add(p); pills.addView(p)
         }
         desc.text = describe(Prefs.tier(this))
