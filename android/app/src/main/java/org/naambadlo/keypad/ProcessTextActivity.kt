@@ -99,7 +99,7 @@ class ProcessTextActivity : Activity() {
         card.addView(preview)
 
         banner = Ui.horizontal(this).apply {
-            background = Ui.rounded(Ui.META, 18, this@ProcessTextActivity)
+            background = Ui.gradient(18, this@ProcessTextActivity)
             setPadding(Ui.dp(context, 14), Ui.dp(context, 8), Ui.dp(context, 8), Ui.dp(context, 8))
             visibility = View.GONE
             addView(Ui.label(context, "✓  ${NameStore.CONGRATS}", 14f, Ui.WHITE, Ui.W.MED),

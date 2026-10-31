@@ -185,7 +185,13 @@ class MainActivity : Activity() {
                 setMargins(0, Ui.dp(context, 18), 0, Ui.dp(context, 8))
             }
         })
-        content.addView(sub("Code names for ministers and parties").apply { gravity = Gravity.CENTER })
+        content.addView(Ui.label(this, "A government-approved solution\nto government disapproval.", 19f, Ui.INK).apply {
+            typeface = Ui.SERIF_ITALIC
+            gravity = Gravity.CENTER
+            alpha = 0.88f
+            setLineSpacing(0f, 1.1f)
+            setPadding(0, Ui.dp(context, 4), 0, Ui.dp(context, 22))
+        })
 
         val (tabScroll, tabs) = Ui.chipRow(this)
         val labels = buildList {
@@ -207,8 +213,6 @@ class MainActivity : Activity() {
     }
 
     private fun wayCard(): View {
-        val ents = NameStore.entities(this)
-        val total = ents.sumOf { it.alternates.size }
         val card = Ui.card(this, 14)
         val head = Ui.horizontal(this).apply { setPadding(Ui.dp(context, 4), Ui.dp(context, 4), 0, Ui.dp(context, 12)) }
         val (iconRes, title, sub) = when (way) {
@@ -226,7 +230,7 @@ class MainActivity : Activity() {
 
         val tags = FlowLayout(this).apply { setPadding(Ui.dp(context, 2), 0, 0, Ui.dp(context, 12)) }
         val tagTexts = when (way) {
-            Way.FLOATING -> listOf("${ents.size} names", "$total code names", "One tap", "Undo", "Offline")
+            Way.FLOATING -> listOf("One tap", "Undo", "Offline")
             Way.KEYBOARD -> listOf("Hindi + English", "Star favourites", "Auto return", "Offline")
             Way.SELECT -> listOf("Any keyboard", "Shuffle anytime", "Offline")
         }
@@ -416,7 +420,7 @@ class MainActivity : Activity() {
 
     private fun names() {
         val ents = NameStore.entities(this)
-        content.addView(headline("${ents.size} *names,*\n${ents.sumOf { it.alternates.size }} code names", 40f))
+        content.addView(headline("Names *&*\ncode names", 40f))
         content.addView(sub("Tap a code name to star it. Starred ones are used first."))
         for (e in ents) {
             val card = Ui.card(this, 18)

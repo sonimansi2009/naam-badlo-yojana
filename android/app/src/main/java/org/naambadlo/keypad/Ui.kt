@@ -71,6 +71,11 @@ object Ui {
         if (strokeColor != null) setStroke(dp(ctx, 1), strokeColor)
     }
 
+    /** Chameleon gradient: Meta blue shifting through violet into teal. Used on the main button and notifications. */
+    val GRADIENT = intArrayOf(0xFF0866FF.toInt(), 0xFF6A4CFF.toInt(), 0xFF0E9F86.toInt())
+    fun gradient(radiusDp: Int, ctx: Context) =
+        GradientDrawable(GradientDrawable.Orientation.TL_BR, GRADIENT).apply { cornerRadius = dp(ctx, radiusDp).toFloat() }
+
     fun oval(color: Int) = GradientDrawable().apply { shape = GradientDrawable.OVAL; setColor(color) }
 
     fun pageBackground() = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(BG_TOP, BG))
@@ -163,7 +168,7 @@ object Ui {
         LinearLayout(ctx).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            background = rounded(META, 28, ctx)
+            background = gradient(28, ctx)
             setPadding(dp(ctx, 20), dp(ctx, 6), dp(ctx, 6), dp(ctx, 6))
             elevation = dp(ctx, 3).toFloat()
             val t = label(ctx, text, 15f, WHITE, W.SEMI).apply { maxLines = 1 }

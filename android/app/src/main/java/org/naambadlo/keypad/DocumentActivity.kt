@@ -281,7 +281,7 @@ class DocumentActivity : Activity() {
         if (rep.swapped > 0) Feedback.swapped(this)
 
         // Congratulations + one-tap Copy
-        val done = Ui.card(this, 16).apply { background = Ui.rounded(Ui.META, 26, context) }
+        val done = Ui.card(this, 16).apply { background = Ui.gradient(26, context) }
         done.addView(Ui.label(this, "✓  ${NameStore.CONGRATS}", 16f, Ui.WHITE, Ui.W.SEMI))
         done.addView(Ui.label(this, "${rep.swapped} name(s) swapped across ${rep.people.size} people.", 13.5f, 0xFFDCE7FF.toInt()).apply {
             setPadding(0, Ui.dp(context, 4), 0, Ui.dp(context, 12))

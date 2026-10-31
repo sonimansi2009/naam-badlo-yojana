@@ -6,7 +6,9 @@
 
 An add-on for your phone keyboard. Type a minister's or party's name, and it offers **50 alternate names** for it: nicknames already used across Instagram, X, Reddit and news comments (Feku, Mota Bhai, Kadi Ninda ji, Reel Mantri), titles (Emperor, Saheb, Supreme Leader) and jumbles (Marendra Nodi, Bodi, Sh4h, B•J•P).
 
-It covers **34 names, 1700 alternates in total**: Narendra Modi, BJP, Amit Shah, Gyanesh Kumar (CEC), the Election Commission, and every Union Cabinet minister. Hindi (Devanagari) and English both work.
+*A government-approved solution to government disapproval.*
+
+It covers **37 names, 1850 code names in total**: Narendra Modi, BJP, Amit Shah, Gyanesh Kumar (CEC), the Election Commission, every Union Cabinet minister, Gautam Adani, "vote chori", and the Cockroach Janta Party. Hindi (Devanagari) and English both work.
 
 - Suggests swaps only for the real names, never for words that are already swapped.
 - No accounts, no server, no admins, **no internet permission**. The list lives inside the app.

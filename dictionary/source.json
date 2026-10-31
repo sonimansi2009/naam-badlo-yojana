@@ -1,858 +1,1014 @@
 {
-  "version": 1,
-  "updated": "2026-10-30",
-  "note": "Edit this file, then run: python3 dictionary/build.py. Triggers are the real names the keyboard watches for. Curated are hand-picked alternates; the build script tops each entry up to exactly 50 with generated jumbles.",
-  "entities": [
-    {
-      "id": "modi",
-      "label": "Narendra Modi",
-      "first": "Narendra",
-      "last": "Modi",
-      "triggers": [
-        "modi",
-        "narendra modi",
-        "modiji",
-        "modi ji",
-        "pm modi",
-        "narendra damodardas modi",
-        "मोदी",
-        "नरेंद्र मोदी",
-        "मोदीजी",
-        "मोदी जी"
-      ],
-      "curated": [
-        "Odiji",
-        "Emperor",
-        "King",
-        "Chota Bandar",
-        "Marendra Nodi",
-        "Bodi",
-        "Naru",
-        "NaMo",
-        "Na-Mo",
-        "Supreme Leader",
-        "Saheb",
-        "Bade Saheb",
-        "Raja ji",
-        "Maharaja",
-        "Pradhan Sevak",
-        "Chowkidar",
-        "Fakir",
-        "Jhola wale Fakir",
-        "56 inch",
-        "Chhappan Inch",
-        "Feku",
-        "Vishwaguru",
-        "Jumla King",
-        "Mitron wale",
-        "Mann ki Baat wale",
-        "Chaiwala",
-        "Camera ji",
-        "Selfie King",
-        "Non-biological ji",
-        "Avtaar ji",
-        "Daadhi wale",
-        "Hukum",
-        "मोडी",
-        "ओदीजी",
-        "साहेब",
-        "फेकू",
-        "नमो",
-        "चौकीदार",
-        "विश्वगुरु",
-        "फ़कीर"
-      ]
-    },
-    {
-      "id": "amit-shah",
-      "label": "Amit Shah",
-      "first": "Amit",
-      "last": "Shah",
-      "with_first": true,
-      "triggers": [
-        "amit shah",
-        "shah",
-        "amit bhai shah",
-        "amitshah",
-        "hm amit shah",
-        "अमित शाह",
-        "शाह"
-      ],
-      "curated": [
-        "Mota Bhai",
-        "Tadipaar",
-        "Chanakya",
-        "Chhote Saheb",
-        "Number Two",
-        "No. 2",
-        "HM",
-        "Gruh Mantri ji",
-        "Shahenshah",
-        "Ameet",
-        "Mota Seth",
-        "Sahakar Babu",
-        "Home Babu",
-        "Gujarat wale Bhai",
-        "Bade Bhai",
-        "Desk wale Chanakya",
-        "मोटा भाई",
-        "तड़ीपार",
-        "चाणक्य",
-        "छोटे साहेब"
-      ],
-      "ask": [
-        "shah",
-        "शाह"
-      ]
-    },
-    {
-      "id": "bjp",
-      "label": "BJP",
-      "acronym": "BJP",
-      "triggers": [
-        "bjp",
-        "b.j.p",
-        "b.j.p.",
-        "bharatiya janata party",
-        "bhartiya janta party",
-        "bhajpa",
-        "भाजपा",
-        "बीजेपी",
-        "भारतीय जनता पार्टी"
-      ],
-      "curated": [
-        "Kamal Dal",
-        "Lotus Party",
-        "Kamal wale",
-        "Bhagwa Party",
-        "Saffron Party",
-        "Washing Machine Party",
-        "Jumla Party",
-        "Bhartiya Jumla Party",
-        "Sabse Badi Party",
-        "IT Cell wale",
-        "Bhakt Mandal",
-        "Kamal Club",
-        "Lotus Club",
-        "Phool wale",
-        "Kesariya Party",
-        "Party With a Difference",
-        "Double Engine wale",
-        "Double Engine Party",
-        "Bee Jay Pee",
-        "BeeJayPee",
-        "Bijepi",
-        "Bhaa Jaa Paa",
-        "B Jay P",
-        "Bee-J-P",
-        "Kamal Brigade",
-        "Kesariya Dal",
-        "Bhagwa Brigade",
-        "Sattadhari Dal",
-        "Sarkar wali Party",
-        "Phool Party",
-        "Lotus wale",
-        "Kamal Company",
-        "Kamal Parivar",
-        "Bhagwa Club",
-        "कमल दल",
-        "फूल वाले",
-        "भगवा दल",
-        "भगवा पार्टी",
-        "जुमला पार्टी",
-        "वॉशिंग मशीन"
-      ]
-    },
-    {
-      "id": "gyanesh-kumar",
-      "label": "Gyanesh Kumar (CEC)",
-      "first": "Gyanesh",
-      "last": "Kumar",
-      "key": "Gyanesh",
-      "triggers": [
-        "gyanesh kumar",
-        "gyanesh",
-        "gyaanesh",
-        "gyaanesh kumar",
-        "cec gyanesh kumar",
-        "ज्ञानेश कुमार",
-        "ज्ञानेश"
-      ],
-      "curated": [
-        "Gyani Baba",
-        "Gyan Babu",
-        "Chunav Babu",
-        "CEC Saheb",
-        "Mukhya Ayukt ji",
-        "EVM Babu",
-        "Syahi Babu",
-        "Ink Saheb",
-        "Gyanu",
-        "Gyani ji",
-        "Ungli Babu",
-        "Voter List Babu",
-        "Form Babu",
-        "Booth Saheb",
-        "Saheb ka Babu",
-        "Kumar Saheb",
-        "ज्ञानी बाबा",
-        "चुनाव बाबू",
-        "स्याही बाबू"
-      ],
-      "ask": [
-        "gyanesh",
-        "gyaanesh",
-        "ज्ञानेश"
-      ]
-    },
-    {
-      "id": "eci",
-      "label": "Election Commission of India",
-      "acronym": "ECI",
-      "triggers": [
-        "eci",
-        "e.c.i",
-        "e.c.i.",
-        "eic",
-        "election commission",
-        "election commission of india",
-        "chunav ayog",
-        "nirvachan ayog",
-        "चुनाव आयोग",
-        "निर्वाचन आयोग",
-        "भारत निर्वाचन आयोग"
-      ],
-      "curated": [
-        "Ayog ji",
-        "Commission ji",
-        "Syahi Dept",
-        "Neeli Syahi wale",
-        "Ungli Daftar",
-        "Ink Office",
-        "Vote Ghar",
-        "Matdaan Daftar",
-        "Poll Babu Log",
-        "Chunavi Daftar",
-        "Godi Ayog",
-        "Saheb ka Ayog",
-        "Teen Babu",
-        "Nirvachan Daftar",
-        "Vote Office",
-        "Ballot Babu",
-        "EVM Ghar",
-        "Booth Babu Log",
-        "Form-6 wale",
-        "SIR wale",
-        "Voter List Babu Log",
-        "Matdata Suchi Office",
-        "Syahi Ghar",
-        "Ungli Babu Log",
-        "Ee See Eye",
-        "E-C-Eye",
-        "Ayog Babu",
-        "Syahi Board",
-        "Ungli Office",
-        "Chunavi Babu Log",
-        "Vote Daftar",
-        "Teen Ayukt",
-        "Booth Office",
-        "Neeli Ungli Dept",
-        "Matdaan Ghar",
-        "Ayog Saheb",
-        "स्याही विभाग",
-        "चुनावी दफ्तर",
-        "उंगली दफ्तर",
-        "वोट घर"
-      ]
-    },
-    {
-      "id": "rajnath",
-      "label": "Rajnath Singh",
-      "first": "Rajnath",
-      "last": "Singh",
-      "key": "Rajnath",
-      "triggers": [
-        "rajnath singh",
-        "rajnath",
-        "raj nath singh",
-        "राजनाथ सिंह",
-        "राजनाथ"
-      ],
-      "curated": [
-        "Raksha Babu",
-        "Defence Dadu",
-        "Kadi Ninda ji",
-        "Ninda Mantri",
-        "RS ji",
-        "Raj Babu",
-        "Raksha Mantri ji"
-      ],
-      "ask": [
-        "rajnath",
-        "राजनाथ"
-      ]
-    },
-    {
-      "id": "gadkari",
-      "label": "Nitin Gadkari",
-      "first": "Nitin",
-      "last": "Gadkari",
-      "triggers": [
-        "nitin gadkari",
-        "gadkari",
-        "नितिन गडकरी",
-        "गडकरी"
-      ],
-      "curated": [
-        "Highway Man",
-        "Road wale Baba",
-        "Flyover Kaka",
-        "Toll Babu",
-        "Nagpur wale Bhau",
-        "Expressway ji",
-        "Gadi Babu"
-      ]
-    },
-    {
-      "id": "nadda",
-      "label": "J. P. Nadda",
-      "first": "Jagat",
-      "last": "Nadda",
-      "triggers": [
-        "jp nadda",
-        "j p nadda",
-        "j.p. nadda",
-        "jagat prakash nadda",
-        "nadda",
-        "जेपी नड्डा",
-        "नड्डा"
-      ],
-      "curated": [
-        "Health Babu",
-        "Dawai Mantri",
-        "Khad Babu",
-        "J.P. ji",
-        "Hospital Babu"
-      ]
-    },
-    {
-      "id": "shivraj",
-      "label": "Shivraj Singh Chouhan",
-      "first": "Shivraj",
-      "last": "Chouhan",
-      "triggers": [
-        "shivraj singh chouhan",
-        "shivraj chouhan",
-        "shivraj",
-        "शिवराज सिंह चौहान",
-        "शिवराज"
-      ],
-      "curated": [
-        "Mama ji",
-        "Mamaji",
-        "Kisan Mama",
-        "Bhanje wale Mama",
-        "Khet Babu",
-        "Gaon Babu",
-        "MP wale Mama",
-        "मामा जी"
-      ],
-      "ask": [
-        "shivraj",
-        "शिवराज"
-      ]
-    },
-    {
-      "id": "sitharaman",
-      "label": "Nirmala Sitharaman",
-      "first": "Nirmala",
-      "last": "Sitharaman",
-      "triggers": [
-        "nirmala sitharaman",
-        "sitharaman",
-        "nirmala sitaraman",
-        "निर्मला सीतारमण",
-        "सीतारमण"
-      ],
-      "curated": [
-        "FM",
-        "FM Didi",
-        "Tax Didi",
-        "Budget Amma",
-        "Onion wali Madam",
-        "Pyaaz Madam",
-        "GST Didi",
-        "Khazana Didi",
-        "Bahi-Khata Didi",
-        "टैक्स दीदी"
-      ]
-    },
-    {
-      "id": "jaishankar",
-      "label": "S. Jaishankar",
-      "first": "Subrahmanyam",
-      "last": "Jaishankar",
-      "triggers": [
-        "s jaishankar",
-        "s. jaishankar",
-        "jaishankar",
-        "एस जयशंकर",
-        "जयशंकर"
-      ],
-      "curated": [
-        "EAM",
-        "Videsh Babu",
-        "Diplomat ji",
-        "Passport Babu",
-        "Jai Sir",
-        "Embassy Babu"
-      ],
-      "ask": [
-        "jaishankar",
-        "जयशंकर"
-      ]
-    },
-    {
-      "id": "khattar",
-      "label": "Manohar Lal Khattar",
-      "first": "Manohar",
-      "last": "Khattar",
-      "triggers": [
-        "manohar lal khattar",
-        "ml khattar",
-        "khattar",
-        "मनोहर लाल खट्टर",
-        "खट्टर"
-      ],
-      "curated": [
-        "Bijli Babu",
-        "Ghar Babu",
-        "Haryana wale Tau",
-        "Power Tau",
-        "Kaka ji"
-      ]
-    },
-    {
-      "id": "kumaraswamy",
-      "label": "H. D. Kumaraswamy",
-      "first": "Hd",
-      "last": "Kumaraswamy",
-      "triggers": [
-        "hd kumaraswamy",
-        "h d kumaraswamy",
-        "h.d. kumaraswamy",
-        "kumaraswamy",
-        "kumarswamy",
-        "कुमारस्वामी"
-      ],
-      "curated": [
-        "HDK",
-        "Kumaranna",
-        "Steel Babu",
-        "Bhari Udyog Babu",
-        "Anna of Steel"
-      ]
-    },
-    {
-      "id": "goyal",
-      "label": "Piyush Goyal",
-      "first": "Piyush",
-      "last": "Goyal",
-      "triggers": [
-        "piyush goyal",
-        "पीयूष गोयल"
-      ],
-      "curated": [
-        "Vyapar Babu",
-        "Commerce Babu",
-        "Dukaan Babu",
-        "Trade Seth",
-        "Export Babu"
-      ]
-    },
-    {
-      "id": "pradhan",
-      "label": "Dharmendra Pradhan",
-      "first": "Dharmendra",
-      "last": "Pradhan",
-      "triggers": [
-        "dharmendra pradhan",
-        "धर्मेंद्र प्रधान"
-      ],
-      "curated": [
-        "Pariksha Babu",
-        "NEET wale Babu",
-        "Paper Babu",
-        "Shiksha Babu",
-        "Exam Chief"
-      ]
-    },
-    {
-      "id": "manjhi",
-      "label": "Jitan Ram Manjhi",
-      "first": "Jitan",
-      "last": "Manjhi",
-      "triggers": [
-        "jitan ram manjhi",
-        "manjhi",
-        "जीतन राम मांझी",
-        "मांझी"
-      ],
-      "curated": [
-        "MSME Baba",
-        "Laghu Udyog Babu",
-        "Gaya wale Baba"
-      ],
-      "ask": [
-        "manjhi",
-        "मांझी"
-      ]
-    },
-    {
-      "id": "lalan-singh",
-      "label": "Lalan Singh",
-      "first": "Lalan",
-      "last": "Singh",
-      "key": "Lalan",
-      "triggers": [
-        "lalan singh",
-        "rajiv ranjan singh",
-        "ललन सिंह"
-      ],
-      "curated": [
-        "Machhli Babu",
-        "Dairy Babu",
-        "Panchayat Babu",
-        "Munger wale Babu"
-      ]
-    },
-    {
-      "id": "sonowal",
-      "label": "Sarbananda Sonowal",
-      "first": "Sarbananda",
-      "last": "Sonowal",
-      "triggers": [
-        "sarbananda sonowal",
-        "sonowal",
-        "सर्बानंद सोनोवाल",
-        "सोनोवाल"
-      ],
-      "curated": [
-        "Jahaaz Babu",
-        "Bandargah Babu",
-        "Port Babu",
-        "Assam wale Dada"
-      ]
-    },
-    {
-      "id": "virendra-kumar",
-      "label": "Virendra Kumar",
-      "first": "Virendra",
-      "last": "Kumar",
-      "key": "Virendra",
-      "triggers": [
-        "virendra kumar",
-        "virendra kumar khatik",
-        "वीरेंद्र कुमार"
-      ],
-      "curated": [
-        "Nyay Babu",
-        "Samajik Nyay ji",
-        "Tikamgarh wale Babu"
-      ]
-    },
-    {
-      "id": "ram-mohan-naidu",
-      "label": "Ram Mohan Naidu",
-      "first": "Rammohan",
-      "last": "Naidu",
-      "triggers": [
-        "ram mohan naidu",
-        "rammohan naidu",
-        "k ram mohan naidu",
-        "kinjarapu ram mohan naidu",
-        "राम मोहन नायडू"
-      ],
-      "curated": [
-        "Udaan Babu",
-        "Aviation Babu",
-        "RMN",
-        "Hawai Babu",
-        "Flight Babu"
-      ]
-    },
-    {
-      "id": "pralhad-joshi",
-      "label": "Pralhad Joshi",
-      "first": "Pralhad",
-      "last": "Joshi",
-      "triggers": [
-        "pralhad joshi",
-        "prahlad joshi",
-        "प्रल्हाद जोशी",
-        "प्रह्लाद जोशी"
-      ],
-      "curated": [
-        "Ration Babu",
-        "Solar Babu",
-        "Urja Babu",
-        "Dharwad wale Babu"
-      ]
-    },
-    {
-      "id": "jual-oram",
-      "label": "Jual Oram",
-      "first": "Jual",
-      "last": "Oram",
-      "triggers": [
-        "jual oram",
-        "जुएल ओराम"
-      ],
-      "curated": [
-        "Janjati Babu",
-        "Tribal Babu",
-        "Sundargarh wale Babu"
-      ]
-    },
-    {
-      "id": "giriraj",
-      "label": "Giriraj Singh",
-      "first": "Giriraj",
-      "last": "Singh",
-      "key": "Giriraj",
-      "triggers": [
-        "giriraj singh",
-        "giriraj",
-        "गिरिराज सिंह",
-        "गिरिराज"
-      ],
-      "curated": [
-        "Kapda Babu",
-        "Textile Babu",
-        "Pakistan Visa wale",
-        "Visa Babu",
-        "Begusarai wale Babu"
-      ],
-      "ask": [
-        "giriraj",
-        "गिरिराज"
-      ]
-    },
-    {
-      "id": "vaishnaw",
-      "label": "Ashwini Vaishnaw",
-      "first": "Ashwini",
-      "last": "Vaishnaw",
-      "triggers": [
-        "ashwini vaishnaw",
-        "ashwini vaishnav",
-        "vaishnaw",
-        "अश्विनी वैष्णव"
-      ],
-      "curated": [
-        "Reel Mantri",
-        "Rail Babu",
-        "Reel Babu",
-        "Train Babu",
-        "IT Babu",
-        "TV Babu",
-        "Teen Mantralay wale",
-        "रील मंत्री"
-      ],
-      "ask": [
-        "vaishnaw"
-      ]
-    },
-    {
-      "id": "scindia",
-      "label": "Jyotiraditya Scindia",
-      "first": "Jyotiraditya",
-      "last": "Scindia",
-      "triggers": [
-        "jyotiraditya scindia",
-        "scindia",
-        "ज्योतिरादित्य सिंधिया",
-        "सिंधिया"
-      ],
-      "curated": [
-        "Maharaj",
-        "Shrimant",
-        "Gwalior Maharaj",
-        "Telecom Raja",
-        "Northeast Babu",
-        "Mahal wale"
-      ],
-      "ask": [
-        "scindia",
-        "सिंधिया"
-      ]
-    },
-    {
-      "id": "bhupender-yadav",
-      "label": "Bhupender Yadav",
-      "first": "Bhupender",
-      "last": "Yadav",
-      "key": "Bhupender",
-      "triggers": [
-        "bhupender yadav",
-        "bhupendra yadav",
-        "भूपेंद्र यादव"
-      ],
-      "curated": [
-        "Jungle Babu",
-        "Paryavaran Babu",
-        "Climate Babu",
-        "Alwar wale Babu"
-      ]
-    },
-    {
-      "id": "shekhawat",
-      "label": "Gajendra Singh Shekhawat",
-      "first": "Gajendra",
-      "last": "Shekhawat",
-      "triggers": [
-        "gajendra singh shekhawat",
-        "gajendra shekhawat",
-        "shekhawat",
-        "गजेंद्र सिंह शेखावत",
-        "शेखावत"
-      ],
-      "curated": [
-        "Sanskriti Babu",
-        "Paryatan Babu",
-        "Tourism Babu",
-        "Jodhpur wale Babu"
-      ],
-      "ask": [
-        "shekhawat",
-        "शेखावत"
-      ]
-    },
-    {
-      "id": "annpurna-devi",
-      "label": "Annpurna Devi",
-      "first": "Annpurna",
-      "last": "Devi",
-      "key": "Annpurna",
-      "triggers": [
-        "annpurna devi",
-        "annapurna devi",
-        "अन्नपूर्णा देवी"
-      ],
-      "curated": [
-        "Mahila Babu",
-        "Bal Vikas Didi",
-        "Koderma wali Didi"
-      ]
-    },
-    {
-      "id": "rijiju",
-      "label": "Kiren Rijiju",
-      "first": "Kiren",
-      "last": "Rijiju",
-      "triggers": [
-        "kiren rijiju",
-        "rijiju",
-        "किरेन रिजिजू",
-        "रिजिजू"
-      ],
-      "curated": [
-        "Sansad Babu",
-        "Arunachal wale Bhai",
-        "Minority Babu",
-        "Parliament Babu"
-      ]
-    },
-    {
-      "id": "hardeep-puri",
-      "label": "Hardeep Singh Puri",
-      "first": "Hardeep",
-      "last": "Puri",
-      "triggers": [
-        "hardeep singh puri",
-        "hardeep puri",
-        "हरदीप सिंह पुरी",
-        "हरदीप पुरी"
-      ],
-      "curated": [
-        "Petrol Babu",
-        "Tel Mantri",
-        "Pump Babu",
-        "Gas Babu",
-        "Diesel Babu"
-      ]
-    },
-    {
-      "id": "mandaviya",
-      "label": "Mansukh Mandaviya",
-      "first": "Mansukh",
-      "last": "Mandaviya",
-      "triggers": [
-        "mansukh mandaviya",
-        "mandaviya",
-        "मनसुख मांडविया",
-        "मांडविया"
-      ],
-      "curated": [
-        "Cycle Mantri",
-        "Khel Babu",
-        "Shram Babu",
-        "Naukri Babu",
-        "Sports Babu"
-      ]
-    },
-    {
-      "id": "kishan-reddy",
-      "label": "G. Kishan Reddy",
-      "first": "Kishan",
-      "last": "Reddy",
-      "triggers": [
-        "g kishan reddy",
-        "kishan reddy",
-        "जी किशन रेड्डी",
-        "किशन रेड्डी"
-      ],
-      "curated": [
-        "Koyla Babu",
-        "Khadan Babu",
-        "Coal Babu",
-        "Hyderabad wale Anna"
-      ]
-    },
-    {
-      "id": "chirag-paswan",
-      "label": "Chirag Paswan",
-      "first": "Chirag",
-      "last": "Paswan",
-      "triggers": [
-        "chirag paswan",
-        "चिराग पासवान"
-      ],
-      "curated": [
-        "Saheb ka Hanuman",
-        "Khana Babu",
-        "Food Processing Babu",
-        "Bihari Hanuman"
-      ]
-    },
-    {
-      "id": "cr-patil",
-      "label": "C. R. Patil",
-      "first": "Chandrakant",
-      "last": "Patil",
-      "triggers": [
-        "cr patil",
-        "c r patil",
-        "c.r. patil",
-        "c. r. patil",
-        "सी आर पाटिल"
-      ],
-      "curated": [
-        "Jal Babu",
-        "Paani Babu",
-        "Nal Babu",
-        "Navsari wale Bhau"
-      ]
-    }
-  ]
+ "version": 1,
+ "updated": "2026-10-31",
+ "note": "Edit this file, then run: python3 dictionary/build.py. Triggers are the real names the keyboard watches for. Curated are hand-picked alternates; the build script tops each entry up to exactly 50 with generated jumbles.",
+ "entities": [
+  {
+   "id": "modi",
+   "label": "Narendra Modi",
+   "first": "Narendra",
+   "last": "Modi",
+   "triggers": [
+    "modi",
+    "narendra modi",
+    "modiji",
+    "modi ji",
+    "pm modi",
+    "narendra damodardas modi",
+    "मोदी",
+    "नरेंद्र मोदी",
+    "मोदीजी",
+    "मोदी जी"
+   ],
+   "curated": [
+    "Odiji",
+    "Emperor",
+    "King",
+    "Chota Bandar",
+    "Marendra Nodi",
+    "Bodi",
+    "Naru",
+    "NaMo",
+    "Na-Mo",
+    "Supreme Leader",
+    "Saheb",
+    "Bade Saheb",
+    "Raja ji",
+    "Maharaja",
+    "Pradhan Sevak",
+    "Chowkidar",
+    "Fakir",
+    "Jhola wale Fakir",
+    "56 inch",
+    "Chhappan Inch",
+    "Feku",
+    "Vishwaguru",
+    "Jumla King",
+    "Mitron wale",
+    "Mann ki Baat wale",
+    "Chaiwala",
+    "Camera ji",
+    "Selfie King",
+    "Non-biological ji",
+    "Avtaar ji",
+    "Daadhi wale",
+    "Hukum",
+    "मोडी",
+    "ओदीजी",
+    "साहेब",
+    "फेकू",
+    "नमो",
+    "चौकीदार",
+    "विश्वगुरु",
+    "फ़कीर"
+   ]
+  },
+  {
+   "id": "amit-shah",
+   "label": "Amit Shah",
+   "first": "Amit",
+   "last": "Shah",
+   "with_first": true,
+   "triggers": [
+    "amit shah",
+    "shah",
+    "amit bhai shah",
+    "amitshah",
+    "hm amit shah",
+    "अमित शाह",
+    "शाह"
+   ],
+   "curated": [
+    "Mota Bhai",
+    "Tadipaar",
+    "Chanakya",
+    "Chhote Saheb",
+    "Number Two",
+    "No. 2",
+    "HM",
+    "Gruh Mantri ji",
+    "Shahenshah",
+    "Ameet",
+    "Mota Seth",
+    "Sahakar Babu",
+    "Home Babu",
+    "Gujarat wale Bhai",
+    "Bade Bhai",
+    "Desk wale Chanakya",
+    "मोटा भाई",
+    "तड़ीपार",
+    "चाणक्य",
+    "छोटे साहेब"
+   ],
+   "ask": [
+    "shah",
+    "शाह"
+   ]
+  },
+  {
+   "id": "bjp",
+   "label": "BJP",
+   "acronym": "BJP",
+   "triggers": [
+    "bjp",
+    "b.j.p",
+    "b.j.p.",
+    "bharatiya janata party",
+    "bhartiya janta party",
+    "bhajpa",
+    "भाजपा",
+    "बीजेपी",
+    "भारतीय जनता पार्टी"
+   ],
+   "curated": [
+    "Kamal Dal",
+    "Lotus Party",
+    "Kamal wale",
+    "Bhagwa Party",
+    "Saffron Party",
+    "Washing Machine Party",
+    "Jumla Party",
+    "Bhartiya Jumla Party",
+    "Sabse Badi Party",
+    "IT Cell wale",
+    "Bhakt Mandal",
+    "Kamal Club",
+    "Lotus Club",
+    "Phool wale",
+    "Kesariya Party",
+    "Party With a Difference",
+    "Double Engine wale",
+    "Double Engine Party",
+    "Bee Jay Pee",
+    "BeeJayPee",
+    "Bijepi",
+    "Bhaa Jaa Paa",
+    "B Jay P",
+    "Bee-J-P",
+    "Kamal Brigade",
+    "Kesariya Dal",
+    "Bhagwa Brigade",
+    "Sattadhari Dal",
+    "Sarkar wali Party",
+    "Phool Party",
+    "Lotus wale",
+    "Kamal Company",
+    "Kamal Parivar",
+    "Bhagwa Club",
+    "कमल दल",
+    "फूल वाले",
+    "भगवा दल",
+    "भगवा पार्टी",
+    "जुमला पार्टी",
+    "वॉशिंग मशीन"
+   ]
+  },
+  {
+   "id": "gyanesh-kumar",
+   "label": "Gyanesh Kumar (CEC)",
+   "first": "Gyanesh",
+   "last": "Kumar",
+   "key": "Gyanesh",
+   "triggers": [
+    "gyanesh kumar",
+    "gyanesh",
+    "gyaanesh",
+    "gyaanesh kumar",
+    "cec gyanesh kumar",
+    "ज्ञानेश कुमार",
+    "ज्ञानेश"
+   ],
+   "curated": [
+    "Gyani Baba",
+    "Gyan Babu",
+    "Chunav Babu",
+    "CEC Saheb",
+    "Mukhya Ayukt ji",
+    "EVM Babu",
+    "Syahi Babu",
+    "Ink Saheb",
+    "Gyanu",
+    "Gyani ji",
+    "Ungli Babu",
+    "Voter List Babu",
+    "Form Babu",
+    "Booth Saheb",
+    "Saheb ka Babu",
+    "Kumar Saheb",
+    "ज्ञानी बाबा",
+    "चुनाव बाबू",
+    "स्याही बाबू"
+   ],
+   "ask": [
+    "gyanesh",
+    "gyaanesh",
+    "ज्ञानेश"
+   ]
+  },
+  {
+   "id": "eci",
+   "label": "Election Commission of India",
+   "acronym": "ECI",
+   "triggers": [
+    "eci",
+    "e.c.i",
+    "e.c.i.",
+    "eic",
+    "election commission",
+    "election commission of india",
+    "chunav ayog",
+    "nirvachan ayog",
+    "चुनाव आयोग",
+    "निर्वाचन आयोग",
+    "भारत निर्वाचन आयोग"
+   ],
+   "curated": [
+    "Ayog ji",
+    "Commission ji",
+    "Syahi Dept",
+    "Neeli Syahi wale",
+    "Ungli Daftar",
+    "Ink Office",
+    "Vote Ghar",
+    "Matdaan Daftar",
+    "Poll Babu Log",
+    "Chunavi Daftar",
+    "Godi Ayog",
+    "Saheb ka Ayog",
+    "Teen Babu",
+    "Nirvachan Daftar",
+    "Vote Office",
+    "Ballot Babu",
+    "EVM Ghar",
+    "Booth Babu Log",
+    "Form-6 wale",
+    "SIR wale",
+    "Voter List Babu Log",
+    "Matdata Suchi Office",
+    "Syahi Ghar",
+    "Ungli Babu Log",
+    "Ee See Eye",
+    "E-C-Eye",
+    "Ayog Babu",
+    "Syahi Board",
+    "Ungli Office",
+    "Chunavi Babu Log",
+    "Vote Daftar",
+    "Teen Ayukt",
+    "Booth Office",
+    "Neeli Ungli Dept",
+    "Matdaan Ghar",
+    "Ayog Saheb",
+    "स्याही विभाग",
+    "चुनावी दफ्तर",
+    "उंगली दफ्तर",
+    "वोट घर"
+   ]
+  },
+  {
+   "id": "rajnath",
+   "label": "Rajnath Singh",
+   "first": "Rajnath",
+   "last": "Singh",
+   "key": "Rajnath",
+   "triggers": [
+    "rajnath singh",
+    "rajnath",
+    "raj nath singh",
+    "राजनाथ सिंह",
+    "राजनाथ"
+   ],
+   "curated": [
+    "Raksha Babu",
+    "Defence Dadu",
+    "Kadi Ninda ji",
+    "Ninda Mantri",
+    "RS ji",
+    "Raj Babu",
+    "Raksha Mantri ji"
+   ],
+   "ask": [
+    "rajnath",
+    "राजनाथ"
+   ]
+  },
+  {
+   "id": "gadkari",
+   "label": "Nitin Gadkari",
+   "first": "Nitin",
+   "last": "Gadkari",
+   "triggers": [
+    "nitin gadkari",
+    "gadkari",
+    "नितिन गडकरी",
+    "गडकरी"
+   ],
+   "curated": [
+    "Highway Man",
+    "Road wale Baba",
+    "Flyover Kaka",
+    "Toll Babu",
+    "Nagpur wale Bhau",
+    "Expressway ji",
+    "Gadi Babu"
+   ]
+  },
+  {
+   "id": "nadda",
+   "label": "J. P. Nadda",
+   "first": "Jagat",
+   "last": "Nadda",
+   "triggers": [
+    "jp nadda",
+    "j p nadda",
+    "j.p. nadda",
+    "jagat prakash nadda",
+    "nadda",
+    "जेपी नड्डा",
+    "नड्डा"
+   ],
+   "curated": [
+    "Health Babu",
+    "Dawai Mantri",
+    "Khad Babu",
+    "J.P. ji",
+    "Hospital Babu"
+   ]
+  },
+  {
+   "id": "shivraj",
+   "label": "Shivraj Singh Chouhan",
+   "first": "Shivraj",
+   "last": "Chouhan",
+   "triggers": [
+    "shivraj singh chouhan",
+    "shivraj chouhan",
+    "shivraj",
+    "शिवराज सिंह चौहान",
+    "शिवराज"
+   ],
+   "curated": [
+    "Mama ji",
+    "Mamaji",
+    "Kisan Mama",
+    "Bhanje wale Mama",
+    "Khet Babu",
+    "Gaon Babu",
+    "MP wale Mama",
+    "मामा जी"
+   ],
+   "ask": [
+    "shivraj",
+    "शिवराज"
+   ]
+  },
+  {
+   "id": "sitharaman",
+   "label": "Nirmala Sitharaman",
+   "first": "Nirmala",
+   "last": "Sitharaman",
+   "triggers": [
+    "nirmala sitharaman",
+    "sitharaman",
+    "nirmala sitaraman",
+    "निर्मला सीतारमण",
+    "सीतारमण"
+   ],
+   "curated": [
+    "FM",
+    "FM Didi",
+    "Tax Didi",
+    "Budget Amma",
+    "Onion wali Madam",
+    "Pyaaz Madam",
+    "GST Didi",
+    "Khazana Didi",
+    "Bahi-Khata Didi",
+    "टैक्स दीदी"
+   ]
+  },
+  {
+   "id": "jaishankar",
+   "label": "S. Jaishankar",
+   "first": "Subrahmanyam",
+   "last": "Jaishankar",
+   "triggers": [
+    "s jaishankar",
+    "s. jaishankar",
+    "jaishankar",
+    "एस जयशंकर",
+    "जयशंकर"
+   ],
+   "curated": [
+    "EAM",
+    "Videsh Babu",
+    "Diplomat ji",
+    "Passport Babu",
+    "Jai Sir",
+    "Embassy Babu"
+   ],
+   "ask": [
+    "jaishankar",
+    "जयशंकर"
+   ]
+  },
+  {
+   "id": "khattar",
+   "label": "Manohar Lal Khattar",
+   "first": "Manohar",
+   "last": "Khattar",
+   "triggers": [
+    "manohar lal khattar",
+    "ml khattar",
+    "khattar",
+    "मनोहर लाल खट्टर",
+    "खट्टर"
+   ],
+   "curated": [
+    "Bijli Babu",
+    "Ghar Babu",
+    "Haryana wale Tau",
+    "Power Tau",
+    "Kaka ji"
+   ]
+  },
+  {
+   "id": "kumaraswamy",
+   "label": "H. D. Kumaraswamy",
+   "first": "Hd",
+   "last": "Kumaraswamy",
+   "triggers": [
+    "hd kumaraswamy",
+    "h d kumaraswamy",
+    "h.d. kumaraswamy",
+    "kumaraswamy",
+    "kumarswamy",
+    "कुमारस्वामी"
+   ],
+   "curated": [
+    "HDK",
+    "Kumaranna",
+    "Steel Babu",
+    "Bhari Udyog Babu",
+    "Anna of Steel"
+   ]
+  },
+  {
+   "id": "goyal",
+   "label": "Piyush Goyal",
+   "first": "Piyush",
+   "last": "Goyal",
+   "triggers": [
+    "piyush goyal",
+    "पीयूष गोयल"
+   ],
+   "curated": [
+    "Vyapar Babu",
+    "Commerce Babu",
+    "Dukaan Babu",
+    "Trade Seth",
+    "Export Babu"
+   ]
+  },
+  {
+   "id": "pradhan",
+   "label": "Dharmendra Pradhan",
+   "first": "Dharmendra",
+   "last": "Pradhan",
+   "triggers": [
+    "dharmendra pradhan",
+    "धर्मेंद्र प्रधान"
+   ],
+   "curated": [
+    "Pariksha Babu",
+    "NEET wale Babu",
+    "Paper Babu",
+    "Shiksha Babu",
+    "Exam Chief"
+   ]
+  },
+  {
+   "id": "manjhi",
+   "label": "Jitan Ram Manjhi",
+   "first": "Jitan",
+   "last": "Manjhi",
+   "triggers": [
+    "jitan ram manjhi",
+    "manjhi",
+    "जीतन राम मांझी",
+    "मांझी"
+   ],
+   "curated": [
+    "MSME Baba",
+    "Laghu Udyog Babu",
+    "Gaya wale Baba"
+   ],
+   "ask": [
+    "manjhi",
+    "मांझी"
+   ]
+  },
+  {
+   "id": "lalan-singh",
+   "label": "Lalan Singh",
+   "first": "Lalan",
+   "last": "Singh",
+   "key": "Lalan",
+   "triggers": [
+    "lalan singh",
+    "rajiv ranjan singh",
+    "ललन सिंह"
+   ],
+   "curated": [
+    "Machhli Babu",
+    "Dairy Babu",
+    "Panchayat Babu",
+    "Munger wale Babu"
+   ]
+  },
+  {
+   "id": "sonowal",
+   "label": "Sarbananda Sonowal",
+   "first": "Sarbananda",
+   "last": "Sonowal",
+   "triggers": [
+    "sarbananda sonowal",
+    "sonowal",
+    "सर्बानंद सोनोवाल",
+    "सोनोवाल"
+   ],
+   "curated": [
+    "Jahaaz Babu",
+    "Bandargah Babu",
+    "Port Babu",
+    "Assam wale Dada"
+   ]
+  },
+  {
+   "id": "virendra-kumar",
+   "label": "Virendra Kumar",
+   "first": "Virendra",
+   "last": "Kumar",
+   "key": "Virendra",
+   "triggers": [
+    "virendra kumar",
+    "virendra kumar khatik",
+    "वीरेंद्र कुमार"
+   ],
+   "curated": [
+    "Nyay Babu",
+    "Samajik Nyay ji",
+    "Tikamgarh wale Babu"
+   ]
+  },
+  {
+   "id": "ram-mohan-naidu",
+   "label": "Ram Mohan Naidu",
+   "first": "Rammohan",
+   "last": "Naidu",
+   "triggers": [
+    "ram mohan naidu",
+    "rammohan naidu",
+    "k ram mohan naidu",
+    "kinjarapu ram mohan naidu",
+    "राम मोहन नायडू"
+   ],
+   "curated": [
+    "Udaan Babu",
+    "Aviation Babu",
+    "RMN",
+    "Hawai Babu",
+    "Flight Babu"
+   ]
+  },
+  {
+   "id": "pralhad-joshi",
+   "label": "Pralhad Joshi",
+   "first": "Pralhad",
+   "last": "Joshi",
+   "triggers": [
+    "pralhad joshi",
+    "prahlad joshi",
+    "प्रल्हाद जोशी",
+    "प्रह्लाद जोशी"
+   ],
+   "curated": [
+    "Ration Babu",
+    "Solar Babu",
+    "Urja Babu",
+    "Dharwad wale Babu"
+   ]
+  },
+  {
+   "id": "jual-oram",
+   "label": "Jual Oram",
+   "first": "Jual",
+   "last": "Oram",
+   "triggers": [
+    "jual oram",
+    "जुएल ओराम"
+   ],
+   "curated": [
+    "Janjati Babu",
+    "Tribal Babu",
+    "Sundargarh wale Babu"
+   ]
+  },
+  {
+   "id": "giriraj",
+   "label": "Giriraj Singh",
+   "first": "Giriraj",
+   "last": "Singh",
+   "key": "Giriraj",
+   "triggers": [
+    "giriraj singh",
+    "giriraj",
+    "गिरिराज सिंह",
+    "गिरिराज"
+   ],
+   "curated": [
+    "Kapda Babu",
+    "Textile Babu",
+    "Pakistan Visa wale",
+    "Visa Babu",
+    "Begusarai wale Babu"
+   ],
+   "ask": [
+    "giriraj",
+    "गिरिराज"
+   ]
+  },
+  {
+   "id": "vaishnaw",
+   "label": "Ashwini Vaishnaw",
+   "first": "Ashwini",
+   "last": "Vaishnaw",
+   "triggers": [
+    "ashwini vaishnaw",
+    "ashwini vaishnav",
+    "vaishnaw",
+    "अश्विनी वैष्णव"
+   ],
+   "curated": [
+    "Reel Mantri",
+    "Rail Babu",
+    "Reel Babu",
+    "Train Babu",
+    "IT Babu",
+    "TV Babu",
+    "Teen Mantralay wale",
+    "रील मंत्री"
+   ],
+   "ask": [
+    "vaishnaw"
+   ]
+  },
+  {
+   "id": "scindia",
+   "label": "Jyotiraditya Scindia",
+   "first": "Jyotiraditya",
+   "last": "Scindia",
+   "triggers": [
+    "jyotiraditya scindia",
+    "scindia",
+    "ज्योतिरादित्य सिंधिया",
+    "सिंधिया"
+   ],
+   "curated": [
+    "Maharaj",
+    "Shrimant",
+    "Gwalior Maharaj",
+    "Telecom Raja",
+    "Northeast Babu",
+    "Mahal wale"
+   ],
+   "ask": [
+    "scindia",
+    "सिंधिया"
+   ]
+  },
+  {
+   "id": "bhupender-yadav",
+   "label": "Bhupender Yadav",
+   "first": "Bhupender",
+   "last": "Yadav",
+   "key": "Bhupender",
+   "triggers": [
+    "bhupender yadav",
+    "bhupendra yadav",
+    "भूपेंद्र यादव"
+   ],
+   "curated": [
+    "Jungle Babu",
+    "Paryavaran Babu",
+    "Climate Babu",
+    "Alwar wale Babu"
+   ]
+  },
+  {
+   "id": "shekhawat",
+   "label": "Gajendra Singh Shekhawat",
+   "first": "Gajendra",
+   "last": "Shekhawat",
+   "triggers": [
+    "gajendra singh shekhawat",
+    "gajendra shekhawat",
+    "shekhawat",
+    "गजेंद्र सिंह शेखावत",
+    "शेखावत"
+   ],
+   "curated": [
+    "Sanskriti Babu",
+    "Paryatan Babu",
+    "Tourism Babu",
+    "Jodhpur wale Babu"
+   ],
+   "ask": [
+    "shekhawat",
+    "शेखावत"
+   ]
+  },
+  {
+   "id": "annpurna-devi",
+   "label": "Annpurna Devi",
+   "first": "Annpurna",
+   "last": "Devi",
+   "key": "Annpurna",
+   "triggers": [
+    "annpurna devi",
+    "annapurna devi",
+    "अन्नपूर्णा देवी"
+   ],
+   "curated": [
+    "Mahila Babu",
+    "Bal Vikas Didi",
+    "Koderma wali Didi"
+   ]
+  },
+  {
+   "id": "rijiju",
+   "label": "Kiren Rijiju",
+   "first": "Kiren",
+   "last": "Rijiju",
+   "triggers": [
+    "kiren rijiju",
+    "rijiju",
+    "किरेन रिजिजू",
+    "रिजिजू"
+   ],
+   "curated": [
+    "Sansad Babu",
+    "Arunachal wale Bhai",
+    "Minority Babu",
+    "Parliament Babu"
+   ]
+  },
+  {
+   "id": "hardeep-puri",
+   "label": "Hardeep Singh Puri",
+   "first": "Hardeep",
+   "last": "Puri",
+   "triggers": [
+    "hardeep singh puri",
+    "hardeep puri",
+    "हरदीप सिंह पुरी",
+    "हरदीप पुरी"
+   ],
+   "curated": [
+    "Petrol Babu",
+    "Tel Mantri",
+    "Pump Babu",
+    "Gas Babu",
+    "Diesel Babu"
+   ]
+  },
+  {
+   "id": "mandaviya",
+   "label": "Mansukh Mandaviya",
+   "first": "Mansukh",
+   "last": "Mandaviya",
+   "triggers": [
+    "mansukh mandaviya",
+    "mandaviya",
+    "मनसुख मांडविया",
+    "मांडविया"
+   ],
+   "curated": [
+    "Cycle Mantri",
+    "Khel Babu",
+    "Shram Babu",
+    "Naukri Babu",
+    "Sports Babu"
+   ]
+  },
+  {
+   "id": "kishan-reddy",
+   "label": "G. Kishan Reddy",
+   "first": "Kishan",
+   "last": "Reddy",
+   "triggers": [
+    "g kishan reddy",
+    "kishan reddy",
+    "जी किशन रेड्डी",
+    "किशन रेड्डी"
+   ],
+   "curated": [
+    "Koyla Babu",
+    "Khadan Babu",
+    "Coal Babu",
+    "Hyderabad wale Anna"
+   ]
+  },
+  {
+   "id": "chirag-paswan",
+   "label": "Chirag Paswan",
+   "first": "Chirag",
+   "last": "Paswan",
+   "triggers": [
+    "chirag paswan",
+    "चिराग पासवान"
+   ],
+   "curated": [
+    "Saheb ka Hanuman",
+    "Khana Babu",
+    "Food Processing Babu",
+    "Bihari Hanuman"
+   ]
+  },
+  {
+   "id": "cr-patil",
+   "label": "C. R. Patil",
+   "first": "Chandrakant",
+   "last": "Patil",
+   "triggers": [
+    "cr patil",
+    "c r patil",
+    "c.r. patil",
+    "c. r. patil",
+    "सी आर पाटिल"
+   ],
+   "curated": [
+    "Jal Babu",
+    "Paani Babu",
+    "Nal Babu",
+    "Navsari wale Bhau"
+   ]
+  },
+  {
+   "id": "adani",
+   "label": "Gautam Adani",
+   "first": "Gautam",
+   "last": "Adani",
+   "triggers": [
+    "adani",
+    "gautam adani",
+    "adani ji",
+    "adaniji",
+    "adani group",
+    "adani sahab",
+    "gautambhai adani",
+    "अडानी",
+    "अदाणी",
+    "गौतम अडानी",
+    "गौतम अदाणी",
+    "अडानी जी"
+   ],
+   "curated": [
+    "Mitra",
+    "Param Mitra",
+    "Pakka Dost",
+    "Sabse Achhe Dost",
+    "Mitron wale Mitra",
+    "Seth ji",
+    "Bade Seth",
+    "Gujarat wale Seth",
+    "Port wale Seth",
+    "Airport wale",
+    "Koyla Seth",
+    "Coal King",
+    "Bandargah Babu",
+    "Hum Do wale",
+    "Hum Do Hamare Do",
+    "Desh ke Seth",
+    "Sabka Seth",
+    "Hindenburg wale",
+    "Fortune wale",
+    "Atta-Tel wale",
+    "Bijli wale Seth",
+    "Cement Seth",
+    "Number One Seth",
+    "Plane wale Dost",
+    "G.A.",
+    "Gee Ay",
+    "Gautam Bhai",
+    "Gotam Seth",
+    "A-Dani",
+    "Adhani",
+    "मित्र",
+    "परम मित्र",
+    "सेठ जी",
+    "बड़े सेठ",
+    "कोयला सेठ",
+    "पोर्ट वाले",
+    "हम दो"
+   ]
+  },
+  {
+   "id": "vote-chori",
+   "label": "Vote chori",
+   "first": "Vote",
+   "last": "Chori",
+   "with_first": true,
+   "triggers": [
+    "vote chori",
+    "vote chor",
+    "vote theft",
+    "votechori",
+    "vote chor gaddi chhod",
+    "vote chori bandh karo",
+    "वोट चोरी",
+    "वोट चोर",
+    "वोट चोर गद्दी छोड़"
+   ],
+   "curated": [
+    "Ballot ki Chori",
+    "Matdata Chori",
+    "Ungli ki Chori",
+    "Syahi ki Chori",
+    "Voter List ka Jaadu",
+    "Jaadui Voter List",
+    "Gaayab Voter",
+    "Missing Voters",
+    "Bhoot Voter",
+    "Ghost Voters",
+    "Chunavi Jaadu",
+    "Matdaan Maya",
+    "List se Gayab",
+    "Naam Kata",
+    "Daftar ka Jaadu",
+    "SIR ka Jaadu",
+    "Booth ka Jaadu",
+    "V.C.",
+    "Vee See",
+    "Vote Gayab",
+    "Gayab Vote",
+    "Matdaan Ka Khel",
+    "Chunav ka Khel",
+    "Ballot Gayab",
+    "वोट का जादू",
+    "मतदाता गायब",
+    "जादुई सूची",
+    "भूत वोटर"
+   ]
+  },
+  {
+   "id": "cockroach-janta-party",
+   "label": "Cockroach Janta Party",
+   "acronym": "CJP",
+   "triggers": [
+    "cockroach janta party",
+    "cockroach janata party",
+    "cockroachjantaparty",
+    "cjp",
+    "कॉकरोच जनता पार्टी",
+    "कॉकरोच जनता पार्टी (सीजेपी)"
+   ],
+   "curated": [
+    "Tilchatta Party",
+    "Tilchatta Dal",
+    "Kaakroach Dal",
+    "Keede Party",
+    "Keeda Dal",
+    "Insect Party",
+    "Six-Legs Party",
+    "Chhe Taang wale",
+    "Bug Party",
+    "Antenna Party",
+    "Kitchen ke Neta",
+    "Sink ke Neeche wale",
+    "Unkillable Party",
+    "Nuclear-proof Party",
+    "Raat ki Party",
+    "Gen Z wale",
+    "Chhota Keeda Club",
+    "Brown Bug Party",
+    "Roach Party",
+    "Roach Club",
+    "Kockroch Party",
+    "Tilchatta Brigade",
+    "Keeda Brigade",
+    "Roach Brigade",
+    "Kockroch Club",
+    "Kakroch Dal",
+    "Six Legs Club",
+    "Chhe Pair wale",
+    "Mooch wale Keede",
+    "Andhere ke Neta",
+    "Tilchatta Sangh",
+    "तिलचट्टा पार्टी",
+    "कीड़ा दल",
+    "छह टांग वाले"
+   ]
+  }
+ ]
 }

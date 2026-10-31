@@ -292,7 +292,7 @@ class FloatingButtonService : AccessibilityService() {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(Ui.dp(context, 6), Ui.dp(context, 6), Ui.dp(context, 8), Ui.dp(context, 6))
-            background = Ui.rounded(Ui.META, 28, context)
+            background = Ui.gradient(28, context)
             elevation = Ui.dp(context, 10).toFloat()
             contentDescription = "Make it Meta friendly"
             addView(label)

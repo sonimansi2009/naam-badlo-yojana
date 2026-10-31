@@ -55,7 +55,7 @@ class NaamBadloIME : InputMethodService() {
             ellipsize = TextUtils.TruncateAt.END
         }
         banner = Ui.horizontal(ctx).apply {
-            background = Ui.rounded(Ui.META, 18, ctx)
+            background = Ui.gradient(18, ctx)
             setPadding(Ui.dp(ctx, 16), Ui.dp(ctx, 8), Ui.dp(ctx, 8), Ui.dp(ctx, 8))
             visibility = View.GONE
             elevation = Ui.dp(ctx, 6).toFloat()
