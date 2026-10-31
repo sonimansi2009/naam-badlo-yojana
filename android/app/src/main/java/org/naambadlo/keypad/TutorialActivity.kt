@@ -37,11 +37,11 @@ class TutorialActivity : Activity() {
 
         /** What changed in this version, in plain words. */
         val WHATS_NEW = listOf(
+            "Smarter Decode: it catches misspellings and disguises like “Odiijii”, “Kamal Partyy” or “M.o.d.i”, and marks them as guesses you can undo.",
+            "A short tour for new users, and this What’s new page after updates.",
             "One box on Home: type, paste or upload, then Encode or Decode.",
-            "Decode: paste a code-name message, read the real names.",
             "Readable code names with emojis, like Kamal Party 🪷. No more B-J-P.",
-            "Adani, “vote chori” and the Cockroach Janta Party added.",
-            "Setup, style and sound now live in Settings.",
+            "Setup, style and sound live in Settings.",
         )
     }
 

@@ -56,32 +56,48 @@ jobs:
 
       - name: Rename APKs
         run: |
-          cp android/app/build/outputs/apk/full/release/app-full-release.apk NaamChupaoYojana.apk
-          cp android/app/build/outputs/apk/lite/release/app-lite-release.apk NaamChupaoYojana-Lite.apk
+          cp android/app/build/outputs/apk/full/release/app-full-release.apk ShadowbanSurakshaYojana.apk
+          cp android/app/build/outputs/apk/lite/release/app-lite-release.apk ShadowbanSurakshaYojana-Lite.apk
 
       - name: Check both APKs are signed, and Lite has no accessibility service
         run: |
           BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
-          for f in NaamChupaoYojana.apk NaamChupaoYojana-Lite.apk; do
+          for f in ShadowbanSurakshaYojana.apk ShadowbanSurakshaYojana-Lite.apk; do
             $BT/apksigner verify $f
             echo "::notice title=$f::$($BT/apksigner verify --verbose $f | grep -E 'Verified using v2' | tr '\n' ' ') $($BT/aapt2 dump badging $f | grep -E '^package' | tr '\n' ' ')"
           done
-          FULL=$($BT/aapt2 dump xmltree --file AndroidManifest.xml NaamChupaoYojana.apk | grep -c BIND_ACCESSIBILITY_SERVICE || true)
-          LITE=$($BT/aapt2 dump xmltree --file AndroidManifest.xml NaamChupaoYojana-Lite.apk | grep -c BIND_ACCESSIBILITY_SERVICE || true)
+          FULL=$($BT/aapt2 dump xmltree --file AndroidManifest.xml ShadowbanSurakshaYojana.apk | grep -c BIND_ACCESSIBILITY_SERVICE || true)
+          LITE=$($BT/aapt2 dump xmltree --file AndroidManifest.xml ShadowbanSurakshaYojana-Lite.apk | grep -c BIND_ACCESSIBILITY_SERVICE || true)
           echo "::notice title=Accessibility::full=$FULL lite=$LITE"
           if [ "$LITE" != "0" ] || [ "$FULL" = "0" ]; then echo "::error::Lite must have no accessibility service and Full must have it"; exit 1; fi
 
       - uses: actions/upload-artifact@v4
         with:
-          name: NaamChupaoYojana-apk
+          name: ShadowbanSurakshaYojana-apk
           path: |
-            NaamChupaoYojana.apk
-            NaamChupaoYojana-Lite.apk
+            ShadowbanSurakshaYojana.apk
+            ShadowbanSurakshaYojana-Lite.apk
 
-      - name: Attach APK to release
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Read version
+        id: v
+        run: echo "name=$(grep -oP 'versionName = "\K[^"]+' android/app/build.gradle.kts)" >> "$GITHUB_OUTPUT"
+
+      # Every build of main becomes a GitHub release, so the website can link to
+      # .../releases/latest/download/ShadowbanSurakshaYojana.apk
+      - name: Publish release
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ steps.v.outputs.name }}
+          target_commitish: ${{ github.sha }}
+          name: Shadowban Suraksha Yojana ${{ steps.v.outputs.name }}
+          make_latest: true
+          body: |
+            **Which file?**
+            - **ShadowbanSurakshaYojana.apk**: the full app, with the floating button that pops up in Instagram & WhatsApp. Android may ask you to pause Play Protect once to install it.
+            - **ShadowbanSurakshaYojana-Lite.apk**: installs without warnings. Keyboard, select text, encode and decode, but no floating button.
+
+            Open the file on your phone and allow "Install unknown apps" when asked. Updating keeps your settings.
           files: |
-            NaamChupaoYojana.apk
-            NaamChupaoYojana-Lite.apk
+            ShadowbanSurakshaYojana.apk
+            ShadowbanSurakshaYojana-Lite.apk

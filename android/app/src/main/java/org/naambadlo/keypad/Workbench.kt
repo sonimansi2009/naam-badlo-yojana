@@ -336,7 +336,7 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
         Feedback.swapped(act)
         val people = hits.map { it.real }.distinct()
         val done = resultCard(
-            "✓  Decoded ${hits.size} code name(s)",
+            "✓  Decoded ${hits.size} code name(s)" + hits.count { it.guess }.let { if (it > 0) " · $it guessed" else "" },
             people.take(5).joinToString(", ") + if (people.size > 5) "…" else "",
         )
         decOut = Ui.label(act, "", 15.5f, Ui.GRAD_INK).apply {
@@ -344,7 +344,7 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
             highlightColor = 0
         }
         done.addView(inner(decOut!!))
-        done.addView(Ui.label(act, "Tap a highlighted name to keep the word as written.", 12.5f, Ui.GRAD_SUB).apply {
+        done.addView(Ui.label(act, if (hits.any { it.guess }) "Underlined names are guesses from misspellings. Tap any name to keep the word as written." else "Tap a highlighted name to keep the word as written.", 12.5f, Ui.GRAD_SUB).apply {
             setPadding(Ui.dp(act, 2), Ui.dp(act, 8), 0, 0)
         })
         done.addView(actions("Copy" to { copy(decoder.decode(decText, hits, kept)) }))
@@ -362,12 +362,12 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
             val isKept = h.start in kept
             sb.append(if (isKept) h.code else h.real)
             if (!isKept) {
-                sb.setSpan(BackgroundColorSpan(0x4DFF9933), s, sb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                sb.setSpan(BackgroundColorSpan(if (h.guess) 0x26FF9933 else 0x4DFF9933), s, sb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 sb.setSpan(StyleSpan(Typeface.BOLD), s, sb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             sb.setSpan(object : ClickableSpan() {
                 override fun onClick(widget: View) { if (!kept.add(h.start)) kept.remove(h.start); paintDecoded() }
-                override fun updateDrawState(ds: TextPaint) { ds.isUnderlineText = isKept; ds.color = Ui.GRAD_INK }
+                override fun updateDrawState(ds: TextPaint) { ds.isUnderlineText = isKept || h.guess; ds.color = Ui.GRAD_INK }
             }, s, sb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             last = h.end
         }

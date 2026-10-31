@@ -47,4 +47,19 @@ class MatcherTest {
         }
         assertTrue(m.findAll(text).isEmpty())
     }
+
+    @Test fun decodeGuessesMisspellings() {
+        val bjp = Entity("bjp", "BJP", listOf("bjp"), listOf("Kamal Party", "Kamal Party 🪷"))
+        val d = Decoder(listOf(modi, shah, bjp))
+        val t = "Odiijii aur Mota bhaai ne kaha, Kamal Partyy jeetegi, M.o.d.i bhi"
+        val hits = d.find(t)
+        assertEquals("Modi aur Amit Shah ne kaha, BJP jeetegi, Modi bhi", d.decode(t, hits))
+        assertEquals(true, hits.first().guess)
+    }
+
+    @Test fun decodeLeavesPlainWordsAlone() {
+        val d = Decoder(listOf(modi, shah))
+        val t = "Aaj mausam accha hai, Modi ji ne kaha"
+        assertEquals(t, d.decode(t))
+    }
 }

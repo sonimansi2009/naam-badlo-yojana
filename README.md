@@ -50,7 +50,7 @@ Google's anti-fraud pilot in India blocks sideloaded apps that ask for accessibi
 ## Install
 
 ### Android
-1. Open the [latest release](../../releases/latest) and download `NaamChupaoYojana-Lite.apk` (or `NaamChupaoYojana.apk` for the floating button) (or get it from the **Actions** tab → latest run → *NaamChupaoYojana-apk*).
+1. Open the [latest release](../../releases/latest) and download `ShadowbanSurakshaYojana-Lite.apk` (or `ShadowbanSurakshaYojana.apk` for the floating button) (or get it from the **Actions** tab → latest run → *ShadowbanSurakshaYojana-apk*).
    If you installed an older test build, **uninstall it first** (old builds used a different signing key).
 2. Open the file on your phone. Allow "install from this source" when asked.
 3. Open **Shadowban Suraksha Yojana** and tap **Turn on floating button**. In Settings, open Installed apps → Naam Chupao button → On.
