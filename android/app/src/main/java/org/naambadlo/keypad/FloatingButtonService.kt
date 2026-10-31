@@ -219,7 +219,7 @@ class FloatingButtonService : AccessibilityService() {
     private fun celebrate() {
         val v = pill ?: return
         celebrateUntil = SystemClock.uptimeMillis() + 4500
-        Feedback.swapped(this)
+        Feedback.encrypted(this)
         label.maxWidth = (resources.displayMetrics.widthPixels * 0.62).toInt()
         label.maxLines = 2
         yesBtn.text = "Undo"

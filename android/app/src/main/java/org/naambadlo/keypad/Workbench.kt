@@ -267,7 +267,7 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
         lastOut = rep.out
         result.removeAllViews()
         if (none) { result.addView(note("No names from the list in this text.")); return }
-        if (rep.swapped > 0) Feedback.swapped(act)
+        if (rep.swapped > 0) Feedback.encrypted(act)
 
         val done = resultCard(
             "✓  ${NameStore.CONGRATS}",

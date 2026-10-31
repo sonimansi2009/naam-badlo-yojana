@@ -9,14 +9,22 @@ import android.os.SystemClock
 import android.os.VibrationEffect
 import android.os.Vibrator
 
-/** A short vibration when names are swapped, and a soft chime when names are found. */
+/**
+ * Small touches of sound and feel. Sounds only play with "Sound" on in Settings
+ * and the phone's ringer on normal (never in silent or vibrate mode).
+ *  - found:     soft two-note chime when a name is spotted
+ *  - encrypted: a tiny dial-up "handshake" + buzz after "Make it Meta friendly"
+ *  - welcome:   "S S Y" in Morse code when the tutorial opens
+ *  - swapped:   just the buzz (Decode, Undo-style moments)
+ */
 object Feedback {
     private var pool: SoundPool? = null
-    private var chime = 0
-    private var loaded = false
+    private val ids = HashMap<Int, Int>()          // raw res -> sound id
+    private val ready = HashSet<Int>()             // sound ids that finished loading
+    private val pending = HashMap<Int, Float>()    // sound id -> volume, to play once loaded
     private var lastChime = 0L
 
-    /** Subtle tick after "Make it Meta friendly" swaps the words. */
+    /** Subtle tick when names are swapped. */
     fun swapped(ctx: Context) {
         val v = ctx.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator ?: return
         if (!v.hasVibrator()) return
@@ -27,15 +35,28 @@ object Feedback {
         }
     }
 
-    /** Soft two-note chime when the floating button pops up. Quiet, never in silent/vibrate mode. */
+    /** After "Make it Meta friendly": buzz + dial-up handshake. */
+    fun encrypted(ctx: Context) {
+        swapped(ctx)
+        play(ctx, R.raw.encrypted, 0.45f)
+    }
+
+    /** Morse "S S Y" when the tutorial or What's new opens. */
+    fun welcome(ctx: Context) = play(ctx, R.raw.morse, 0.4f)
+
+    /** Soft chime when the floating button pops up; never chatters while typing. */
     fun found(ctx: Context) {
+        val now = SystemClock.uptimeMillis()
+        if (now - lastChime < 4000) return
+        lastChime = now
+        play(ctx, R.raw.detect, 0.35f)
+    }
+
+    private fun play(ctx: Context, res: Int, vol: Float) {
         if (!Prefs.sound(ctx)) return
         val am = ctx.getSystemService(Context.AUDIO_SERVICE) as? AudioManager ?: return
         if (am.ringerMode != AudioManager.RINGER_MODE_NORMAL) return
-        val now = SystemClock.uptimeMillis()
-        if (now - lastChime < 4000) return            // never chatter while typing
-        lastChime = now
-        val p = pool ?: SoundPool.Builder().setMaxStreams(1).setAudioAttributes(
+        val p = pool ?: SoundPool.Builder().setMaxStreams(2).setAudioAttributes(
             AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -43,11 +64,12 @@ object Feedback {
         ).build().also { sp ->
             pool = sp
             sp.setOnLoadCompleteListener { s, id, status ->
-                if (status == 0) { loaded = true; s.play(id, 0.35f, 0.35f, 1, 0, 1f) }
+                if (status != 0) return@setOnLoadCompleteListener
+                ready.add(id)
+                pending.remove(id)?.let { v -> s.play(id, v, v, 1, 0, 1f) }
             }
-            chime = sp.load(ctx.applicationContext, R.raw.detect, 1)
-            return
         }
-        if (loaded) p.play(chime, 0.35f, 0.35f, 1, 0, 1f)
+        val id = ids.getOrPut(res) { p.load(ctx.applicationContext, res, 1) }
+        if (id in ready) p.play(id, vol, vol, 1, 0, 1f) else pending[id] = vol
     }
 }

@@ -37,6 +37,7 @@ class TutorialActivity : Activity() {
 
         /** What changed in this version, in plain words. */
         val WHATS_NEW = listOf(
+            "New sounds: a tiny dial-up handshake when your post gets encrypted, and a Morse “S S Y” hello.",
             "New motto: Making censorship work harder, one word at a time.",
             "Smarter Decode: it catches misspellings and disguises like “Odiijii”, “Kamal Partyy” or “M.o.d.i”, and marks them as guesses you can undo.",
             "A short tour for new users, and this What’s new page after updates.",
@@ -54,6 +55,7 @@ class TutorialActivity : Activity() {
     private lateinit var skip: TextView
     private var pages: List<Page> = emptyList()
     private var index = 0
+    private var whatsNewMode = false
     private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +64,7 @@ class TutorialActivity : Activity() {
         window.statusBarColor = Ui.BG_TOP
         window.navigationBarColor = Ui.BG
         val isUpdate = intent.getBooleanExtra(EXTRA_UPDATE, false)
+        whatsNewMode = isUpdate
         pages = if (isUpdate) listOf(Page(::whatsNew)) else tour()
 
         val root = Ui.vertical(this).apply {
@@ -86,7 +89,7 @@ class TutorialActivity : Activity() {
         val bar = Ui.horizontal(this).apply { gravity = Gravity.CENTER_VERTICAL }
         back = Ui.label(this, "Back", 15f, Ui.MUTED, Ui.W.MED).apply {
             setPadding(Ui.dp(context, 6), Ui.dp(context, 12), Ui.dp(context, 16), Ui.dp(context, 12))
-            setOnClickListener { go(index - 1) }
+            setOnClickListener { if (whatsNewMode) done() else go(index - 1) }
         }
         bar.addView(back)
         bar.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f))
@@ -106,6 +109,14 @@ class TutorialActivity : Activity() {
         })
         stage.setOnTouchListener { _, ev -> gd.onTouchEvent(ev) }
         go(0, animate = false)
+        Feedback.welcome(this)      // "S S Y" in Morse code
+    }
+
+    private fun startTour() {
+        whatsNewMode = false
+        pages = tour(); index = 0
+        dots.visibility = View.VISIBLE; skip.visibility = View.VISIBLE
+        go(0)
     }
 
     private fun go(i: Int, animate: Boolean = true) {
@@ -129,8 +140,15 @@ class TutorialActivity : Activity() {
             layoutParams = LinearLayout.LayoutParams(Ui.dp(context, if (k == i) 22 else 8), Ui.dp(context, 8))
                 .apply { setMargins(Ui.dp(context, 3), 0, Ui.dp(context, 3), 0) }
         })
-        back.visibility = if (i > 0) View.VISIBLE else View.INVISIBLE
         next.removeAllViews()
+        if (whatsNewMode) {
+            // What's new: the tour is the big button, Start is a quiet text link
+            back.text = "Start"; back.setTextColor(Ui.INK); back.visibility = View.VISIBLE
+            next.addView(Ui.cta(this, "Take the tour") { startTour() })
+            return
+        }
+        back.text = "Back"; back.setTextColor(Ui.MUTED)
+        back.visibility = if (i > 0) View.VISIBLE else View.INVISIBLE
         val last = i == pages.size - 1
         next.addView(Ui.cta(this, if (last) "Start" else "Next") { go(index + 1) })
     }
@@ -256,11 +274,5 @@ class TutorialActivity : Activity() {
             })
         }
         p.addView(card)
-        p.addView(Ui.label(this, "Take the full tour", 14.5f, Ui.INK, Ui.W.MED).apply {
-            gravity = Gravity.CENTER
-            setPadding(0, Ui.dp(context, 18), 0, 0)
-            paintFlags = paintFlags or android.graphics.Paint.UNDERLINE_TEXT_FLAG
-            setOnClickListener { pages = tour(); dots.visibility = View.VISIBLE; skip.visibility = View.VISIBLE; go(0) }
-        })
     }
 }

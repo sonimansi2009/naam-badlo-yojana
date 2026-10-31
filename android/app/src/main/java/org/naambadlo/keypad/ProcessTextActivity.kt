@@ -211,7 +211,7 @@ class ProcessTextActivity : Activity() {
         }
         banner.visibility = View.VISIBLE
         Ui.enter(banner, 0, rise = 6)
-        Feedback.swapped(this)
+        Feedback.encrypted(this)
         finishing = true
         handler.postDelayed({ if (finishing) finish() }, 3200)
     }
