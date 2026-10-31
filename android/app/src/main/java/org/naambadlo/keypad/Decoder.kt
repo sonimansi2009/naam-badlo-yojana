@@ -80,8 +80,9 @@ class Decoder(entities: List<Entity>) {
                 if (a >= b) continue
                 val raw = text.substring(a, b)
                 val (real, d) = score(raw) ?: continue
+                if (k > 1 && d > 0) continue               // near-misses only for single words ("Narendra ne" is not a name)
                 if (afterRealName(text, Hit(a, b, raw, real))) continue
-                if (d < bestD) { bestD = d; hit = Hit(a, b, raw, real, guess = true); used = k }
+                if (d < bestD) { bestD = d; hit = Hit(a, b, raw, real, guess = d > 0); used = k }
             }
             if (hit != null) out.add(hit)
             i += used

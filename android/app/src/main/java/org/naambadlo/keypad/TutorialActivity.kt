@@ -37,14 +37,11 @@ class TutorialActivity : Activity() {
 
         /** What changed in this version, in plain words. */
         val WHATS_NEW = listOf(
-            "Decode now understands jumbles like “Nodi”, “Nodiji” or “Badani”.",
-            "Encode and Decode now just give a light buzz, no sound.",
-            "A Morse “S S Y” hello when the tour opens.",
-            "New motto: Making censorship work harder, one word at a time.",
-            "Smarter Decode: it catches misspellings and disguises like “Odiijii”, “Kamal Partyy” or “M.o.d.i”, and marks them as guesses you can undo.",
-            "A short tour for new users, and this What’s new page after updates.",
-            "One box on Home: type, paste or upload, then Encode or Decode.",
-            "Readable code names with emojis, like Kamal Party 🪷. No more B-J-P.",
+            "The button is now “Make it Meta-proof”.",
+            "Symbol letters: 2–3 letters of each code name become look-alikes, like K@mal P@rty. Turn it off in Settings.",
+            "First names like Narendra or Nirmala are spotted too (the app asks first).",
+            "Real names are never shown in full on screen: N*re*d*a M*di.",
+            "Decode reads symbol letters and jumbles like “Nodi” or “Marendra”.",
         )
     }
 
@@ -234,7 +231,7 @@ class TutorialActivity : Activity() {
         },
         Page { p ->
             p.addView(title("*Encode*"))
-            p.addView(body("Type or paste your post, or upload a whole speech. Tap “Make it Meta friendly”. Copy. Post."))
+            p.addView(body("Type or paste your post, or upload a whole speech. Tap “Make it Meta-proof”. Copy. Post."))
             p.addView(demo("Aaj Modi ji ne kaha…", "Aaj Odiji 👑 ne kaha…", "Odiji 👑", "Your post"))
         },
         Page { p ->

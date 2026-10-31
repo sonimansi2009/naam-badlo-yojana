@@ -32,6 +32,10 @@ object Prefs {
     fun tutorialSeen(ctx: Context) = sp(ctx).getInt("tutorial_seen", 0)
     fun setTutorialSeen(ctx: Context, v: Int) = sp(ctx).edit().putInt("tutorial_seen", v).apply()
 
+    /** Symbol layer: swap 2-3 letters of each code name for look-alikes (K@mal P@rty). */
+    fun symbols(ctx: Context) = sp(ctx).getBoolean("symbols", true)
+    fun setSymbols(ctx: Context, v: Boolean) = sp(ctx).edit().putBoolean("symbols", v).apply()
+
     /** Which code names to use. */
     enum class Tier { RECOGNISABLE, MIX, STEALTH }
     fun tier(ctx: Context): Tier =

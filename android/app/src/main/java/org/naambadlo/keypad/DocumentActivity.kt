@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 
 /**
- * Opens from the share sheet ("Make it Meta friendly"): text or a file shared from
+ * Opens from the share sheet ("Make it Meta-proof"): text or a file shared from
  * another app lands in the same one-box screen as Home, in Encode mode.
  */
 open class DocumentActivity : Activity() {

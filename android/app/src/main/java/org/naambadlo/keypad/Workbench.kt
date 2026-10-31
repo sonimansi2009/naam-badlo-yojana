@@ -137,7 +137,7 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
         input.hint = if (mode == Mode.ENCODE) "Type or paste your post, a speech or a whole script…"
                      else "Paste a message written in code names, like “Kamal Party ne kaha, Mota Bhai ne suna…”"
         ctaHolder.removeAllViews()
-        val cta = Ui.cta(act, if (mode == Mode.ENCODE) "Make it Meta friendly" else "Decode message") { run() }
+        val cta = Ui.cta(act, if (mode == Mode.ENCODE) "Make it Meta-proof" else "Decode message") { run() }
         cta.getChildAt(0).layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
         ctaHolder.addView(cta, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
     }
@@ -190,7 +190,7 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
                 if (bytes == null) {
                     // Google Docs and other cloud files: ask for a plain-text copy
                     exportAsText(uri)?.let { DocText.Result.Ok(it) }
-                        ?: DocText.Result.Error("Couldn't open that file. For a Google Doc, open it in Docs → Share → Make it Meta friendly.")
+                        ?: DocText.Result.Error("Couldn't open that file. For a Google Doc, open it in Docs → Share → Make it Meta-proof.")
                 } else DocText.read(name, mime, bytes)
             }.getOrElse { DocText.Result.Error("Couldn't open that file.") }
             act.runOnUiThread {
@@ -293,7 +293,7 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
             })
             for ((w, e, n) in rep.asks) {
                 val key = Matcher.normalize(w)
-                c.addView(Ui.label(act, "“$w”${if (n > 1) " · $n times" else ""} · is it ${e.label}?", 14.5f).apply {
+                c.addView(Ui.label(act, "“${NameStore.mask(w)}”${if (n > 1) " · $n times" else ""} · is it ${NameStore.mask(e.label)}?", 14.5f).apply {
                     setPadding(0, Ui.dp(act, 10), 0, Ui.dp(act, 6))
                 })
                 c.addView(Ui.horizontal(act).apply {
@@ -310,7 +310,7 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
             for ((e, n) in rep.people) {
                 val row = Ui.horizontal(act).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(0, Ui.dp(act, 10), 0, 0) }
                 row.addView(Ui.vertical(act).apply {
-                    addView(Ui.label(act, e.label, 15f, Ui.INK, Ui.W.MED))
+                    addView(Ui.label(act, NameStore.mask(e.label), 15f, Ui.INK, Ui.W.MED))
                     addView(Ui.label(act, "→ ${chosen[e.id] ?: ""}${if (n > 1) " · $n times" else ""}", 13.5f, Ui.MUTED))
                 }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
                 row.addView(Ui.pill(act, "Change", false) {
@@ -337,7 +337,7 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
         val people = hits.map { it.real }.distinct()
         val done = resultCard(
             "✓  Decoded ${hits.size} code name(s)" + hits.count { it.guess }.let { if (it > 0) " · $it guessed" else "" },
-            people.take(5).joinToString(", ") + if (people.size > 5) "…" else "",
+            people.take(5).joinToString(", ") { NameStore.mask(it) } + if (people.size > 5) "…" else "",
         )
         decOut = Ui.label(act, "", 15.5f, Ui.GRAD_INK).apply {
             movementMethod = LinkMovementMethod.getInstance()
@@ -428,7 +428,7 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
         val out = lastOut ?: return
         act.startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"; putExtra(Intent.EXTRA_TEXT, out)
-        }, "Share Meta-friendly text"))
+        }, "Share Meta-proof text"))
     }
 
     private fun saveTo(uri: Uri) {

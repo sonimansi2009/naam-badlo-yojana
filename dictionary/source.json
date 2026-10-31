@@ -18,7 +18,9 @@
     "मोदी",
     "नरेंद्र मोदी",
     "मोदीजी",
-    "मोदी जी"
+    "मोदी जी",
+    "narendra",
+    "नरेंद्र"
    ],
    "curated": [
     "Odiji",
@@ -66,6 +68,10 @@
     "👑",
     "🍵",
     "📸"
+   ],
+   "ask": [
+    "narendra",
+    "नरेंद्र"
    ]
   },
   {
@@ -81,7 +87,9 @@
     "amitshah",
     "hm amit shah",
     "अमित शाह",
-    "शाह"
+    "शाह",
+    "amit",
+    "अमित"
    ],
    "curated": [
     "Mota Bhai",
@@ -107,7 +115,9 @@
    ],
    "ask": [
     "shah",
-    "शाह"
+    "शाह",
+    "amit",
+    "अमित"
    ],
    "emoji": [
     "🧠",
@@ -330,7 +340,9 @@
     "nitin gadkari",
     "gadkari",
     "नितिन गडकरी",
-    "गडकरी"
+    "गडकरी",
+    "nitin",
+    "नितिन"
    ],
    "curated": [
     "Highway Man",
@@ -343,6 +355,10 @@
    ],
    "emoji": [
     "🚧"
+   ],
+   "ask": [
+    "nitin",
+    "नितिन"
    ]
   },
   {
@@ -357,7 +373,8 @@
     "jagat prakash nadda",
     "nadda",
     "जेपी नड्डा",
-    "नड्डा"
+    "नड्डा",
+    "jagat"
    ],
    "curated": [
     "Health Babu",
@@ -368,6 +385,9 @@
    ],
    "emoji": [
     "🏥"
+   ],
+   "ask": [
+    "jagat"
    ]
   },
   {
@@ -410,7 +430,9 @@
     "sitharaman",
     "nirmala sitaraman",
     "निर्मला सीतारमण",
-    "सीतारमण"
+    "सीतारमण",
+    "nirmala",
+    "निर्मला"
    ],
    "curated": [
     "FM",
@@ -427,6 +449,10 @@
    "emoji": [
     "💰",
     "🧅"
+   ],
+   "ask": [
+    "nirmala",
+    "निर्मला"
    ]
   },
   {
@@ -439,7 +465,8 @@
     "s. jaishankar",
     "jaishankar",
     "एस जयशंकर",
-    "जयशंकर"
+    "जयशंकर",
+    "subrahmanyam"
    ],
    "curated": [
     "EAM",
@@ -451,7 +478,8 @@
    ],
    "ask": [
     "jaishankar",
-    "जयशंकर"
+    "जयशंकर",
+    "subrahmanyam"
    ],
    "emoji": [
     "🌍"
@@ -467,7 +495,8 @@
     "ml khattar",
     "khattar",
     "मनोहर लाल खट्टर",
-    "खट्टर"
+    "खट्टर",
+    "manohar"
    ],
    "curated": [
     "Bijli Babu",
@@ -478,6 +507,9 @@
    ],
    "emoji": [
     "🔌"
+   ],
+   "ask": [
+    "manohar"
    ]
   },
   {
@@ -511,7 +543,8 @@
    "last": "Goyal",
    "triggers": [
     "piyush goyal",
-    "पीयूष गोयल"
+    "पीयूष गोयल",
+    "piyush"
    ],
    "curated": [
     "Vyapar Babu",
@@ -522,6 +555,9 @@
    ],
    "emoji": [
     "📦"
+   ],
+   "ask": [
+    "piyush"
    ]
   },
   {
@@ -531,7 +567,8 @@
    "last": "Pradhan",
    "triggers": [
     "dharmendra pradhan",
-    "धर्मेंद्र प्रधान"
+    "धर्मेंद्र प्रधान",
+    "dharmendra"
    ],
    "curated": [
     "Pariksha Babu",
@@ -542,6 +579,9 @@
    ],
    "emoji": [
     "📚"
+   ],
+   "ask": [
+    "dharmendra"
    ]
   },
   {
@@ -553,7 +593,8 @@
     "jitan ram manjhi",
     "manjhi",
     "जीतन राम मांझी",
-    "मांझी"
+    "मांझी",
+    "jitan"
    ],
    "curated": [
     "MSME Baba",
@@ -562,7 +603,8 @@
    ],
    "ask": [
     "manjhi",
-    "मांझी"
+    "मांझी",
+    "jitan"
    ],
    "emoji": [
     "🧰"
@@ -577,7 +619,8 @@
    "triggers": [
     "lalan singh",
     "rajiv ranjan singh",
-    "ललन सिंह"
+    "ललन सिंह",
+    "lalan"
    ],
    "curated": [
     "Machhli Babu",
@@ -587,6 +630,9 @@
    ],
    "emoji": [
     "🐄"
+   ],
+   "ask": [
+    "lalan"
    ]
   },
   {
@@ -598,7 +644,8 @@
     "sarbananda sonowal",
     "sonowal",
     "सर्बानंद सोनोवाल",
-    "सोनोवाल"
+    "सोनोवाल",
+    "sarbananda"
    ],
    "curated": [
     "Jahaaz Babu",
@@ -608,6 +655,9 @@
    ],
    "emoji": [
     "🚢"
+   ],
+   "ask": [
+    "sarbananda"
    ]
   },
   {
@@ -619,7 +669,8 @@
    "triggers": [
     "virendra kumar",
     "virendra kumar khatik",
-    "वीरेंद्र कुमार"
+    "वीरेंद्र कुमार",
+    "virendra"
    ],
    "curated": [
     "Nyay Babu",
@@ -628,6 +679,9 @@
    ],
    "emoji": [
     "🤝"
+   ],
+   "ask": [
+    "virendra"
    ]
   },
   {
@@ -640,7 +694,9 @@
     "rammohan naidu",
     "k ram mohan naidu",
     "kinjarapu ram mohan naidu",
-    "राम मोहन नायडू"
+    "राम मोहन नायडू",
+    "rammohan",
+    "ram mohan"
    ],
    "curated": [
     "Udaan Babu",
@@ -651,6 +707,10 @@
    ],
    "emoji": [
     "🛫"
+   ],
+   "ask": [
+    "rammohan",
+    "ram mohan"
    ]
   },
   {
@@ -662,7 +722,8 @@
     "pralhad joshi",
     "prahlad joshi",
     "प्रल्हाद जोशी",
-    "प्रह्लाद जोशी"
+    "प्रह्लाद जोशी",
+    "pralhad"
    ],
    "curated": [
     "Ration Babu",
@@ -672,6 +733,9 @@
    ],
    "emoji": [
     "🍚"
+   ],
+   "ask": [
+    "pralhad"
    ]
   },
   {
@@ -681,7 +745,8 @@
    "last": "Oram",
    "triggers": [
     "jual oram",
-    "जुएल ओराम"
+    "जुएल ओराम",
+    "jual"
    ],
    "curated": [
     "Janjati Babu",
@@ -690,6 +755,9 @@
    ],
    "emoji": [
     "🏹"
+   ],
+   "ask": [
+    "jual"
    ]
   },
   {
@@ -728,7 +796,8 @@
     "ashwini vaishnaw",
     "ashwini vaishnav",
     "vaishnaw",
-    "अश्विनी वैष्णव"
+    "अश्विनी वैष्णव",
+    "ashwini"
    ],
    "curated": [
     "Reel Mantri",
@@ -741,7 +810,8 @@
     "रील मंत्री"
    ],
    "ask": [
-    "vaishnaw"
+    "vaishnaw",
+    "ashwini"
    ],
    "emoji": [
     "🚆",
@@ -757,7 +827,8 @@
     "jyotiraditya scindia",
     "scindia",
     "ज्योतिरादित्य सिंधिया",
-    "सिंधिया"
+    "सिंधिया",
+    "jyotiraditya"
    ],
    "curated": [
     "Maharaj",
@@ -769,7 +840,8 @@
    ],
    "ask": [
     "scindia",
-    "सिंधिया"
+    "सिंधिया",
+    "jyotiraditya"
    ],
    "emoji": [
     "📡",
@@ -785,7 +857,8 @@
    "triggers": [
     "bhupender yadav",
     "bhupendra yadav",
-    "भूपेंद्र यादव"
+    "भूपेंद्र यादव",
+    "bhupender"
    ],
    "curated": [
     "Jungle Babu",
@@ -795,6 +868,9 @@
    ],
    "emoji": [
     "🌳"
+   ],
+   "ask": [
+    "bhupender"
    ]
   },
   {
@@ -807,7 +883,8 @@
     "gajendra shekhawat",
     "shekhawat",
     "गजेंद्र सिंह शेखावत",
-    "शेखावत"
+    "शेखावत",
+    "gajendra"
    ],
    "curated": [
     "Sanskriti Babu",
@@ -817,7 +894,8 @@
    ],
    "ask": [
     "shekhawat",
-    "शेखावत"
+    "शेखावत",
+    "gajendra"
    ],
    "emoji": [
     "🎭"
@@ -832,7 +910,8 @@
    "triggers": [
     "annpurna devi",
     "annapurna devi",
-    "अन्नपूर्णा देवी"
+    "अन्नपूर्णा देवी",
+    "annpurna"
    ],
    "curated": [
     "Mahila Babu",
@@ -841,6 +920,9 @@
    ],
    "emoji": [
     "👶"
+   ],
+   "ask": [
+    "annpurna"
    ]
   },
   {
@@ -852,7 +934,8 @@
     "kiren rijiju",
     "rijiju",
     "किरेन रिजिजू",
-    "रिजिजू"
+    "रिजिजू",
+    "kiren"
    ],
    "curated": [
     "Sansad Babu",
@@ -862,6 +945,9 @@
    ],
    "emoji": [
     "📜"
+   ],
+   "ask": [
+    "kiren"
    ]
   },
   {
@@ -873,7 +959,8 @@
     "hardeep singh puri",
     "hardeep puri",
     "हरदीप सिंह पुरी",
-    "हरदीप पुरी"
+    "हरदीप पुरी",
+    "hardeep"
    ],
    "curated": [
     "Petrol Babu",
@@ -884,6 +971,9 @@
    ],
    "emoji": [
     "⛽"
+   ],
+   "ask": [
+    "hardeep"
    ]
   },
   {
@@ -895,7 +985,8 @@
     "mansukh mandaviya",
     "mandaviya",
     "मनसुख मांडविया",
-    "मांडविया"
+    "मांडविया",
+    "mansukh"
    ],
    "curated": [
     "Cycle Mantri",
@@ -907,6 +998,9 @@
    "emoji": [
     "⚽",
     "🚲"
+   ],
+   "ask": [
+    "mansukh"
    ]
   },
   {
@@ -918,7 +1012,8 @@
     "g kishan reddy",
     "kishan reddy",
     "जी किशन रेड्डी",
-    "किशन रेड्डी"
+    "किशन रेड्डी",
+    "kishan"
    ],
    "curated": [
     "Koyla Babu",
@@ -928,6 +1023,9 @@
    ],
    "emoji": [
     "🪨"
+   ],
+   "ask": [
+    "kishan"
    ]
   },
   {
@@ -937,7 +1035,8 @@
    "last": "Paswan",
    "triggers": [
     "chirag paswan",
-    "चिराग पासवान"
+    "चिराग पासवान",
+    "chirag"
    ],
    "curated": [
     "Saheb ka Hanuman",
@@ -947,6 +1046,9 @@
    ],
    "emoji": [
     "🥫"
+   ],
+   "ask": [
+    "chirag"
    ]
   },
   {
@@ -959,7 +1061,8 @@
     "c r patil",
     "c.r. patil",
     "c. r. patil",
-    "सी आर पाटिल"
+    "सी आर पाटिल",
+    "chandrakant"
    ],
    "curated": [
     "Jal Babu",
@@ -969,6 +1072,9 @@
    ],
    "emoji": [
     "💧"
+   ],
+   "ask": [
+    "chandrakant"
    ]
   },
   {
@@ -988,7 +1094,9 @@
     "अदाणी",
     "गौतम अडानी",
     "गौतम अदाणी",
-    "अडानी जी"
+    "अडानी जी",
+    "gautam",
+    "गौतम"
    ],
    "curated": [
     "Mitra",
@@ -1030,6 +1138,10 @@
     "🤝",
     "🚢",
     "⚡"
+   ],
+   "ask": [
+    "gautam",
+    "गौतम"
    ]
   },
   {

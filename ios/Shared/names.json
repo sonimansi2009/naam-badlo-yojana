@@ -15,7 +15,9 @@
     "मोदी",
     "नरेंद्र मोदी",
     "मोदीजी",
-    "मोदी जी"
+    "मोदी जी",
+    "narendra",
+    "नरेंद्र"
    ],
    "alternates": [
     "Odiji",
@@ -70,7 +72,10 @@
     "Jodi"
    ],
    "popular": 48,
-   "ask": []
+   "ask": [
+    "narendra",
+    "नरेंद्र"
+   ]
   },
   {
    "id": "amit-shah",
@@ -82,7 +87,9 @@
     "amitshah",
     "hm amit shah",
     "अमित शाह",
-    "शाह"
+    "शाह",
+    "amit",
+    "अमित"
    ],
    "alternates": [
     "Mota Bhai",
@@ -114,32 +121,34 @@
     "HM 🧠",
     "Gruh Mantri ji 🎯",
     "Shamit Ah",
-    "Amit Bah",
-    "Amit Gah",
-    "Amit Jah",
-    "Amit Kah",
-    "Amit Lah",
-    "Amit Nah",
-    "Amit Pah",
-    "Amit Rah",
-    "Amit Sah",
-    "Amit Tah",
-    "Amit Vah",
-    "Amit Hah",
-    "Amit Dah",
-    "Amit Fah",
-    "Amit Yah",
-    "Amit Bhah",
-    "Amit Chah",
     "Sheh",
     "Shih",
     "Shuh",
-    "Shoh"
+    "Shoh",
+    "Shaah",
+    "Shahh",
+    "Shaaah",
+    "AmSh",
+    "Bah ji",
+    "Bah Saheb",
+    "Bah Babu",
+    "Gah ji",
+    "Gah Saheb",
+    "Gah Babu",
+    "Jah ji",
+    "Jah Saheb",
+    "Jah Babu",
+    "Kah ji",
+    "Kah Saheb",
+    "Kah Babu",
+    "Lah ji"
    ],
    "popular": 28,
    "ask": [
     "shah",
-    "शाह"
+    "शाह",
+    "amit",
+    "अमित"
    ]
   },
   {
@@ -428,7 +437,9 @@
     "nitin gadkari",
     "gadkari",
     "नितिन गडकरी",
-    "गडकरी"
+    "गडकरी",
+    "nitin",
+    "नितिन"
    ],
    "alternates": [
     "Highway Man",
@@ -483,7 +494,10 @@
     "Kadkari Saheb"
    ],
    "popular": 14,
-   "ask": []
+   "ask": [
+    "nitin",
+    "नितिन"
+   ]
   },
   {
    "id": "nadda",
@@ -495,7 +509,8 @@
     "jagat prakash nadda",
     "nadda",
     "जेपी नड्डा",
-    "नड्डा"
+    "नड्डा",
+    "jagat"
    ],
    "alternates": [
     "Health Babu",
@@ -550,7 +565,9 @@
     "Ladda ji"
    ],
    "popular": 10,
-   "ask": []
+   "ask": [
+    "jagat"
+   ]
   },
   {
    "id": "shivraj",
@@ -628,7 +645,9 @@
     "sitharaman",
     "nirmala sitaraman",
     "निर्मला सीतारमण",
-    "सीतारमण"
+    "सीतारमण",
+    "nirmala",
+    "निर्मला"
    ],
    "alternates": [
     "FM",
@@ -683,7 +702,10 @@
     "Githaraman Saheb"
    ],
    "popular": 18,
-   "ask": []
+   "ask": [
+    "nirmala",
+    "निर्मला"
+   ]
   },
   {
    "id": "jaishankar",
@@ -693,7 +715,8 @@
     "s. jaishankar",
     "jaishankar",
     "एस जयशंकर",
-    "जयशंकर"
+    "जयशंकर",
+    "subrahmanyam"
    ],
    "alternates": [
     "EAM",
@@ -750,7 +773,8 @@
    "popular": 12,
    "ask": [
     "jaishankar",
-    "जयशंकर"
+    "जयशंकर",
+    "subrahmanyam"
    ]
   },
   {
@@ -761,7 +785,8 @@
     "ml khattar",
     "khattar",
     "मनोहर लाल खट्टर",
-    "खट्टर"
+    "खट्टर",
+    "manohar"
    ],
    "alternates": [
     "Bijli Babu",
@@ -816,7 +841,9 @@
     "Lattar ji"
    ],
    "popular": 10,
-   "ask": []
+   "ask": [
+    "manohar"
+   ]
   },
   {
    "id": "kumaraswamy",
@@ -889,7 +916,8 @@
    "label": "Piyush Goyal",
    "triggers": [
     "piyush goyal",
-    "पीयूष गोयल"
+    "पीयूष गोयल",
+    "piyush"
    ],
    "alternates": [
     "Vyapar Babu",
@@ -944,14 +972,17 @@
     "Noyal ji"
    ],
    "popular": 10,
-   "ask": []
+   "ask": [
+    "piyush"
+   ]
   },
   {
    "id": "pradhan",
    "label": "Dharmendra Pradhan",
    "triggers": [
     "dharmendra pradhan",
-    "धर्मेंद्र प्रधान"
+    "धर्मेंद्र प्रधान",
+    "dharmendra"
    ],
    "alternates": [
     "Pariksha Babu",
@@ -1006,7 +1037,9 @@
     "Kadhan Babu"
    ],
    "popular": 10,
-   "ask": []
+   "ask": [
+    "dharmendra"
+   ]
   },
   {
    "id": "manjhi",
@@ -1015,7 +1048,8 @@
     "jitan ram manjhi",
     "manjhi",
     "जीतन राम मांझी",
-    "मांझी"
+    "मांझी",
+    "jitan"
    ],
    "alternates": [
     "MSME Baba",
@@ -1072,7 +1106,8 @@
    "popular": 6,
    "ask": [
     "manjhi",
-    "मांझी"
+    "मांझी",
+    "jitan"
    ]
   },
   {
@@ -1081,7 +1116,8 @@
    "triggers": [
     "lalan singh",
     "rajiv ranjan singh",
-    "ललन सिंह"
+    "ललन सिंह",
+    "lalan"
    ],
    "alternates": [
     "Machhli Babu",
@@ -1136,7 +1172,9 @@
     "Nalan Babu"
    ],
    "popular": 8,
-   "ask": []
+   "ask": [
+    "lalan"
+   ]
   },
   {
    "id": "sonowal",
@@ -1145,7 +1183,8 @@
     "sarbananda sonowal",
     "sonowal",
     "सर्बानंद सोनोवाल",
-    "सोनोवाल"
+    "सोनोवाल",
+    "sarbananda"
    ],
    "alternates": [
     "Jahaaz Babu",
@@ -1200,7 +1239,9 @@
     "Nonowal ji"
    ],
    "popular": 8,
-   "ask": []
+   "ask": [
+    "sarbananda"
+   ]
   },
   {
    "id": "virendra-kumar",
@@ -1208,7 +1249,8 @@
    "triggers": [
     "virendra kumar",
     "virendra kumar khatik",
-    "वीरेंद्र कुमार"
+    "वीरेंद्र कुमार",
+    "virendra"
    ],
    "alternates": [
     "Nyay Babu",
@@ -1263,7 +1305,9 @@
     "Nirendra Saheb"
    ],
    "popular": 6,
-   "ask": []
+   "ask": [
+    "virendra"
+   ]
   },
   {
    "id": "ram-mohan-naidu",
@@ -1273,7 +1317,9 @@
     "rammohan naidu",
     "k ram mohan naidu",
     "kinjarapu ram mohan naidu",
-    "राम मोहन नायडू"
+    "राम मोहन नायडू",
+    "rammohan",
+    "ram mohan"
    ],
    "alternates": [
     "Udaan Babu",
@@ -1328,7 +1374,10 @@
     "Laidu ji"
    ],
    "popular": 10,
-   "ask": []
+   "ask": [
+    "rammohan",
+    "ram mohan"
+   ]
   },
   {
    "id": "pralhad-joshi",
@@ -1337,7 +1386,8 @@
     "pralhad joshi",
     "prahlad joshi",
     "प्रल्हाद जोशी",
-    "प्रह्लाद जोशी"
+    "प्रह्लाद जोशी",
+    "pralhad"
    ],
    "alternates": [
     "Ration Babu",
@@ -1392,14 +1442,17 @@
     "Noshi Babu"
    ],
    "popular": 8,
-   "ask": []
+   "ask": [
+    "pralhad"
+   ]
   },
   {
    "id": "jual-oram",
    "label": "Jual Oram",
    "triggers": [
     "jual oram",
-    "जुएल ओराम"
+    "जुएल ओराम",
+    "jual"
    ],
    "alternates": [
     "Janjati Babu",
@@ -1454,7 +1507,9 @@
     "Noram ji"
    ],
    "popular": 6,
-   "ask": []
+   "ask": [
+    "jual"
+   ]
   },
   {
    "id": "giriraj",
@@ -1530,7 +1585,8 @@
     "ashwini vaishnaw",
     "ashwini vaishnav",
     "vaishnaw",
-    "अश्विनी वैष्णव"
+    "अश्विनी वैष्णव",
+    "ashwini"
    ],
    "alternates": [
     "Reel Mantri",
@@ -1586,7 +1642,8 @@
    ],
    "popular": 15,
    "ask": [
-    "vaishnaw"
+    "vaishnaw",
+    "ashwini"
    ]
   },
   {
@@ -1596,7 +1653,8 @@
     "jyotiraditya scindia",
     "scindia",
     "ज्योतिरादित्य सिंधिया",
-    "सिंधिया"
+    "सिंधिया",
+    "jyotiraditya"
    ],
    "alternates": [
     "Maharaj",
@@ -1653,7 +1711,8 @@
    "popular": 12,
    "ask": [
     "scindia",
-    "सिंधिया"
+    "सिंधिया",
+    "jyotiraditya"
    ]
   },
   {
@@ -1662,7 +1721,8 @@
    "triggers": [
     "bhupender yadav",
     "bhupendra yadav",
-    "भूपेंद्र यादव"
+    "भूपेंद्र यादव",
+    "bhupender"
    ],
    "alternates": [
     "Jungle Babu",
@@ -1717,7 +1777,9 @@
     "Lupender Babu"
    ],
    "popular": 8,
-   "ask": []
+   "ask": [
+    "bhupender"
+   ]
   },
   {
    "id": "shekhawat",
@@ -1727,7 +1789,8 @@
     "gajendra shekhawat",
     "shekhawat",
     "गजेंद्र सिंह शेखावत",
-    "शेखावत"
+    "शेखावत",
+    "gajendra"
    ],
    "alternates": [
     "Sanskriti Babu",
@@ -1784,7 +1847,8 @@
    "popular": 8,
    "ask": [
     "shekhawat",
-    "शेखावत"
+    "शेखावत",
+    "gajendra"
    ]
   },
   {
@@ -1793,7 +1857,8 @@
    "triggers": [
     "annpurna devi",
     "annapurna devi",
-    "अन्नपूर्णा देवी"
+    "अन्नपूर्णा देवी",
+    "annpurna"
    ],
    "alternates": [
     "Mahila Babu",
@@ -1848,7 +1913,9 @@
     "Nannpurna ji"
    ],
    "popular": 6,
-   "ask": []
+   "ask": [
+    "annpurna"
+   ]
   },
   {
    "id": "rijiju",
@@ -1857,7 +1924,8 @@
     "kiren rijiju",
     "rijiju",
     "किरेन रिजिजू",
-    "रिजिजू"
+    "रिजिजू",
+    "kiren"
    ],
    "alternates": [
     "Sansad Babu",
@@ -1912,7 +1980,9 @@
     "Lijiju Babu"
    ],
    "popular": 8,
-   "ask": []
+   "ask": [
+    "kiren"
+   ]
   },
   {
    "id": "hardeep-puri",
@@ -1921,7 +1991,8 @@
     "hardeep singh puri",
     "hardeep puri",
     "हरदीप सिंह पुरी",
-    "हरदीप पुरी"
+    "हरदीप पुरी",
+    "hardeep"
    ],
    "alternates": [
     "Petrol Babu",
@@ -1976,7 +2047,9 @@
     "Kuri Babu"
    ],
    "popular": 10,
-   "ask": []
+   "ask": [
+    "hardeep"
+   ]
   },
   {
    "id": "mandaviya",
@@ -1985,7 +2058,8 @@
     "mansukh mandaviya",
     "mandaviya",
     "मनसुख मांडविया",
-    "मांडविया"
+    "मांडविया",
+    "mansukh"
    ],
    "alternates": [
     "Cycle Mantri",
@@ -2040,7 +2114,9 @@
     "Nandaviya Saheb"
    ],
    "popular": 10,
-   "ask": []
+   "ask": [
+    "mansukh"
+   ]
   },
   {
    "id": "kishan-reddy",
@@ -2049,7 +2125,8 @@
     "g kishan reddy",
     "kishan reddy",
     "जी किशन रेड्डी",
-    "किशन रेड्डी"
+    "किशन रेड्डी",
+    "kishan"
    ],
    "alternates": [
     "Koyla Babu",
@@ -2104,14 +2181,17 @@
     "Neddy Saheb"
    ],
    "popular": 8,
-   "ask": []
+   "ask": [
+    "kishan"
+   ]
   },
   {
    "id": "chirag-paswan",
    "label": "Chirag Paswan",
    "triggers": [
     "chirag paswan",
-    "चिराग पासवान"
+    "चिराग पासवान",
+    "chirag"
    ],
    "alternates": [
     "Saheb ka Hanuman",
@@ -2166,7 +2246,9 @@
     "Laswan Babu"
    ],
    "popular": 8,
-   "ask": []
+   "ask": [
+    "chirag"
+   ]
   },
   {
    "id": "cr-patil",
@@ -2176,7 +2258,8 @@
     "c r patil",
     "c.r. patil",
     "c. r. patil",
-    "सी आर पाटिल"
+    "सी आर पाटिल",
+    "chandrakant"
    ],
    "alternates": [
     "Jal Babu",
@@ -2231,7 +2314,9 @@
     "Latil Saheb"
    ],
    "popular": 8,
-   "ask": []
+   "ask": [
+    "chandrakant"
+   ]
   },
   {
    "id": "adani",
@@ -2248,7 +2333,9 @@
     "अदाणी",
     "गौतम अडानी",
     "गौतम अदाणी",
-    "अडानी जी"
+    "अडानी जी",
+    "gautam",
+    "गौतम"
    ],
    "alternates": [
     "Mitra",
@@ -2283,7 +2370,6 @@
     "Number One Seth",
     "Plane wale Dost",
     "Gujarat wale Seth 🚢",
-    "Gautam Bhai",
     "Gotam Seth",
     "Adhani",
     "मित्र",
@@ -2300,10 +2386,14 @@
     "Kadani",
     "Ladani",
     "Nadani",
-    "Padani"
+    "Padani",
+    "Radani"
    ],
-   "popular": 42,
-   "ask": []
+   "popular": 41,
+   "ask": [
+    "gautam",
+    "गौतम"
+   ]
   },
   {
    "id": "vote-chori",

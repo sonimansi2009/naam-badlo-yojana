@@ -71,7 +71,7 @@ struct ContentView: View {
                             } }.padding(.top, 8)
                         }
                     case .use:
-                        header("sparkles", "Make it Meta friendly", "One tap swaps every name")
+                        header("sparkles", "Make it Meta-proof", "One tap swaps every name")
                         tags(["One tap", "Fresh names", "50 per name"])
                         panel {
                             step(1, "Type on your usual keyboard.")

@@ -31,7 +31,7 @@ struct NameMatch {
 final class NameDictionary {
     static let shared = NameDictionary()
     static let appName = "Naam Chupao Yojana"
-    static let congrats = "Badhai ho! Aapka post ab Meta-friendly hai."
+    static let congrats = "Badhai ho! Aapka post ab Meta-proof hai."
 
     private(set) var entities: [NameEntity] = []
     private var map: [String: NameEntity] = [:]

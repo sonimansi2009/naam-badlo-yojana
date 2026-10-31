@@ -1,7 +1,7 @@
 import UIKit
 
 /// Naam Chupao keyboard. Type on your usual keyboard, tap 🌐 to switch here,
-/// tap "Make it Meta friendly" (again for fresh names) or pick a code name.
+/// tap "Make it Meta-proof" (again for fresh names) or pick a code name.
 final class KeyboardViewController: UIInputViewController {
 
     private let dict = NameDictionary.shared
@@ -63,7 +63,7 @@ final class KeyboardViewController: UIInputViewController {
         ])
         root.addArrangedSubview(scroll)
 
-        metaKey = makeCTA("Make it Meta friendly") { [weak self] in self?.makeFriendly() }
+        metaKey = makeCTA("Make it Meta-proof") { [weak self] in self?.makeFriendly() }
         metaKey.heightAnchor.constraint(equalToConstant: 52).isActive = true
         root.addArrangedSubview(metaKey)
 
@@ -137,7 +137,7 @@ final class KeyboardViewController: UIInputViewController {
         let text = before
         let all = dict.findAll(text)
         let real = all.filter { !$0.fromMemory }.count
-        setCTATitle((real == 0 && !all.isEmpty) ? "Fresh names" : "Make it Meta friendly")
+        setCTATitle((real == 0 && !all.isEmpty) ? "Fresh names" : "Make it Meta-proof")
         metaKey.alpha = all.isEmpty ? 0.6 : 1
 
         let mm = dict.matchAtEnd(text)

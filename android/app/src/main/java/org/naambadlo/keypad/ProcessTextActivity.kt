@@ -58,17 +58,21 @@ class ProcessTextActivity : Activity() {
         }
         choices = Array(groups.size) { g ->
             val gr = groups[g]
-            if (gr.ask) "" else NameStore.pick(gr.entity, gr.word)
+            if (gr.ask) "" else NameStore.pickPlain(gr.entity, gr.word)
         }
         setContentView(build())
     }
+
+    /** Code name as it goes into the text: with the symbol layer (K@mal P@rty), the same each time. */
+    private val shownAs = HashMap<String, String>()
+    private fun shown(c: String) = shownAs.getOrPut(c) { NameStore.maybeDisguise(c) }
 
     private fun result(): String {
         val sb = StringBuilder()
         var last = 0
         matches.forEachIndexed { i, m ->
             val c = choices[groupOf[i]]
-            sb.append(original, last, m.start).append(c.ifEmpty { original.substring(m.start, m.end) })
+            sb.append(original, last, m.start).append(if (c.isEmpty()) original.substring(m.start, m.end) else shown(c))
             last = m.end
         }
         sb.append(original, last, original.length)
@@ -112,8 +116,8 @@ class ProcessTextActivity : Activity() {
 
         groups.forEachIndexed { g, gr ->
             val times = if (gr.count > 1) " · ${gr.count}×" else ""
-            val heading = if (gr.ask) "“${gr.word}”$times · is this ${gr.entity.label}? Pick a code name if yes"
-                          else "${gr.entity.label}$times"
+            val heading = if (gr.ask) "“${NameStore.mask(gr.word)}”$times · is this ${NameStore.mask(gr.entity.label)}? Pick a code name if yes"
+                          else "${NameStore.mask(gr.entity.label)}$times"
             card.addView(Ui.label(this, heading, 13f, Ui.MUTED, Ui.W.MED).apply {
                 setPadding(Ui.dp(context, 4), Ui.dp(context, 8), 0, Ui.dp(context, 2))
             })
@@ -155,7 +159,7 @@ class ProcessTextActivity : Activity() {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .apply { setMargins(0, 0, Ui.dp(context, 8), 0) }
         })
-        bar.addView(Ui.cta(this, if (readOnly) "Copy" else "Make it Meta friendly") { done() })
+        bar.addView(Ui.cta(this, if (readOnly) "Copy" else "Make it Meta-proof") { done() })
         root.addView(bar)
 
         Ui.enter(card, 0)
@@ -174,7 +178,7 @@ class ProcessTextActivity : Activity() {
     private fun shuffle() {
         for (g in choices.indices) {
             if (choices[g].isEmpty()) continue           // leave "keep as is" alone
-            choices[g] = NameStore.pick(groups[g].entity, choices[g])
+            choices[g] = NameStore.pickPlain(groups[g].entity, choices[g])
         }
         preview.animate().alpha(0.3f).setDuration(90).withEndAction {
             refresh()
@@ -202,7 +206,7 @@ class ProcessTextActivity : Activity() {
 
     private fun done() {
         val text = result()
-        groups.forEachIndexed { g, gr -> if (choices[g].isNotEmpty()) NameStore.memory.add(choices[g], gr.entity) }
+        groups.forEachIndexed { g, gr -> if (choices[g].isNotEmpty()) NameStore.memory.add(shown(choices[g]), gr.entity) }
         if (readOnly) {
             (getSystemService(CLIPBOARD_SERVICE) as ClipboardManager)
                 .setPrimaryClip(ClipData.newPlainText(NameStore.APP_NAME, text))

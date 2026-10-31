@@ -19,7 +19,7 @@ import android.widget.Toast
 
 /**
  * Shadowban Suraksha keyboard. Keep typing on your usual keyboard; switch here after
- * a name. "Make it Meta friendly" swaps every name (again for fresh code names),
+ * a name. "Make it Meta-proof" swaps every name (again for fresh code names),
  * or pick a code name for the last word. Long-press a code name to star it.
  * Bare first names / common surnames ("Shah") ask first.
  */
@@ -84,7 +84,7 @@ class NaamBadloIME : InputMethodService() {
         scroll.minimumHeight = Ui.dp(ctx, 52)
         root.addView(scroll)
 
-        val meta = Ui.cta(ctx, "Make it Meta friendly") { makeFriendly() }
+        val meta = Ui.cta(ctx, "Make it Meta-proof") { makeFriendly() }
         metaLabel = meta.getChildAt(0) as TextView
         metaKey = meta
         root.addView(meta, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Ui.dp(ctx, 52)).apply {
@@ -137,7 +137,7 @@ class NaamBadloIME : InputMethodService() {
         val all = matcher.findAll(text, memory)
         val usable = all.filter { ready(text, it) }
         val real = usable.count { !it.fromMemory }
-        metaLabel.text = if (real == 0 && usable.isNotEmpty()) "Fresh names" else "Make it Meta friendly"
+        metaLabel.text = if (real == 0 && usable.isNotEmpty()) "Fresh names" else "Make it Meta-proof"
         metaKey.alpha = if (usable.isEmpty()) 0.6f else 1f
 
         val m = matcher.matchAtEnd(text, memory)?.takeIf { it.fromMemory || !it.ask || !declined.contains(wordKey(text, it)) }
@@ -156,8 +156,8 @@ class NaamBadloIME : InputMethodService() {
         }
         val word = text.substring(m.start, m.end)
         if (pending(text, m)) {
-            title.text = "“$word” means ${m.entity.label}?"
-            chips.addView(Ui.chip(this, "Yes, ${m.entity.label}", selected = true) {
+            title.text = "“${NameStore.mask(word)}” means ${NameStore.mask(m.entity.label)}?"
+            chips.addView(Ui.chip(this, "Yes, ${NameStore.mask(m.entity.label)}", selected = true) {
                 confirmed.add(wordKey(text, m)); lastKey = ""; refresh()
             })
             chips.addView(Ui.chip(this, "No, someone else") {
@@ -165,7 +165,7 @@ class NaamBadloIME : InputMethodService() {
             })
             return
         }
-        title.text = "“$word” · ${m.entity.label} · hold a code name to star it"
+        title.text = "“${NameStore.mask(word)}” · hold a code name to star it"
         val favs = Prefs.favourites(this, m.entity.id)
         NameStore.ordered(this, m.entity).forEachIndexed { i, alt ->
             val c = Ui.chip(this, if (alt in favs) "★ $alt" else alt) { swap(alt) }

@@ -27,7 +27,7 @@ import android.widget.Toast
 import kotlin.math.abs
 
 /**
- * The floating "Make it Meta friendly" button (full version only).
+ * The floating "Make it Meta-proof" button (full version only).
  *
  * Keep typing on your normal keyboard. When the text box contains a name from
  * the list, a blue pill appears. Tap it to swap every name; tap again for fresh
@@ -128,7 +128,7 @@ class FloatingButtonService : AccessibilityService() {
         val again = found.count { it.fromMemory }
         if (!shown && (real > 0 || ask != null)) Feedback.found(this)   // soft chime when a name is spotted
         when {
-            real > 0 -> showAction("Make it Meta friendly · $real")
+            real > 0 -> showAction("Make it Meta-proof · $real")
             ask != null -> showQuestion(text, ask)
             again > 0 -> showAction("Fresh names · $again")
             else -> hide()
@@ -251,7 +251,7 @@ class FloatingButtonService : AccessibilityService() {
         noBtn.text = "No"; noBtn.visibility = View.VISIBLE
         label.maxLines = 2
         label.maxWidth = (resources.displayMetrics.widthPixels * 0.5).toInt()
-        show("“$word” means ${m.entity.label}?")
+        show("“${NameStore.mask(word)}” means ${NameStore.mask(m.entity.label)}?")
     }
 
     private fun smallButton(text: String, onClick: () -> Unit) = TextView(this).apply {
@@ -294,7 +294,7 @@ class FloatingButtonService : AccessibilityService() {
             setPadding(Ui.dp(context, 6), Ui.dp(context, 6), Ui.dp(context, 8), Ui.dp(context, 6))
             background = Ui.gradient(28, context)
             elevation = Ui.dp(context, 10).toFloat()
-            contentDescription = "Make it Meta friendly"
+            contentDescription = "Make it Meta-proof"
             addView(label)
             addView(yesBtn)
             addView(noBtn)

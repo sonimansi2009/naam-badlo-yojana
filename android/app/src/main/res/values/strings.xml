@@ -4,8 +4,8 @@
     <string name="ime_name">Shadowban Suraksha keyboard</string>
     <string name="process_label">Shadowban Suraksha</string>
     <string name="a11y_name">Shadowban Suraksha button</string>
-    <string name="a11y_summary">Shows a “Make it Meta friendly” button when your text has a name from the list.</string>
-    <string name="a11y_description">Shows a floating “Make it Meta friendly” button while you type. It reads only the text box you are typing in (never password fields) to find names from the list, and swaps them when you tap the button. Shadowban Suraksha Yojana has no internet permission, so nothing you type can leave your phone.</string>
-    <string name="doc_label">Make it Meta friendly</string>
+    <string name="a11y_summary">Shows a “Make it Meta-proof” button when your text has a name from the list.</string>
+    <string name="a11y_description">Shows a floating “Make it Meta-proof” button while you type. It reads only the text box you are typing in (never password fields) to find names from the list, and swaps them when you tap the button. Shadowban Suraksha Yojana has no internet permission, so nothing you type can leave your phone.</string>
+    <string name="doc_label">Make it Meta-proof</string>
     <string name="decode_label">Decode names</string>
 </resources>

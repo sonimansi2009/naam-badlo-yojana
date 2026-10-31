@@ -2,7 +2,7 @@
 <!-- Full edition only: the floating button. Lite leaves this out so Play Protect does not block it. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
-        <!-- Floating "Make it Meta friendly" button over other apps -->
+        <!-- Floating "Make it Meta-proof" button over other apps -->
         <service
             android:name=".FloatingButtonService"
             android:exported="true"

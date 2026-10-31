@@ -20,9 +20,9 @@ You keep your normal keyboard (Gboard, SwiftKey, Samsung, Apple). Shadowban Sura
 
 | | Android | iPhone |
 |---|---|---|
-| **Floating button** (easiest) | Type a name in Instagram, WhatsApp or any app → a **✦ Make it Meta friendly** button appears → tap it, every name in the box is swapped. Tap again for fresh names. Hold to undo, drag to move. Can be limited to Meta apps only. | Not allowed by Apple |
+| **Floating button** (easiest) | Type a name in Instagram, WhatsApp or any app → a **✦ Make it Meta-proof** button appears → tap it, every name in the box is swapped. Tap again for fresh names. Hold to undo, drag to move. Can be limited to Meta apps only. | Not allowed by Apple |
 | **Select text** | Select text → ⋮ → **Shadowban Suraksha** → pick each swap → Done | — |
-| **Add-on keyboard** | Switch to it → **Make it Meta friendly** or pick from 50 swaps → it jumps back to your keyboard | Tap 🌐 → **Make it Meta friendly** or pick a swap → 🌐 back |
+| **Add-on keyboard** | Switch to it → **Make it Meta-proof** or pick from 50 swaps → it jumps back to your keyboard | Tap 🌐 → **Make it Meta-proof** or pick a swap → 🌐 back |
 
 The floating button uses Android's accessibility service, because that is the only way an app can edit the text box of another app. It reads only the box you are typing in, skips password fields, and the app has no internet permission, so nothing leaves the phone. Google Play reviews apps that use this closely, so for now the APK is shared directly.
 
@@ -40,7 +40,7 @@ Speeches, scripts, notes and documents: open **Long text** on the home screen, o
 
 | | Full | Lite |
 |---|---|---|
-| Floating “Make it Meta friendly” button | ✓ | — |
+| Floating “Make it Meta-proof” button | ✓ | — |
 | Add-on keyboard | ✓ | ✓ |
 | Select text → Naam Chupao | ✓ | ✓ |
 | Installs without Play Protect blocking it | No (pause Play Protect once) | Yes |

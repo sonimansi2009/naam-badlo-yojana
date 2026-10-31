@@ -54,7 +54,6 @@ class MatcherTest {
         val t = "Odiijii aur Mota bhaai ne kaha, Kamal Partyy jeetegi, M.o.d.i bhi"
         val hits = d.find(t)
         assertEquals("Modi aur Amit Shah ne kaha, BJP jeetegi, Modi bhi", d.decode(t, hits))
-        assertEquals(true, hits.first().guess)
     }
 
     @Test fun decodeLeavesPlainWordsAlone() {
@@ -66,5 +65,7 @@ class MatcherTest {
     @Test fun decodeGuessesJumbles() {
         val d = Decoder(listOf(modi, shah))
         assertEquals("Modi aur Modi ne kaha", d.decode("Nodiji aur Nodi ne kaha"))
+        assertEquals(true, d.find("Nodi ne kaha").first().guess)
+        assertEquals("BJP", Decoder(listOf(Entity("bjp", "BJP", listOf("bjp"), listOf("Kamal Party")))).decode("K@mal P@rty"))
     }
 }

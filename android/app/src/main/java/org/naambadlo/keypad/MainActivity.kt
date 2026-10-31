@@ -297,7 +297,7 @@ class MainActivity : Activity() {
 
     private fun reachTest() {
         content.addView(headline("Does it *work?*", 44f))
-        content.addView(sub("Post the same thing twice, once plain and once Meta friendly, and compare reach."))
+        content.addView(sub("Post the same thing twice, once plain and once Meta-proof, and compare reach."))
 
         val c1 = Ui.card(this, 18)
         c1.addView(Ui.label(this, "1. Make a test pair", 17f, Ui.INK, Ui.W.SEMI))
@@ -329,7 +329,7 @@ class MainActivity : Activity() {
                     return@cta
                 }
                 out.addView(pairRow("A · plain", plain))
-                out.addView(pairRow("B · Meta friendly", swapped))
+                out.addView(pairRow("B · Meta-proof", swapped))
                 Ui.enter(out, 0)
             })
         })
@@ -348,7 +348,7 @@ class MainActivity : Activity() {
         val c3 = Ui.card(this, 18)
         c3.addView(Ui.label(this, "3. Log the results", 17f, Ui.INK, Ui.W.SEMI))
         val plainIn = numberField("Reach of A (plain)")
-        val swapIn = numberField("Reach of B (Meta friendly)")
+        val swapIn = numberField("Reach of B (Meta-proof)")
         c3.addView(plainIn.apply { (layoutParams as? LinearLayout.LayoutParams)?.topMargin = Ui.dp(context, 10) })
         c3.addView(swapIn)
         val (platRow, platPills) = Ui.chipRow(this)
@@ -428,8 +428,8 @@ class MainActivity : Activity() {
         val change = if (a > 0) ((b - a) / a * 100).toInt() else 0
         val verdict = when {
             rows.size < 5 -> "Too early to tell. Keep going until you have 5 pairs."
-            change >= 15 -> "Meta friendly posts reached more people."
-            change <= -15 -> "Meta friendly posts reached fewer people."
+            change >= 15 -> "Meta-proof posts reached more people."
+            change <= -15 -> "Meta-proof posts reached fewer people."
             else -> "No clear difference yet."
         }
         box.addView(Ui.label(this, "${if (change >= 0) "+" else ""}$change%", 40f, if (change >= 0) Ui.GOOD else Ui.INK, Ui.W.MED).apply {
@@ -458,7 +458,7 @@ class MainActivity : Activity() {
         content.addView(styleCard())
 
         val sw = Ui.card(this, 18)
-        sw.addView(Ui.label(this, "Sound and button", 17f, Ui.INK, Ui.W.SEMI))
+        sw.addView(Ui.label(this, "Options", 17f, Ui.INK, Ui.W.SEMI))
         fun switch(label: String, on: Boolean, top: Int, set: (Boolean) -> Unit) = Switch(this).apply {
             text = label
             typeface = Ui.SANS_MEDIUM
@@ -468,14 +468,18 @@ class MainActivity : Activity() {
             setOnCheckedChangeListener { _, v -> set(v) }
             setPadding(0, Ui.dp(context, top), 0, 0)
         }
-        sw.addView(switch("Soft sound when a name is found", Prefs.sound(this), 12) { Prefs.setSound(this, it) })
+        sw.addView(switch("Symbol letters, like K@mal P@rty", Prefs.symbols(this), 12) { Prefs.setSymbols(this, it) })
+        sw.addView(Ui.label(this, "Swaps 2–3 letters of each code name for look-alikes: @ for a, 0 for o, 1 for i, 3 for e, $ for s.", 12.5f, Ui.MUTED).apply {
+            setPadding(0, Ui.dp(context, 2), 0, 0)
+        })
+        sw.addView(switch("Soft sound when a name is found", Prefs.sound(this), 14) { Prefs.setSound(this, it) })
         if (hasFloating) {
             sw.addView(switch("Floating button only in Meta apps", Prefs.metaOnly(this), 14) { Prefs.setMetaOnly(this, it) })
         }
         content.addView(sw)
 
         content.addView(Ui.card(this, 18).apply {
-            addView(cardHead(R.drawable.ic_shuffle, "Does it work?", "Compare the reach of plain and Meta friendly posts.").apply {
+            addView(cardHead(R.drawable.ic_shuffle, "Does it work?", "Compare the reach of plain and Meta-proof posts.").apply {
                 addView(Ui.pill(context, "Open", false) { screen = Screen.TEST; render(animate = true) })
             })
         })
