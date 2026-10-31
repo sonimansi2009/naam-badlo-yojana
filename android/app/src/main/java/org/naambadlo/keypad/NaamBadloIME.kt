@@ -61,9 +61,16 @@ class NaamBadloIME : InputMethodService() {
             elevation = Ui.dp(ctx, 6).toFloat()
             addView(Ui.label(ctx, "✓  ${NameStore.CONGRATS}", 14f, Ui.WHITE, Ui.W.MED),
                 LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            addView(Ui.label(ctx, "Copy", 14f, Ui.META, Ui.W.SEMI).apply {
+                background = Ui.rounded(Ui.WHITE, 16, ctx)
+                setPadding(Ui.dp(ctx, 14), Ui.dp(ctx, 7), Ui.dp(ctx, 14), Ui.dp(ctx, 7))
+                setOnClickListener { copyAll() }
+            })
             addView(Ui.label(ctx, "Undo", 14f, Ui.META, Ui.W.SEMI).apply {
                 background = Ui.rounded(Ui.WHITE, 16, ctx)
                 setPadding(Ui.dp(ctx, 14), Ui.dp(ctx, 7), Ui.dp(ctx, 14), Ui.dp(ctx, 7))
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .apply { setMargins(Ui.dp(ctx, 6), 0, 0, 0) }
                 setOnClickListener { undo() }
             })
         }
@@ -117,7 +124,7 @@ class NaamBadloIME : InputMethodService() {
     }
 
     private fun before(): String =
-        currentInputConnection?.getTextBeforeCursor(2000, 0)?.toString() ?: ""
+        currentInputConnection?.getTextBeforeCursor(20_000, 0)?.toString() ?: ""
 
     private fun wordKey(text: String, m: Match) = Matcher.normalize(text.substring(m.start, m.end))
     private fun ready(text: String, m: Match) = m.fromMemory || !m.ask || wordKey(text, m) in confirmed
@@ -200,6 +207,16 @@ class NaamBadloIME : InputMethodService() {
         ic.deleteSurroundingText(old.length, 0)
         ic.commitText(new, 1)
         ic.endBatchEdit()
+    }
+
+    /** Copy the whole text box (not just the part before the cursor). */
+    private fun copyAll() {
+        val ic = currentInputConnection ?: return
+        val all = ic.getExtractedText(android.view.inputmethod.ExtractedTextRequest(), 0)?.text?.toString()
+            ?: (before() + (ic.getTextAfterCursor(100_000, 0) ?: ""))
+        (getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager)
+            .setPrimaryClip(android.content.ClipData.newPlainText(NameStore.APP_NAME, all))
+        Toast.makeText(this, "Copied", Toast.LENGTH_SHORT).show()
     }
 
     private fun undo() {

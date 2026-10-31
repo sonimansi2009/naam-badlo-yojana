@@ -20,6 +20,26 @@
             </intent-filter>
         </activity>
 
+        <!-- Long text: paste, open a file, or share text / a file from another app -->
+        <activity
+            android:name=".DocumentActivity"
+            android:exported="true"
+            android:label="@string/doc_label"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/markdown" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+            </intent-filter>
+        </activity>
+
         <!-- Shows "Naam Badlo" in the menu when you select text in any app -->
         <activity
             android:name=".ProcessTextActivity"

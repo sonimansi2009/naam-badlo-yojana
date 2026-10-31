@@ -205,6 +205,13 @@ class FloatingButtonService : AccessibilityService() {
 
     private fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 
+    /** One-tap copy of the whole converted text box. */
+    private fun copyField() {
+        val text = focusedField()?.let { fieldText(it) } ?: lastOut ?: return
+        (getSystemService(CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText(NameStore.APP_NAME, text))
+        toast("Copied")
+    }
+
     // ---- The pill ----
 
     /** After a swap: the message plus a visible Undo for a few seconds. */
@@ -216,7 +223,8 @@ class FloatingButtonService : AccessibilityService() {
         label.maxLines = 2
         yesBtn.text = "Undo"
         yesBtn.visibility = View.VISIBLE
-        noBtn.visibility = View.GONE
+        noBtn.text = "Copy"
+        noBtn.visibility = View.VISIBLE
         show(NameStore.CONGRATS)
         v.scaleX = 0.9f; v.scaleY = 0.9f
         v.animate().scaleX(1f).scaleY(1f).setDuration(320).setInterpolator(OvershootInterpolator(2.2f)).start()
@@ -276,7 +284,9 @@ class FloatingButtonService : AccessibilityService() {
         yesBtn = smallButton("Yes") {
             if (SystemClock.uptimeMillis() < celebrateUntil) undoLast() else answer(true)
         }
-        noBtn = smallButton("No") { answer(false) }
+        noBtn = smallButton("No") {
+            if (SystemClock.uptimeMillis() < celebrateUntil) copyField() else answer(false)
+        }
         val v = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL

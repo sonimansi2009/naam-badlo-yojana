@@ -24,6 +24,16 @@ You keep your normal keyboard (Gboard, SwiftKey, Samsung, Apple). Shadowban Sura
 
 The floating button uses Android's accessibility service, because that is the only way an app can edit the text box of another app. It reads only the box you are typing in, skips password fields, and the app has no internet permission, so nothing leaves the phone. Google Play reviews apps that use this closely, so for now the APK is shared directly.
 
+## Long text
+
+Speeches, scripts, notes and documents: open **Long text** on the home screen, or share text or a file to the app from Notes, Keep, Docs or Files.
+
+- Paste, or open a `.txt`, `.md` or Word `.docx` file (PDF isn't supported yet; copy its text in)
+- Each person keeps **one code name through the whole text**, so long pieces stay readable (switch off for variety)
+- Bare first names / surnames are listed under "Check these" instead of being swapped blindly
+- One-tap **Copy text**, plus Share and Save as `.txt`
+- A 50,000-character script converts in well under a second, fully offline
+
 ## Two versions
 
 | | Full | Lite |

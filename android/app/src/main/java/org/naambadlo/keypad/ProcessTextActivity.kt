@@ -18,15 +18,21 @@ import android.widget.Toast
 
 /**
  * Works with ANY keyboard: select text, tap "Shadowban Suraksha" in the pop-up menu,
- * pick code names (or shuffle as often as you like), then confirm.
+ * pick code names (or shuffle), then confirm or copy.
+ * One row per person, so long selections stay short; each person keeps one code name.
  * Bare first names / common surnames start as "keep as is" until you pick a code name.
  * Long-press a code name to star it.
  */
 class ProcessTextActivity : Activity() {
 
+    /** One row per person (or per bare name that needs a yes). */
+    private class Group(val key: String, val entity: Entity, val word: String, val ask: Boolean, var count: Int)
+
     private lateinit var original: String
     private lateinit var matches: List<Match>
-    private lateinit var choices: Array<String>     // "" = keep the original word
+    private lateinit var groupOf: IntArray          // match index -> group index
+    private val groups = ArrayList<Group>()
+    private lateinit var choices: Array<String>     // per group; "" = keep the original words
     private lateinit var preview: TextView
     private lateinit var banner: LinearLayout
     private val rows = ArrayList<LinearLayout>()
@@ -40,20 +46,29 @@ class ProcessTextActivity : Activity() {
         original = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString() ?: ""
         readOnly = intent.getBooleanExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, false)
         matches = NameStore.matcher(this).findAll(original, NameStore.memory)
-        choices = Array(matches.size) { i ->
+        val index = HashMap<String, Int>()
+        groupOf = IntArray(matches.size) { i ->
             val m = matches[i]
-            if (m.ask && !m.fromMemory) "" else NameStore.pick(m.entity, original.substring(m.start, m.end))
+            val w = original.substring(m.start, m.end)
+            val ask = m.ask && !m.fromMemory
+            val key = if (ask) "ask:" + Matcher.normalize(w) else m.entity.id
+            index[key]?.also { groups[it].count++ } ?: run {
+                groups.add(Group(key, m.entity, w, ask, 1)); index[key] = groups.size - 1; groups.size - 1
+            }
+        }
+        choices = Array(groups.size) { g ->
+            val gr = groups[g]
+            if (gr.ask) "" else NameStore.pick(gr.entity, gr.word)
         }
         setContentView(build())
     }
-
-    private fun word(i: Int) = original.substring(matches[i].start, matches[i].end)
 
     private fun result(): String {
         val sb = StringBuilder()
         var last = 0
         matches.forEachIndexed { i, m ->
-            sb.append(original, last, m.start).append(choices[i].ifEmpty { word(i) })
+            val c = choices[groupOf[i]]
+            sb.append(original, last, m.start).append(c.ifEmpty { original.substring(m.start, m.end) })
             last = m.end
         }
         sb.append(original, last, original.length)
@@ -78,6 +93,8 @@ class ProcessTextActivity : Activity() {
             val p = Ui.dp(this@ProcessTextActivity, 14)
             setPadding(p, p, p, p)
             setTextIsSelectable(true)
+            maxLines = 14
+            ellipsize = android.text.TextUtils.TruncateAt.END
         }
         card.addView(preview)
 
@@ -87,36 +104,33 @@ class ProcessTextActivity : Activity() {
             visibility = View.GONE
             addView(Ui.label(context, "✓  ${NameStore.CONGRATS}", 14f, Ui.WHITE, Ui.W.MED),
                 LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-            addView(Ui.label(context, "Undo", 14f, Ui.META, Ui.W.SEMI).apply {
-                background = Ui.rounded(Ui.WHITE, 16, context)
-                setPadding(Ui.dp(context, 14), Ui.dp(context, 7), Ui.dp(context, 14), Ui.dp(context, 7))
-                setOnClickListener { undo() }
-            })
+            addView(smallWhite("Copy") { copy(true) })
+            addView(smallWhite("Undo") { undo() })
         }
         card.addView(Ui.fullWidth(banner, this, topDp = 10))
         card.addView(Ui.spacer(this, 8))
 
-        matches.forEachIndexed { i, m ->
-            val w = word(i)
-            val heading = if (m.ask && !m.fromMemory) "“$w” · is this ${m.entity.label}? Pick a code name if yes"
-                          else "“$w” · ${m.entity.label}"
+        groups.forEachIndexed { g, gr ->
+            val times = if (gr.count > 1) " · ${gr.count}×" else ""
+            val heading = if (gr.ask) "“${gr.word}”$times · is this ${gr.entity.label}? Pick a code name if yes"
+                          else "${gr.entity.label}$times"
             card.addView(Ui.label(this, heading, 13f, Ui.MUTED, Ui.W.MED).apply {
                 setPadding(Ui.dp(context, 4), Ui.dp(context, 8), 0, Ui.dp(context, 2))
             })
             val (scroll, row) = Ui.chipRow(this)
-            if (m.ask && !m.fromMemory) {
-                row.addView(Ui.chip(this, "Keep “$w”", selected = choices[i].isEmpty()) {
-                    choices[i] = ""; refresh()
+            if (gr.ask) {
+                row.addView(Ui.chip(this, "Keep “${gr.word}”", selected = choices[g].isEmpty()) {
+                    choices[g] = ""; refresh()
                 }.apply { tag = "" })
             }
-            val favs = Prefs.favourites(this, m.entity.id)
-            for (alt in NameStore.ordered(this, m.entity)) {
-                val chip = Ui.chip(this, if (alt in favs) "★ $alt" else alt, selected = alt == choices[i]) {
-                    choices[i] = alt; refresh()
+            val favs = Prefs.favourites(this, gr.entity.id)
+            for (alt in NameStore.ordered(this, gr.entity)) {
+                val chip = Ui.chip(this, if (alt in favs) "★ $alt" else alt, selected = alt == choices[g]) {
+                    choices[g] = alt; refresh()
                 }
                 chip.tag = alt
                 chip.setOnLongClickListener {
-                    val added = Prefs.toggleFavourite(this, m.entity.id, alt)
+                    val added = Prefs.toggleFavourite(this, gr.entity.id, alt)
                     chip.text = if (added) "★ $alt" else alt
                     chip.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                     Toast.makeText(this, if (added) "Starred. Used first from now on." else "Unstarred", Toast.LENGTH_SHORT).show()
@@ -137,6 +151,10 @@ class ProcessTextActivity : Activity() {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .apply { setMargins(0, 0, Ui.dp(context, 8), 0) }
         })
+        bar.addView(Ui.lightButton(this, "Copy") { copy(false) }.apply {
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .apply { setMargins(0, 0, Ui.dp(context, 8), 0) }
+        })
         bar.addView(Ui.cta(this, if (readOnly) "Copy" else "Make it Meta friendly") { done() })
         root.addView(bar)
 
@@ -145,10 +163,18 @@ class ProcessTextActivity : Activity() {
         return ScrollView(this).apply { background = Ui.pageBackground(); addView(root) }
     }
 
+    private fun smallWhite(text: String, onClick: () -> Unit) = Ui.label(this, text, 14f, Ui.META, Ui.W.SEMI).apply {
+        background = Ui.rounded(Ui.WHITE, 16, this@ProcessTextActivity)
+        setPadding(Ui.dp(context, 14), Ui.dp(context, 7), Ui.dp(context, 14), Ui.dp(context, 7))
+        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            .apply { setMargins(Ui.dp(context, 6), 0, 0, 0) }
+        setOnClickListener { onClick() }
+    }
+
     private fun shuffle() {
-        for (i in choices.indices) {
-            if (choices[i].isEmpty()) continue           // leave "keep as is" alone
-            choices[i] = NameStore.pick(matches[i].entity, choices[i])
+        for (g in choices.indices) {
+            if (choices[g].isEmpty()) continue           // leave "keep as is" alone
+            choices[g] = NameStore.pick(groups[g].entity, choices[g])
         }
         preview.animate().alpha(0.3f).setDuration(90).withEndAction {
             refresh()
@@ -158,17 +184,25 @@ class ProcessTextActivity : Activity() {
 
     private fun refresh() {
         preview.text = result()
-        rows.forEachIndexed { i, row ->
+        rows.forEachIndexed { g, row ->
             for (k in 0 until row.childCount) {
                 val c = row.getChildAt(k) as TextView
-                Ui.styleChip(c, (c.tag as? String ?: "") == choices[i])
+                Ui.styleChip(c, (c.tag as? String ?: "") == choices[g])
             }
         }
     }
 
+    /** Copy the converted text. While the confirmation is showing, also keep the window open. */
+    private fun copy(fromBanner: Boolean) {
+        (getSystemService(CLIPBOARD_SERVICE) as ClipboardManager)
+            .setPrimaryClip(ClipData.newPlainText(NameStore.APP_NAME, result()))
+        Toast.makeText(this, "Copied. Paste it anywhere.", Toast.LENGTH_SHORT).show()
+        if (fromBanner) { finishing = false; handler.removeCallbacksAndMessages(null); handler.postDelayed({ finish() }, 900) }
+    }
+
     private fun done() {
         val text = result()
-        matches.forEachIndexed { i, m -> if (choices[i].isNotEmpty()) NameStore.memory.add(choices[i], m.entity) }
+        groups.forEachIndexed { g, gr -> if (choices[g].isNotEmpty()) NameStore.memory.add(choices[g], gr.entity) }
         if (readOnly) {
             (getSystemService(CLIPBOARD_SERVICE) as ClipboardManager)
                 .setPrimaryClip(ClipData.newPlainText(NameStore.APP_NAME, text))
@@ -178,7 +212,7 @@ class ProcessTextActivity : Activity() {
         banner.visibility = View.VISIBLE
         Ui.enter(banner, 0, rise = 6)
         finishing = true
-        handler.postDelayed({ if (finishing) finish() }, 2600)
+        handler.postDelayed({ if (finishing) finish() }, 3200)
     }
 
     /** Stay open and put the original text back. */

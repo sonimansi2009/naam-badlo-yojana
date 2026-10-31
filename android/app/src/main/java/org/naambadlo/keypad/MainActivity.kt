@@ -202,6 +202,7 @@ class MainActivity : Activity() {
         }
         content.addView(tabScroll.apply { setPadding(0, 0, 0, Ui.dp(context, 14)) })
         content.addView(wayCard())
+        content.addView(longTextCard())
         content.addView(styleCard())
         if (!hasFloating) content.addView(liteNote())
         content.addView(tryCard())
@@ -309,6 +310,30 @@ class MainActivity : Activity() {
             layoutParams = LinearLayout.LayoutParams(Ui.dp(context, 24), Ui.dp(context, 24))
         })
         addView(Ui.label(context, s, 15f).apply { setPadding(Ui.dp(context, 12), Ui.dp(context, 1), 0, 0) })
+    }
+
+    /** Speeches, scripts, notes and documents. */
+    private fun longTextCard(): View {
+        val card = Ui.card(this, 14)
+        val head = Ui.horizontal(this).apply { setPadding(Ui.dp(context, 4), Ui.dp(context, 4), 0, Ui.dp(context, 12)) }
+        head.addView(Ui.iconCircle(this, R.drawable.ic_text, Ui.SOFT, Ui.INK, 44))
+        head.addView(Ui.vertical(this).apply {
+            setPadding(Ui.dp(context, 12), 0, 0, 0)
+            addView(Ui.label(context, "Long text", 17f, Ui.INK, Ui.W.SEMI))
+            addView(Ui.label(context, "Scripts, speeches, notes, documents", 13f, Ui.MUTED))
+        })
+        card.addView(head)
+        val tags = FlowLayout(this).apply { setPadding(Ui.dp(context, 2), 0, 0, Ui.dp(context, 12)) }
+        listOf(".txt", ".md", "Word .docx", "Paste", "Share from any app").forEach { tags.addView(Ui.tag(this, it)) }
+        card.addView(tags)
+        card.addView(Ui.horizontal(this).apply {
+            gravity = Gravity.END
+            setPadding(0, 0, Ui.dp(context, 4), Ui.dp(context, 4))
+            addView(Ui.cta(context, "Open long text") {
+                startActivity(Intent(this@MainActivity, DocumentActivity::class.java))
+            })
+        })
+        return card
     }
 
     /** Recognisable (default) vs Stealth code names. */
