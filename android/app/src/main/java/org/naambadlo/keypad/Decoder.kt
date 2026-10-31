@@ -21,6 +21,7 @@ class Decoder(entities: List<Entity>) {
     /** real names exactly as people write them ("Modi", "Modiji"): already decoded, leave them */
     private val realWords = HashSet<String>()
     private val triggerKeys = HashSet<String>()
+    private val realOf = HashMap<String, String>()
     /** surname sound minus its first consonant ("odi" from Modi) -> real name, for jumbles like Nodi, Bodi, Gadani */
     private val rhymes = HashMap<String, String?>()
     /** first letter -> keys, for quick near-miss lookups */
@@ -29,7 +30,7 @@ class Decoder(entities: List<Entity>) {
     init {
         for (e in entities) {
             val real = realName(e)
-            for (t in e.triggers) { realWords.add(Matcher.normalize(t)); triggerKeys.add(squash(t)) }
+            for (t in e.triggers) { realWords.add(Matcher.normalize(t)); triggerKeys.add(squash(t)); realOf[Matcher.normalize(t)] = real }
             for (w in e.alternates + e.triggers) {
                 val k = squash(w)
                 if (k.length < MIN_KEY) continue
@@ -53,7 +54,7 @@ class Decoder(entities: List<Entity>) {
     fun find(text: String): List<Hit> {
         val exact = matcher.findAll(text).map {
             Hit(it.start, it.end, text.substring(it.start, it.end), it.entity.alternates[0])
-        }.filter { !samePerson(it) }
+        }.filter { !samePerson(it) && !afterRealName(text, it) }
         val toks = Regex("\\S+").findAll(text).map { it.range.first to it.range.last + 1 }.toList()
         val out = ArrayList<Hit>()
         var ei = 0
@@ -79,12 +80,36 @@ class Decoder(entities: List<Entity>) {
                 if (a >= b) continue
                 val raw = text.substring(a, b)
                 val (real, d) = score(raw) ?: continue
+                if (afterRealName(text, Hit(a, b, raw, real))) continue
                 if (d < bestD) { bestD = d; hit = Hit(a, b, raw, real, guess = true); used = k }
             }
             if (hit != null) out.add(hit)
             i += used
         }
+        return mergeNeighbours(text, out)
+    }
+
+    /** "Lodi saheb" -> one name: neighbouring hits for the same person become one. */
+    private fun mergeNeighbours(text: String, hits: List<Hit>): List<Hit> {
+        val out = ArrayList<Hit>()
+        for (h in hits) {
+            val p = out.lastOrNull()
+            if (p != null && p.real == h.real && text.substring(p.end, h.start).isBlank()) {
+                out[out.size - 1] = Hit(p.start, h.end, text.substring(p.start, h.end), h.real, p.guess || h.guess)
+            } else out.add(h)
+        }
         return out
+    }
+
+    /** "Modi saheb": a nickname right after the real name is just a title, leave it. */
+    private fun afterRealName(text: String, h: Hit): Boolean {
+        var e = h.start
+        while (e > 0 && text[e - 1].isWhitespace()) e--
+        var b = e
+        while (b > 0 && !text[b - 1].isWhitespace()) b--
+        if (b >= e) return false
+        val prev = text.substring(b, e).trim { it in EDGE }
+        return realOf[Matcher.normalize(prev)] == h.real
     }
 
     /** A real name written plainly is not a code name: leave it alone. */
