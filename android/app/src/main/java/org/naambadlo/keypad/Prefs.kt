@@ -24,6 +24,10 @@ object Prefs {
     fun metaOnly(ctx: Context) = sp(ctx).getBoolean("meta_only", false)
     fun setMetaOnly(ctx: Context, v: Boolean) = sp(ctx).edit().putBoolean("meta_only", v).apply()
 
+    /** Soft chime when the floating button finds a name. */
+    fun sound(ctx: Context) = sp(ctx).getBoolean("sound", true)
+    fun setSound(ctx: Context, v: Boolean) = sp(ctx).edit().putBoolean("sound", v).apply()
+
     /** Which code names to use. */
     enum class Tier { RECOGNISABLE, MIX, STEALTH }
     fun tier(ctx: Context): Tier =

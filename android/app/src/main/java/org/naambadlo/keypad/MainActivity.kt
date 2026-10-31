@@ -178,10 +178,8 @@ class MainActivity : Activity() {
     // ---- Home ----
 
     private fun home() {
-        content.addView(ImageView(this).apply {
-            setImageResource(R.drawable.seal_white)
+        content.addView(SheenImageView(this, R.drawable.seal_white).apply {
             contentDescription = "Shadowban Suraksha Yojana seal: a chameleon on a lotus"
-            adjustViewBounds = true
             layoutParams = LinearLayout.LayoutParams(Ui.dp(context, 210), Ui.dp(context, 210)).apply {
                 gravity = Gravity.CENTER_HORIZONTAL
                 setMargins(0, Ui.dp(context, 18), 0, Ui.dp(context, 8))
@@ -266,6 +264,15 @@ class MainActivity : Activity() {
                 setOnCheckedChangeListener { _, v -> Prefs.setMetaOnly(this@MainActivity, v) }
                 setPadding(0, Ui.dp(context, 14), 0, 0)
             })
+            panel.addView(Switch(this).apply {
+                text = "Soft sound when a name is found"
+                typeface = Ui.SANS_MEDIUM
+                textSize = 15f
+                setTextColor(Ui.INK)
+                isChecked = Prefs.sound(this@MainActivity)
+                setOnCheckedChangeListener { _, v -> Prefs.setSound(this@MainActivity, v) }
+                setPadding(0, Ui.dp(context, 10), 0, 0)
+            })
             if (!Prefs.floatingEnabled(this)) {
                 panel.addView(Ui.label(this,
                     "If Android says “Restricted setting”: open App info → ⋮ → Allow restricted settings, then try again.",
@@ -324,7 +331,7 @@ class MainActivity : Activity() {
         })
         card.addView(head)
         val tags = FlowLayout(this).apply { setPadding(Ui.dp(context, 2), 0, 0, Ui.dp(context, 12)) }
-        listOf(".txt", ".md", "Word .docx", "Paste", "Share from any app").forEach { tags.addView(Ui.tag(this, it)) }
+        listOf("Upload .txt, .md, .docx", "Paste", "Share from any app").forEach { tags.addView(Ui.tag(this, it)) }
         card.addView(tags)
         card.addView(Ui.horizontal(this).apply {
             gravity = Gravity.END

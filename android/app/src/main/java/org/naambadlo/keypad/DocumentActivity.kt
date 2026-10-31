@@ -72,7 +72,7 @@ class DocumentActivity : Activity() {
 
         val card = Ui.card(this, 16)
         val actions = Ui.horizontal(this)
-        actions.addView(Ui.lightButton(this, "Open file") { openFile() }.apply {
+        actions.addView(Ui.lightButton(this, "Upload") { openFile() }.apply {
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { setMargins(0, 0, Ui.dp(context, 6), 0) }
         })
         actions.addView(Ui.lightButton(this, "Paste") { pasteClipboard() }.apply {
@@ -141,14 +141,11 @@ class DocumentActivity : Activity() {
     }
 
     private fun openFile() {
+        // Any file can be picked (some phones label .md or .docx oddly and grey them out
+        // when the list is filtered). Unsupported types get a clear message instead.
         val i = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "*/*"
-            putExtra(Intent.EXTRA_MIME_TYPES, arrayOf(
-                "text/*",
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "application/octet-stream",
-            ))
         }
         runCatching { startActivityForResult(i, REQ_OPEN) }
             .onFailure { toast("No file picker found on this phone") }
@@ -185,11 +182,13 @@ class DocumentActivity : Activity() {
         fileLabel.text = "Opening $name…"; fileLabel.visibility = View.VISIBLE
         Thread {
             val res = runCatching {
-                val bytes = contentResolver.openInputStream(uri)!!.use { s ->
-                    val buf = s.readBytes()
-                    buf
-                }
-                DocText.read(name, mime, bytes)
+                val bytes = readBytes(uri)
+                // Google Docs and other cloud files: ask the provider for a plain-text copy
+                if (bytes == null) {
+                    val txt = exportAsText(uri)
+                    if (txt != null) DocText.Result.Ok(txt)
+                    else DocText.Result.Error("Couldn't open that file. For a Google Doc, open it in Docs → Share → Make it Meta friendly.")
+                } else DocText.read(name, mime, bytes)
             }.getOrElse { DocText.Result.Error("Couldn't open that file.") }
             runOnUiThread {
                 when (res) {
@@ -205,6 +204,28 @@ class DocumentActivity : Activity() {
             }
         }.start()
     }
+
+    private fun readBytes(uri: Uri): ByteArray? = runCatching {
+        contentResolver.openInputStream(uri)?.use { s ->
+            val out = java.io.ByteArrayOutputStream()
+            val buf = ByteArray(64 * 1024)
+            while (true) {
+                val n = s.read(buf)
+                if (n < 0) break
+                out.write(buf, 0, n)
+                if (out.size() > DocText.MAX_BYTES + 1) break     // stop early on huge files
+            }
+            out.toByteArray()
+        }
+    }.getOrNull()
+
+    private fun exportAsText(uri: Uri): String? = runCatching {
+        val types = contentResolver.getStreamTypes(uri, "text/*") ?: return null
+        val t = types.firstOrNull { it == "text/plain" } ?: types.firstOrNull() ?: return null
+        contentResolver.openTypedAssetFileDescriptor(uri, t, null)?.createInputStream()?.use {
+            String(it.readBytes(), Charsets.UTF_8)
+        }
+    }.getOrNull()
 
     // ---- Converting ----
 
@@ -256,6 +277,8 @@ class DocumentActivity : Activity() {
             })
             return
         }
+
+        if (rep.swapped > 0) Feedback.swapped(this)
 
         // Congratulations + one-tap Copy
         val done = Ui.card(this, 16).apply { background = Ui.rounded(Ui.META, 26, context) }

@@ -2,6 +2,9 @@
 <!-- No INTERNET permission: the app cannot send anything anywhere. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Only for the short tick after swapping names. Still no INTERNET permission. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:name=".App"
         android:allowBackup="false"

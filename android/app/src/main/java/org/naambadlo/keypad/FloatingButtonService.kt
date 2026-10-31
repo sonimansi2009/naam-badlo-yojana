@@ -126,6 +126,7 @@ class FloatingButtonService : AccessibilityService() {
         val real = found.count { ready(text, it) }
         val ask = found.firstOrNull { pending(text, it) }
         val again = found.count { it.fromMemory }
+        if (!shown && (real > 0 || ask != null)) Feedback.found(this)   // soft chime when a name is spotted
         when {
             real > 0 -> showAction("Make it Meta friendly · $real")
             ask != null -> showQuestion(text, ask)
@@ -218,7 +219,7 @@ class FloatingButtonService : AccessibilityService() {
     private fun celebrate() {
         val v = pill ?: return
         celebrateUntil = SystemClock.uptimeMillis() + 4500
-        v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+        Feedback.swapped(this)
         label.maxWidth = (resources.displayMetrics.widthPixels * 0.62).toInt()
         label.maxLines = 2
         yesBtn.text = "Undo"

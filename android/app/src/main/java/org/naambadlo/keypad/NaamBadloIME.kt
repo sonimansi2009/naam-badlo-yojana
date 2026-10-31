@@ -239,7 +239,7 @@ class NaamBadloIME : InputMethodService() {
         banner.alpha = 0f
         banner.translationY = -Ui.dp(this, 8).toFloat()
         banner.animate().alpha(1f).translationY(0f).setDuration(260).start()
-        banner.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+        Feedback.swapped(this)
         handler.postDelayed({
             banner.animate().alpha(0f).setDuration(200).withEndAction { banner.visibility = View.GONE }.start()
             undoState = null
