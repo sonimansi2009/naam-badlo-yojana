@@ -38,7 +38,8 @@ class TutorialActivity : Activity() {
         /** What changed in this version, in plain words. */
         val WHATS_NEW = listOf(
             "Decode now understands jumbles like “Nodi”, “Nodiji” or “Badani”.",
-            "New sounds: a tiny dial-up handshake when your post gets encrypted, and a Morse “S S Y” hello.",
+            "Encode and Decode now just give a light buzz, no sound.",
+            "A Morse “S S Y” hello when the tour opens.",
             "New motto: Making censorship work harder, one word at a time.",
             "Smarter Decode: it catches misspellings and disguises like “Odiijii”, “Kamal Partyy” or “M.o.d.i”, and marks them as guesses you can undo.",
             "A short tour for new users, and this What’s new page after updates.",

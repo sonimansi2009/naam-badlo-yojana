@@ -13,7 +13,7 @@ import android.os.Vibrator
  * Small touches of sound and feel. Sounds only play with "Sound" on in Settings
  * and the phone's ringer on normal (never in silent or vibrate mode).
  *  - found:     soft two-note chime when a name is spotted
- *  - encrypted: a tiny dial-up "handshake" + buzz after "Make it Meta friendly"
+ *  - encrypted: just the buzz after "Make it Meta friendly" (no sound)
  *  - welcome:   "S S Y" in Morse code when the tutorial opens
  *  - swapped:   just the buzz (Decode, Undo-style moments)
  */
@@ -35,11 +35,8 @@ object Feedback {
         }
     }
 
-    /** After "Make it Meta friendly": buzz + dial-up handshake. */
-    fun encrypted(ctx: Context) {
-        swapped(ctx)
-        play(ctx, R.raw.encrypted, 0.45f)
-    }
+    /** After "Make it Meta friendly": vibration only. */
+    fun encrypted(ctx: Context) = swapped(ctx)
 
     /** Morse "S S Y" when the tutorial or What's new opens. */
     fun welcome(ctx: Context) = play(ctx, R.raw.morse, 0.4f)
