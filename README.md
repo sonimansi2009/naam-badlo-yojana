@@ -6,7 +6,7 @@
 
 An add-on for your phone keyboard. Type a minister's or party's name, and it offers **50 alternate names** for it: nicknames already used across Instagram, X, Reddit and news comments (Feku, Mota Bhai, Kadi Ninda ji, Reel Mantri), titles (Emperor, Saheb, Supreme Leader) and jumbles (Marendra Nodi, Bodi, Sh4h, B•J•P).
 
-*A government-approved solution to government disapproval.*
+*Making censorship work harder, one word at a time.*
 
 It covers **37 names, 1850 code names in total**: Narendra Modi, BJP, Amit Shah, Gyanesh Kumar (CEC), the Election Commission, every Union Cabinet minister, Gautam Adani, "vote chori", and the Cockroach Janta Party. Code names are readable nicknames, sound-alikes and emoji versions (Kamal Party 🪷), never letter tricks like B-J-P. A **Decode** screen turns a code-name message back into real names. Hindi (Devanagari) and English both work.
 

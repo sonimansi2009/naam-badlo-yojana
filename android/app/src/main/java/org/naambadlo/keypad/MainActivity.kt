@@ -178,7 +178,7 @@ class MainActivity : Activity() {
                 setMargins(0, Ui.dp(context, 2), 0, 0)
             }
         })
-        content.addView(Ui.label(this, "A government-approved solution\nto government disapproval.", 18f, Ui.INK).apply {
+        content.addView(Ui.label(this, "Making censorship work harder,\none word at a time.", 18f, Ui.INK).apply {
             typeface = Ui.SERIF_ITALIC
             gravity = Gravity.CENTER
             alpha = 0.88f
@@ -526,7 +526,7 @@ class MainActivity : Activity() {
             if (hasFloating) add("Only the box you type in" to "The floating button reads only the text box you are typing in, never password fields.")
             add("Nothing stored" to "Your text is not saved. Only your settings, stars and reach-test numbers stay on this phone.")
             if (hasFloating) add("Why Android warns you" to "Android warns about every app that uses accessibility. It is the only way one app can edit text in another.")
-            add("Code names are not encryption" to "Swapped names can still be understood by people and by AI. Use it to make posts less obvious, not invisible.")
+            add("Not 100% encrypted" to "Swapped names can still be understood by people and by AI. Use it to make posts less obvious, not invisible.")
         }
         for ((t, d) in points) {
             val card = Ui.card(this, 18)

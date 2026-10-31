@@ -37,11 +37,11 @@ class TutorialActivity : Activity() {
 
         /** What changed in this version, in plain words. */
         val WHATS_NEW = listOf(
+            "New motto: Making censorship work harder, one word at a time.",
             "Smarter Decode: it catches misspellings and disguises like “Odiijii”, “Kamal Partyy” or “M.o.d.i”, and marks them as guesses you can undo.",
             "A short tour for new users, and this What’s new page after updates.",
             "One box on Home: type, paste or upload, then Encode or Decode.",
             "Readable code names with emojis, like Kamal Party 🪷. No more B-J-P.",
-            "Setup, style and sound live in Settings.",
         )
     }
 
@@ -207,10 +207,10 @@ class TutorialActivity : Activity() {
             p.addView(SheenImageView(this, R.drawable.seal_white).apply {
                 layoutParams = LinearLayout.LayoutParams(Ui.dp(context, 190), Ui.dp(context, 190)).apply { gravity = Gravity.CENTER_HORIZONTAL }
             })
-            p.addView(Ui.label(this, "A government-approved solution\nto government disapproval.", 21f, Ui.INK).apply {
+            p.addView(Ui.label(this, "Making censorship work harder,\none word at a time.", 21f, Ui.INK).apply {
                 typeface = Ui.SERIF_ITALIC; gravity = Gravity.CENTER; setPadding(0, Ui.dp(context, 18), 0, Ui.dp(context, 14))
             })
-            p.addView(body("Some names come with side effects. This app swaps politicians’ names for code names your readers already understand."))
+            p.addView(body("Some names come with side effects. This app swaps Meta-censored names for code names your readers already understand."))
         },
         Page { p ->
             p.addView(title("*Encode*"))
@@ -232,7 +232,7 @@ class TutorialActivity : Activity() {
         Page { p ->
             p.addView(title("Satire, *not a shield*", 32f))
             p.addView(row(R.drawable.ic_shield, "No internet", "Your text never leaves this phone"))
-            p.addView(row(R.drawable.ic_eye, "Not encryption", "People, and sharp AI, still know who Mota Bhai is"))
+            p.addView(row(R.drawable.ic_eye, "Not 100% encrypted", "People, and sharp AI, still know who Mota Bhai is"))
             p.addView(row(R.drawable.ic_check, "Your call", "Use it to be less obvious, not invisible"))
         },
     )
