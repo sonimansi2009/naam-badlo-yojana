@@ -37,6 +37,7 @@ class TutorialActivity : Activity() {
 
         /** What changed in this version, in plain words. */
         val WHATS_NEW = listOf(
+            "Decode now understands jumbles like “Nodi”, “Nodiji” or “Badani”.",
             "New sounds: a tiny dial-up handshake when your post gets encrypted, and a Morse “S S Y” hello.",
             "New motto: Making censorship work harder, one word at a time.",
             "Smarter Decode: it catches misspellings and disguises like “Odiijii”, “Kamal Partyy” or “M.o.d.i”, and marks them as guesses you can undo.",
@@ -144,13 +145,13 @@ class TutorialActivity : Activity() {
         if (whatsNewMode) {
             // What's new: the tour is the big button, Start is a quiet text link
             back.text = "Start"; back.setTextColor(Ui.INK); back.visibility = View.VISIBLE
-            next.addView(Ui.cta(this, "Take the tour") { startTour() })
+            next.addView(Ui.cta(this, "Take the tour", iconRes = null) { startTour() })
             return
         }
         back.text = "Back"; back.setTextColor(Ui.MUTED)
         back.visibility = if (i > 0) View.VISIBLE else View.INVISIBLE
         val last = i == pages.size - 1
-        next.addView(Ui.cta(this, if (last) "Start" else "Next") { go(index + 1) })
+        next.addView(Ui.cta(this, if (last) "Start" else "Next", iconRes = null) { go(index + 1) })
     }
 
     private fun done() {

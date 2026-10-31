@@ -25,10 +25,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/** Home (one box: Encode or Decode), Names and Settings, behind a floating bottom bar. Reach test sits inside Settings. */
+/** Home (one box: Encode or Decode) and Settings, behind a floating bottom bar. Reach test sits inside Settings. */
 class MainActivity : Activity() {
 
-    private enum class Screen { HOME, NAMES, TEST, SETTINGS }
+    private enum class Screen { HOME, TEST, SETTINGS }
 
     /** The Lite build has no accessibility service, so no floating button. */
     private val hasFloating = BuildConfig.HAS_FLOATING
@@ -110,7 +110,6 @@ class MainActivity : Activity() {
         }
         val items = linkedMapOf(
             Screen.HOME to (R.drawable.ic_home to "Home"),
-            Screen.NAMES to (R.drawable.ic_list to "Names"),
             Screen.SETTINGS to (R.drawable.ic_tune to "Settings"),
         )
         val made = HashMap<Screen, LinearLayout>()
@@ -150,7 +149,6 @@ class MainActivity : Activity() {
         paintNav()
         when (screen) {
             Screen.HOME -> home()
-            Screen.NAMES -> names()
             Screen.TEST -> reachTest()
             Screen.SETTINGS -> settings()
         }
@@ -289,40 +287,10 @@ class MainActivity : Activity() {
         }
         desc.text = describe(Prefs.tier(this))
         card.addView(row)
-        card.addView(Ui.label(this, "Starred favourites are always used first. Star them in the Names tab or by holding a code name.", 12.5f, Ui.MUTED).apply {
+        card.addView(Ui.label(this, "Starred favourites are always used first. Star one by holding a code name on the keyboard.", 12.5f, Ui.MUTED).apply {
             setPadding(0, Ui.dp(context, 12), 0, 0)
         })
         return card
-    }
-
-    // ---- Names ----
-
-    private fun names() {
-        val ents = NameStore.entities(this)
-        content.addView(headline("Names *&*\ncode names", 40f))
-        content.addView(sub("Tap a code name to star it. Starred ones are used first."))
-        for (e in ents) {
-            val card = Ui.card(this, 18)
-            card.addView(Ui.label(this, e.label, 17f, Ui.INK, Ui.W.SEMI))
-            card.addView(Ui.label(this, "Watches for: " + e.triggers.take(4).joinToString(", "), 12.5f, Ui.MUTED).apply {
-                setPadding(0, Ui.dp(context, 2), 0, Ui.dp(context, 10))
-            })
-            val favs = Prefs.favourites(this, e.id)
-            val flow = FlowLayout(this)
-            val shown = (favs.filter { it in e.alternates } + e.recognisable).distinct().take(14)
-            for (alt in shown) {
-                val chip = Ui.chip(this, if (alt in favs) "★ $alt" else alt, selected = alt in favs) {}
-                chip.setOnClickListener {
-                    val added = Prefs.toggleFavourite(this, e.id, alt)
-                    chip.text = if (added) "★ $alt" else alt
-                    Ui.styleChip(chip, added)
-                    chip.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                }
-                flow.addView(chip)
-            }
-            card.addView(flow)
-            content.addView(card)
-        }
     }
 
     // ---- Reach test ----
@@ -351,7 +319,7 @@ class MainActivity : Activity() {
         c1.addView(Ui.horizontal(this).apply {
             gravity = Gravity.END
             setPadding(0, Ui.dp(context, 12), 0, 0)
-            addView(Ui.cta(context, "Make pair") {
+            addView(Ui.cta(context, "Make pair", iconRes = null) {
                 val plain = input.text.toString()
                 val matcher = NameStore.matcher(this@MainActivity)
                 val swapped = matcher.replaceAll(plain, null, include = { _, _ -> true }, pick = NameStore::pick)
@@ -397,7 +365,7 @@ class MainActivity : Activity() {
         c3.addView(Ui.horizontal(this).apply {
             gravity = Gravity.END
             setPadding(0, Ui.dp(context, 14), 0, 0)
-            addView(Ui.cta(context, "Save result") {
+            addView(Ui.cta(context, "Save result", iconRes = null) {
                 val a = plainIn.text.toString().toIntOrNull()
                 val b = swapIn.text.toString().toIntOrNull()
                 if (a == null || b == null || a <= 0) {

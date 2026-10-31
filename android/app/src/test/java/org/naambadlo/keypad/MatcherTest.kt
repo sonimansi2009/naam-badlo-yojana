@@ -62,4 +62,9 @@ class MatcherTest {
         val t = "Aaj mausam accha hai, Modi ji ne kaha"
         assertEquals(t, d.decode(t))
     }
+
+    @Test fun decodeGuessesJumbles() {
+        val d = Decoder(listOf(modi, shah))
+        assertEquals("Modi aur Modi ne kaha", d.decode("Nodiji aur Nodi ne kaha"))
+    }
 }

@@ -21,6 +21,8 @@ class Decoder(entities: List<Entity>) {
     /** real names exactly as people write them ("Modi", "Modiji"): already decoded, leave them */
     private val realWords = HashSet<String>()
     private val triggerKeys = HashSet<String>()
+    /** surname sound minus its first consonant ("odi" from Modi) -> real name, for jumbles like Nodi, Bodi, Gadani */
+    private val rhymes = HashMap<String, String?>()
     /** first letter -> keys, for quick near-miss lookups */
     private val byFirst = HashMap<Char, MutableList<String>>()
 
@@ -35,6 +37,17 @@ class Decoder(entities: List<Entity>) {
             }
         }
         for (k in keys.keys) byFirst.getOrPut(k[0]) { ArrayList() }.add(k)
+        // People only (not parties or phrases): the last word of each name, e.g. Modi, Gadkari, Adani
+        for (e in entities) {
+            if (e.id in NOT_PEOPLE) continue
+            val real = realName(e)
+            for (t in e.triggers) {
+                val w = t.split(' ').lastOrNull { it.isNotBlank() && Matcher.normalize(it) !in HONORIFICS } ?: continue
+                val (_, rest) = onset(squash(w))
+                if (rest.length < 3 || w.any { it.code > 0x7F }) continue
+                if (rhymes.containsKey(rest) && rhymes[rest] != real) rhymes[rest] = null else rhymes[rest] = real
+            }
+        }
     }
 
     fun find(text: String): List<Hit> {
@@ -82,11 +95,23 @@ class Decoder(entities: List<Entity>) {
 
     /** (real name, edits needed) for a misspelled or disguised word, or null. */
     private fun score(raw: String): Pair<String, Int>? {
-        val k = squash(raw)
-        if (k.length < MIN_KEY || Matcher.normalize(raw) in realWords) return null
-        // A real name only counts as disguised if it was dotted, spaced out or written in digits ("M.o.d.i", "M0di")
-        if (k in triggerKeys && raw.none { it in DISGUISE } && !Regex("^(\\S\\s)+\\S$").matches(raw.trim())) return null
-        if (keys.containsKey(k)) return keys[k]?.takeIf { Matcher.normalize(it) != Matcher.normalize(raw) }?.let { it to 0 }
+        val k0 = squash(raw)
+        if (k0.length < MIN_KEY || Matcher.normalize(raw) in realWords) return null
+        val disguised = raw.any { it in DISGUISE } || Regex("^(\\S\\s)+\\S$").matches(raw.trim())
+        // Try the word as is, then without a trailing "ji" / "saheb" / "babu" ("Nodiji" -> "Nodi")
+        val variants = listOf(k0) + SUFFIXES.filter { k0.endsWith(it) && k0.length - it.length >= MIN_KEY }.map { k0.dropLast(it.length) }
+        for ((n, k) in variants.withIndex()) {
+            // A real name only counts as disguised if it was dotted, spaced out or written in digits ("M.o.d.i", "M0di")
+            if (k in triggerKeys) { if (disguised) return keys[k]?.let { it to 0 }; continue }
+            if (keys.containsKey(k)) return keys[k]?.takeIf { Matcher.normalize(it) != Matcher.normalize(raw) }?.let { it to n.coerceAtMost(1) }
+        }
+        // Letter-swapped surnames: Nodi, Bodi, Godiji -> Modi; Badani -> Adani; Satil -> Patil
+        for (k in variants) {
+            if (k in triggerKeys) continue                 // "Modi saheb" is just Modi, not a jumble
+            val (on, rest) = onset(k)
+            if (on.length <= 2 && rest.length >= 3) rhymes[rest]?.let { return it to 1 }
+        }
+        val k = k0
         if (k.length < 6) return null
         val maxD = if (k.length >= 10) 2 else 1
         var best: String? = null
@@ -115,6 +140,15 @@ class Decoder(entities: List<Entity>) {
 
     companion object {
         private const val MIN_KEY = 4
+        private val NOT_PEOPLE = setOf("bjp", "eci", "vote-chori", "cockroach-janta-party")
+        private val HONORIFICS = setOf("ji", "जी", "sahab", "saheb", "babu", "bhai", "hm", "pm", "fm", "cec", "dr", "shri")
+        private val SUFFIXES = listOf("ji", "sahab", "saheb", "babu")
+
+        /** Split a squashed word at its first vowel: "modi" -> ("m", "odi"), "adani" -> ("", "adani"). */
+        fun onset(k: String): Pair<String, String> {
+            val i = k.indexOfFirst { it in "aeiou" }
+            return if (i < 0) k to "" else k.substring(0, i) to k.substring(i)
+        }
         private const val MAX_WORDS = 4
         private const val DISGUISE = "0134578@$._-*|/•~"
         private const val EDGE = ".,!?;:\"'()[]{}#@*_~“”‘’…-|।"

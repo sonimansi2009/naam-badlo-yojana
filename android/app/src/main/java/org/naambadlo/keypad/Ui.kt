@@ -168,19 +168,23 @@ object Ui {
     }
 
     /** Meta-blue call to action with a round white arrow. */
-    fun cta(ctx: Context, text: String, iconRes: Int = R.drawable.ic_chameleon, onClick: () -> Unit) =
+    /** Gradient button. The chameleon badge is only for Encode / Decode; pass iconRes = null elsewhere. */
+    fun cta(ctx: Context, text: String, iconRes: Int? = R.drawable.ic_chameleon, onClick: () -> Unit) =
         LinearLayout(ctx).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             background = gradient(28, ctx)
-            setPadding(dp(ctx, 20), dp(ctx, 6), dp(ctx, 6), dp(ctx, 6))
+            if (iconRes == null) setPadding(dp(ctx, 24), dp(ctx, 13), dp(ctx, 24), dp(ctx, 13))
+            else setPadding(dp(ctx, 20), dp(ctx, 6), dp(ctx, 6), dp(ctx, 6))
             elevation = dp(ctx, 6).toFloat()
             if (android.os.Build.VERSION.SDK_INT >= 28) outlineSpotShadowColor = SAFFRON
             val t = label(ctx, text, 15f, GRAD_INK, W.SEMI).apply { maxLines = 1 }
             addView(t)
-            val circle = iconCircle(ctx, iconRes, WHITE, META, 40)
-            (circle.layoutParams as LinearLayout.LayoutParams).setMargins(dp(ctx, 12), 0, 0, 0)
-            addView(circle)
+            if (iconRes != null) {
+                val circle = iconCircle(ctx, iconRes, WHITE, META, 40)
+                (circle.layoutParams as LinearLayout.LayoutParams).setMargins(dp(ctx, 12), 0, 0, 0)
+                addView(circle)
+            } else gravity = Gravity.CENTER
             isClickable = true
             setOnClickListener { onClick() }
             pressable(this)
