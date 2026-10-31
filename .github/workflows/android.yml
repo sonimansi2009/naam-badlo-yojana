@@ -46,7 +46,13 @@ jobs:
 
       - name: Test and build
         working-directory: android
-        run: gradle --no-daemon testFullDebugUnitTest assembleFullRelease assembleLiteRelease
+        run: |
+          set -o pipefail
+          if ! gradle --no-daemon testFullDebugUnitTest assembleFullRelease assembleLiteRelease 2>&1 | tee build.log; then
+            # Surface the real error as annotations (job logs are not always reachable)
+            grep -E "^e: |error:|ERROR:|FAILED|What went wrong|Exception|expected:" build.log | head -25 | while IFS= read -r l; do echo "::error::$l"; done
+            exit 1
+          fi
 
       - name: Rename APKs
         run: |
