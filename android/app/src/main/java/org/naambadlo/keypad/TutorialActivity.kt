@@ -37,10 +37,11 @@ class TutorialActivity : Activity() {
 
         /** What changed in this version, in plain words. */
         val WHATS_NEW = listOf(
+            "After Make it Meta-proof, only the code names are in bold.",
             "The button is now “Make it Meta-proof”.",
             "Symbol letters: 2–3 letters of each code name become look-alikes, like K@mal P@rty. Turn it off in Settings.",
             "First names like Narendra or Nirmala are spotted too (the app asks first).",
-            "Real names are never shown in full on screen: N*re*d*a M*di.",
+            "Real names are never shown in full on screen: Nar*nd*a Mo*i.",
             "Decode reads symbol letters and jumbles like “Nodi” or “Marendra”.",
         )
     }

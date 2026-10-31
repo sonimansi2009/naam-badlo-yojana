@@ -73,15 +73,16 @@ object NameStore {
     }
 
     /**
-     * Hides a real name on screen: about 40% of the letters become *, never the first letter
-     * of a word. "Narendra Modi" -> "N*re*d*a M*di". Same name, same mask, every time.
+     * Hides a real name on screen: about 20% of the letters become *, never the first letter
+     * of a word. "Narendra Modi" -> "Nar*nd*a Mo*i". Same name, same mask, every time.
      */
     fun mask(name: String): String {
         val out = StringBuilder()
         for (word in name.split(' ')) {
             if (out.isNotEmpty()) out.append(' ')
             val idx = word.indices.filter { it > 0 && word[it].isLetter() }
-            val n = (word.count { it.isLetter() } * 0.4).toInt()
+            val letters = word.count { it.isLetter() }
+            val n = if (letters < 3) 0 else maxOf(1, Math.round(letters * 0.2).toInt())
             val hide = HashSet<Int>()
             if (n > 0 && idx.isNotEmpty()) for (j in 0 until n) hide.add(idx[minOf(idx.size - 1, ((j + 0.5) * idx.size / n).toInt())])
             word.forEachIndexed { i, c -> out.append(if (i in hide) '*' else c) }

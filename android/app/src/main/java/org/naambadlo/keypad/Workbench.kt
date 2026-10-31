@@ -274,7 +274,7 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
             "${rep.swapped} name(s) swapped" + if (rep.people.size > 1) " across ${rep.people.size} people" else "",
         )
         val preview = if (rep.out.length > PREVIEW_CHARS) rep.out.take(PREVIEW_CHARS) + "\n\n…" else rep.out
-        done.addView(inner(Ui.label(act, preview, 15.5f, Ui.GRAD_INK).apply { setTextIsSelectable(true) }))
+        done.addView(inner(Ui.label(act, boldCodeNames(preview), 15.5f, Ui.GRAD_INK).apply { setTextIsSelectable(true) }))
         done.addView(actions(
             "Copy" to { copy(lastOut) },
             "Fresh names" to { chosen.clear(); encode() },
@@ -322,6 +322,20 @@ class Workbench(private val act: Activity, startMode: Mode, private val scrollTo
             result.addView(c)
         }
         reveal()
+    }
+
+    /** The swapped text with only the code names in bold. */
+    private fun boldCodeNames(text: String): CharSequence {
+        val sb = SpannableStringBuilder(text)
+        for (code in chosen.values.toSet().sortedByDescending { it.length }) {
+            var at = text.indexOf(code)
+            while (at >= 0) {
+                if (sb.getSpans(at, at + code.length, StyleSpan::class.java).isEmpty())
+                    sb.setSpan(StyleSpan(Typeface.BOLD), at, at + code.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                at = text.indexOf(code, at + code.length)
+            }
+        }
+        return sb
     }
 
     // ---- Decode ----
