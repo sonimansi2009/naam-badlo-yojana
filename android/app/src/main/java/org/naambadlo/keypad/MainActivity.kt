@@ -64,6 +64,7 @@ class MainActivity : Activity() {
 
         setContentView(root)
         render(animate = true)
+        TutorialActivity.maybeShow(this)
     }
 
     override fun onResume() {
@@ -508,6 +509,13 @@ class MainActivity : Activity() {
         content.addView(Ui.card(this, 18).apply {
             addView(cardHead(R.drawable.ic_shuffle, "Does it work?", "Compare the reach of plain and Meta friendly posts.").apply {
                 addView(Ui.pill(context, "Open", false) { screen = Screen.TEST; render(animate = true) })
+            })
+        })
+        content.addView(Ui.card(this, 18).apply {
+            addView(cardHead(R.drawable.ic_sparkle, "Tutorial", "A quick tour of how it works.").apply {
+                addView(Ui.pill(context, "Replay", false) {
+                    startActivity(Intent(this@MainActivity, TutorialActivity::class.java))
+                })
             })
         })
         content.addView(Ui.label(this, "Your privacy", 20f, Ui.INK, Ui.W.SEMI).apply {

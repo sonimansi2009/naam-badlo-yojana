@@ -25,6 +25,10 @@
 
         <!-- Long text: paste, open a file, or share text / a file from another app -->
         <activity
+            android:name=".TutorialActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".DecodeActivity"
             android:exported="true"
             android:label="@string/decode_label"

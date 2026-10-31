@@ -28,6 +28,10 @@ object Prefs {
     fun sound(ctx: Context) = sp(ctx).getBoolean("sound", true)
     fun setSound(ctx: Context, v: Boolean) = sp(ctx).edit().putBoolean("sound", v).apply()
 
+    /** Last app version whose tutorial / what's new was shown (0 = never). */
+    fun tutorialSeen(ctx: Context) = sp(ctx).getInt("tutorial_seen", 0)
+    fun setTutorialSeen(ctx: Context, v: Int) = sp(ctx).edit().putInt("tutorial_seen", v).apply()
+
     /** Which code names to use. */
     enum class Tier { RECOGNISABLE, MIX, STEALTH }
     fun tier(ctx: Context): Tier =
