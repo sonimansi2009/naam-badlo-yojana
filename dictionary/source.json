@@ -61,6 +61,11 @@
     "चौकीदार",
     "विश्वगुरु",
     "फ़कीर"
+   ],
+   "emoji": [
+    "👑",
+    "🍵",
+    "📸"
    ]
   },
   {
@@ -103,6 +108,10 @@
    "ask": [
     "shah",
     "शाह"
+   ],
+   "emoji": [
+    "🧠",
+    "🎯"
    ]
   },
   {
@@ -121,46 +130,56 @@
     "भारतीय जनता पार्टी"
    ],
    "curated": [
+    "Kamal Party",
+    "Phool Party",
     "Kamal Dal",
     "Lotus Party",
     "Kamal wale",
+    "Phool wale",
+    "Lotus wale",
+    "Lotus Club",
+    "Kamal Club",
+    "Kamal Company",
+    "Kamal Parivar",
+    "Kamal Brigade",
+    "Kamal ka Kunba",
     "Bhagwa Party",
+    "कमल पार्टी",
+    "फूल पार्टी",
+    "कमल दल",
+    "फूल वाले",
+    "Bhagwa Club",
+    "Bhagwa Brigade",
     "Saffron Party",
+    "Kesariya Party",
+    "Kesariya Dal",
     "Washing Machine Party",
+    "Washing Machine wale",
     "Jumla Party",
     "Bhartiya Jumla Party",
+    "Jumla Sena",
+    "भगवा पार्टी",
+    "जुमला पार्टी",
+    "वॉशिंग मशीन",
     "Sabse Badi Party",
     "IT Cell wale",
     "Bhakt Mandal",
-    "Kamal Club",
-    "Lotus Club",
-    "Phool wale",
-    "Kesariya Party",
     "Party With a Difference",
-    "Double Engine wale",
     "Double Engine Party",
-    "Bee Jay Pee",
-    "BeeJayPee",
-    "Bijepi",
-    "Bhaa Jaa Paa",
-    "B Jay P",
-    "Bee-J-P",
-    "Kamal Brigade",
-    "Kesariya Dal",
-    "Bhagwa Brigade",
+    "Double Engine wale",
     "Sattadhari Dal",
     "Sarkar wali Party",
-    "Phool Party",
-    "Lotus wale",
-    "Kamal Company",
-    "Kamal Parivar",
-    "Bhagwa Club",
-    "कमल दल",
-    "फूल वाले",
-    "भगवा दल",
-    "भगवा पार्टी",
-    "जुमला पार्टी",
-    "वॉशिंग मशीन"
+    "Achhe Din Party",
+    "Achhe Din wale",
+    "400 Paar Party",
+    "Saheb ki Party",
+    "Nagpur wale",
+    "Electoral Bond Party"
+   ],
+   "emoji": [
+    "🪷",
+    "🌸",
+    "🧡"
    ]
   },
   {
@@ -203,6 +222,10 @@
     "gyanesh",
     "gyaanesh",
     "ज्ञानेश"
+   ],
+   "emoji": [
+    "🧾",
+    "📋"
    ]
   },
   {
@@ -247,8 +270,6 @@
     "Matdata Suchi Office",
     "Syahi Ghar",
     "Ungli Babu Log",
-    "Ee See Eye",
-    "E-C-Eye",
     "Ayog Babu",
     "Syahi Board",
     "Ungli Office",
@@ -263,6 +284,11 @@
     "चुनावी दफ्तर",
     "उंगली दफ्तर",
     "वोट घर"
+   ],
+   "emoji": [
+    "📋",
+    "💙",
+    "☝🏽"
    ]
   },
   {
@@ -290,6 +316,9 @@
    "ask": [
     "rajnath",
     "राजनाथ"
+   ],
+   "emoji": [
+    "🪖"
    ]
   },
   {
@@ -311,6 +340,9 @@
     "Nagpur wale Bhau",
     "Expressway ji",
     "Gadi Babu"
+   ],
+   "emoji": [
+    "🚧"
    ]
   },
   {
@@ -333,6 +365,9 @@
     "Khad Babu",
     "J.P. ji",
     "Hospital Babu"
+   ],
+   "emoji": [
+    "🏥"
    ]
   },
   {
@@ -360,6 +395,9 @@
    "ask": [
     "shivraj",
     "शिवराज"
+   ],
+   "emoji": [
+    "🌾"
    ]
   },
   {
@@ -385,6 +423,10 @@
     "Khazana Didi",
     "Bahi-Khata Didi",
     "टैक्स दीदी"
+   ],
+   "emoji": [
+    "💰",
+    "🧅"
    ]
   },
   {
@@ -410,6 +452,9 @@
    "ask": [
     "jaishankar",
     "जयशंकर"
+   ],
+   "emoji": [
+    "🌍"
    ]
   },
   {
@@ -430,6 +475,9 @@
     "Haryana wale Tau",
     "Power Tau",
     "Kaka ji"
+   ],
+   "emoji": [
+    "🔌"
    ]
   },
   {
@@ -451,6 +499,9 @@
     "Steel Babu",
     "Bhari Udyog Babu",
     "Anna of Steel"
+   ],
+   "emoji": [
+    "🏭"
    ]
   },
   {
@@ -468,6 +519,9 @@
     "Dukaan Babu",
     "Trade Seth",
     "Export Babu"
+   ],
+   "emoji": [
+    "📦"
    ]
   },
   {
@@ -485,6 +539,9 @@
     "Paper Babu",
     "Shiksha Babu",
     "Exam Chief"
+   ],
+   "emoji": [
+    "📚"
    ]
   },
   {
@@ -506,6 +563,9 @@
    "ask": [
     "manjhi",
     "मांझी"
+   ],
+   "emoji": [
+    "🧰"
    ]
   },
   {
@@ -524,6 +584,9 @@
     "Dairy Babu",
     "Panchayat Babu",
     "Munger wale Babu"
+   ],
+   "emoji": [
+    "🐄"
    ]
   },
   {
@@ -542,6 +605,9 @@
     "Bandargah Babu",
     "Port Babu",
     "Assam wale Dada"
+   ],
+   "emoji": [
+    "🚢"
    ]
   },
   {
@@ -559,6 +625,9 @@
     "Nyay Babu",
     "Samajik Nyay ji",
     "Tikamgarh wale Babu"
+   ],
+   "emoji": [
+    "🤝"
    ]
   },
   {
@@ -579,6 +648,9 @@
     "RMN",
     "Hawai Babu",
     "Flight Babu"
+   ],
+   "emoji": [
+    "🛫"
    ]
   },
   {
@@ -597,6 +669,9 @@
     "Solar Babu",
     "Urja Babu",
     "Dharwad wale Babu"
+   ],
+   "emoji": [
+    "🍚"
    ]
   },
   {
@@ -612,6 +687,9 @@
     "Janjati Babu",
     "Tribal Babu",
     "Sundargarh wale Babu"
+   ],
+   "emoji": [
+    "🏹"
    ]
   },
   {
@@ -636,6 +714,9 @@
    "ask": [
     "giriraj",
     "गिरिराज"
+   ],
+   "emoji": [
+    "🧵"
    ]
   },
   {
@@ -661,6 +742,10 @@
    ],
    "ask": [
     "vaishnaw"
+   ],
+   "emoji": [
+    "🚆",
+    "🎬"
    ]
   },
   {
@@ -685,6 +770,10 @@
    "ask": [
     "scindia",
     "सिंधिया"
+   ],
+   "emoji": [
+    "📡",
+    "🏰"
    ]
   },
   {
@@ -703,6 +792,9 @@
     "Paryavaran Babu",
     "Climate Babu",
     "Alwar wale Babu"
+   ],
+   "emoji": [
+    "🌳"
    ]
   },
   {
@@ -726,6 +818,9 @@
    "ask": [
     "shekhawat",
     "शेखावत"
+   ],
+   "emoji": [
+    "🎭"
    ]
   },
   {
@@ -743,6 +838,9 @@
     "Mahila Babu",
     "Bal Vikas Didi",
     "Koderma wali Didi"
+   ],
+   "emoji": [
+    "👶"
    ]
   },
   {
@@ -761,6 +859,9 @@
     "Arunachal wale Bhai",
     "Minority Babu",
     "Parliament Babu"
+   ],
+   "emoji": [
+    "📜"
    ]
   },
   {
@@ -780,6 +881,9 @@
     "Pump Babu",
     "Gas Babu",
     "Diesel Babu"
+   ],
+   "emoji": [
+    "⛽"
    ]
   },
   {
@@ -799,6 +903,10 @@
     "Shram Babu",
     "Naukri Babu",
     "Sports Babu"
+   ],
+   "emoji": [
+    "⚽",
+    "🚲"
    ]
   },
   {
@@ -817,6 +925,9 @@
     "Khadan Babu",
     "Coal Babu",
     "Hyderabad wale Anna"
+   ],
+   "emoji": [
+    "🪨"
    ]
   },
   {
@@ -833,6 +944,9 @@
     "Khana Babu",
     "Food Processing Babu",
     "Bihari Hanuman"
+   ],
+   "emoji": [
+    "🥫"
    ]
   },
   {
@@ -852,6 +966,9 @@
     "Paani Babu",
     "Nal Babu",
     "Navsari wale Bhau"
+   ],
+   "emoji": [
+    "💧"
    ]
   },
   {
@@ -898,11 +1015,8 @@
     "Cement Seth",
     "Number One Seth",
     "Plane wale Dost",
-    "G.A.",
-    "Gee Ay",
     "Gautam Bhai",
     "Gotam Seth",
-    "A-Dani",
     "Adhani",
     "मित्र",
     "परम मित्र",
@@ -911,6 +1025,11 @@
     "कोयला सेठ",
     "पोर्ट वाले",
     "हम दो"
+   ],
+   "emoji": [
+    "🤝",
+    "🚢",
+    "⚡"
    ]
   },
   {
@@ -948,8 +1067,6 @@
     "Daftar ka Jaadu",
     "SIR ka Jaadu",
     "Booth ka Jaadu",
-    "V.C.",
-    "Vee See",
     "Vote Gayab",
     "Gayab Vote",
     "Matdaan Ka Khel",
@@ -959,6 +1076,10 @@
     "मतदाता गायब",
     "जादुई सूची",
     "भूत वोटर"
+   ],
+   "emoji": [
+    "👻",
+    "🪄"
    ]
   },
   {
@@ -1008,6 +1129,9 @@
     "तिलचट्टा पार्टी",
     "कीड़ा दल",
     "छह टांग वाले"
+   ],
+   "emoji": [
+    "🪳"
    ]
   }
  ]

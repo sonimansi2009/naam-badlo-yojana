@@ -102,7 +102,7 @@ class ProcessTextActivity : Activity() {
             background = Ui.gradient(18, this@ProcessTextActivity)
             setPadding(Ui.dp(context, 14), Ui.dp(context, 8), Ui.dp(context, 8), Ui.dp(context, 8))
             visibility = View.GONE
-            addView(Ui.label(context, "✓  ${NameStore.CONGRATS}", 14f, Ui.WHITE, Ui.W.MED),
+            addView(Ui.label(context, "✓  ${NameStore.CONGRATS}", 14f, Ui.GRAD_INK, Ui.W.MED),
                 LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
             addView(smallWhite("Copy") { copy(true) })
             addView(smallWhite("Undo") { undo() })
@@ -163,8 +163,8 @@ class ProcessTextActivity : Activity() {
         return ScrollView(this).apply { background = Ui.pageBackground(); addView(root) }
     }
 
-    private fun smallWhite(text: String, onClick: () -> Unit) = Ui.label(this, text, 14f, Ui.META, Ui.W.SEMI).apply {
-        background = Ui.rounded(Ui.WHITE, 16, this@ProcessTextActivity)
+    private fun smallWhite(text: String, onClick: () -> Unit) = Ui.label(this, text, 14f, Ui.WHITE, Ui.W.SEMI).apply {
+        background = Ui.rounded(Ui.GRAD_INK, 16, this@ProcessTextActivity)
         setPadding(Ui.dp(context, 14), Ui.dp(context, 7), Ui.dp(context, 14), Ui.dp(context, 7))
         layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             .apply { setMargins(Ui.dp(context, 6), 0, 0, 0) }

@@ -8,7 +8,7 @@ An add-on for your phone keyboard. Type a minister's or party's name, and it off
 
 *A government-approved solution to government disapproval.*
 
-It covers **37 names, 1850 code names in total**: Narendra Modi, BJP, Amit Shah, Gyanesh Kumar (CEC), the Election Commission, every Union Cabinet minister, Gautam Adani, "vote chori", and the Cockroach Janta Party. Hindi (Devanagari) and English both work.
+It covers **37 names, 1850 code names in total**: Narendra Modi, BJP, Amit Shah, Gyanesh Kumar (CEC), the Election Commission, every Union Cabinet minister, Gautam Adani, "vote chori", and the Cockroach Janta Party. Code names are readable nicknames, sound-alikes and emoji versions (Kamal Party 🪷), never letter tricks like B-J-P. A **Decode** screen turns a code-name message back into real names. Hindi (Devanagari) and English both work.
 
 - Suggests swaps only for the real names, never for words that are already swapped.
 - No accounts, no server, no admins, **no internet permission**. The list lives inside the app.

@@ -282,13 +282,13 @@ class DocumentActivity : Activity() {
 
         // Congratulations + one-tap Copy
         val done = Ui.card(this, 16).apply { background = Ui.gradient(26, context) }
-        done.addView(Ui.label(this, "✓  ${NameStore.CONGRATS}", 16f, Ui.WHITE, Ui.W.SEMI))
-        done.addView(Ui.label(this, "${rep.swapped} name(s) swapped across ${rep.people.size} people.", 13.5f, 0xFFDCE7FF.toInt()).apply {
+        done.addView(Ui.label(this, "✓  ${NameStore.CONGRATS}", 16f, Ui.GRAD_INK, Ui.W.SEMI))
+        done.addView(Ui.label(this, "${rep.swapped} name(s) swapped across ${rep.people.size} people.", 13.5f, Ui.GRAD_SUB).apply {
             setPadding(0, Ui.dp(context, 4), 0, Ui.dp(context, 12))
         })
-        done.addView(Ui.label(this, "Copy text", 16f, Ui.META, Ui.W.SEMI).apply {
+        done.addView(Ui.label(this, "Copy text", 16f, Ui.WHITE, Ui.W.SEMI).apply {
             gravity = Gravity.CENTER
-            background = Ui.rounded(Ui.WHITE, 24, context)
+            background = Ui.rounded(Ui.GRAD_INK, 24, context)
             setPadding(0, Ui.dp(context, 14), 0, Ui.dp(context, 14))
             setOnClickListener { copy() }
             Ui.pressable(this)

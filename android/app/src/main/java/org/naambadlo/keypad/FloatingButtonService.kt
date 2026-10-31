@@ -258,8 +258,8 @@ class FloatingButtonService : AccessibilityService() {
         this.text = text
         typeface = Ui.SANS_SEMI
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
-        setTextColor(Ui.META)
-        background = Ui.rounded(Ui.WHITE, 18, context)
+        setTextColor(Ui.WHITE)
+        background = Ui.rounded(Ui.GRAD_INK, 18, context)
         setPadding(Ui.dp(context, 14), Ui.dp(context, 7), Ui.dp(context, 14), Ui.dp(context, 7))
         layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             .apply { setMargins(Ui.dp(context, 8), 0, 0, 0) }
@@ -271,10 +271,10 @@ class FloatingButtonService : AccessibilityService() {
     private fun createPill() {
         val dot = Ui.dp(this, 32)
         val chameleon = getDrawable(R.drawable.ic_chameleon)!!
-        val badge = LayerDrawable(arrayOf(Ui.oval(Ui.WHITE), InsetDrawable(chameleon, Ui.dp(this, 2))))
+        val badge = LayerDrawable(arrayOf(Ui.oval(Ui.WHITE).apply { setStroke(Ui.dp(this@FloatingButtonService, 1), 0xFFD9D2FF.toInt()) }, InsetDrawable(chameleon, Ui.dp(this, 2))))
             .apply { setBounds(0, 0, dot, dot) }
         label = TextView(this).apply {
-            setTextColor(Ui.WHITE)
+            setTextColor(Ui.GRAD_INK)
             typeface = Ui.SANS_SEMI
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
             maxLines = 1

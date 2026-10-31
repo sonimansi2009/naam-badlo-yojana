@@ -59,15 +59,15 @@ class NaamBadloIME : InputMethodService() {
             setPadding(Ui.dp(ctx, 16), Ui.dp(ctx, 8), Ui.dp(ctx, 8), Ui.dp(ctx, 8))
             visibility = View.GONE
             elevation = Ui.dp(ctx, 6).toFloat()
-            addView(Ui.label(ctx, "✓  ${NameStore.CONGRATS}", 14f, Ui.WHITE, Ui.W.MED),
+            addView(Ui.label(ctx, "✓  ${NameStore.CONGRATS}", 14f, Ui.GRAD_INK, Ui.W.MED),
                 LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-            addView(Ui.label(ctx, "Copy", 14f, Ui.META, Ui.W.SEMI).apply {
-                background = Ui.rounded(Ui.WHITE, 16, ctx)
+            addView(Ui.label(ctx, "Copy", 14f, Ui.WHITE, Ui.W.SEMI).apply {
+                background = Ui.rounded(Ui.GRAD_INK, 16, ctx)
                 setPadding(Ui.dp(ctx, 14), Ui.dp(ctx, 7), Ui.dp(ctx, 14), Ui.dp(ctx, 7))
                 setOnClickListener { copyAll() }
             })
-            addView(Ui.label(ctx, "Undo", 14f, Ui.META, Ui.W.SEMI).apply {
-                background = Ui.rounded(Ui.WHITE, 16, ctx)
+            addView(Ui.label(ctx, "Undo", 14f, Ui.WHITE, Ui.W.SEMI).apply {
+                background = Ui.rounded(Ui.GRAD_INK, 16, ctx)
                 setPadding(Ui.dp(ctx, 14), Ui.dp(ctx, 7), Ui.dp(ctx, 14), Ui.dp(ctx, 7))
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                     .apply { setMargins(Ui.dp(ctx, 6), 0, 0, 0) }

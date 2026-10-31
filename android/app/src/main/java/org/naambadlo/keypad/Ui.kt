@@ -71,10 +71,13 @@ object Ui {
         if (strokeColor != null) setStroke(dp(ctx, 1), strokeColor)
     }
 
-    /** Chameleon gradient: Meta blue shifting through violet into teal. Used on the main button and notifications. */
-    val GRADIENT = intArrayOf(0xFF0866FF.toInt(), 0xFF6A4CFF.toInt(), 0xFF0E9F86.toInt())
+    /** Pearl gradient: white into soft lavender into blue-violet. Main button and notifications. */
+    val GRADIENT = intArrayOf(0xFFFFFFFF.toInt(), 0xFFE7E1FF.toInt(), 0xFFA89BFF.toInt())
+    const val GRAD_INK = 0xFF1D1640.toInt()     // text on the gradient
+    const val GRAD_SUB = 0xFF4A4270.toInt()     // secondary text on the gradient
+
     fun gradient(radiusDp: Int, ctx: Context) =
-        GradientDrawable(GradientDrawable.Orientation.TL_BR, GRADIENT).apply { cornerRadius = dp(ctx, radiusDp).toFloat() }
+        GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, GRADIENT).apply { cornerRadius = dp(ctx, radiusDp).toFloat() }
 
     fun oval(color: Int) = GradientDrawable().apply { shape = GradientDrawable.OVAL; setColor(color) }
 
@@ -170,8 +173,9 @@ object Ui {
             gravity = Gravity.CENTER_VERTICAL
             background = gradient(28, ctx)
             setPadding(dp(ctx, 20), dp(ctx, 6), dp(ctx, 6), dp(ctx, 6))
-            elevation = dp(ctx, 3).toFloat()
-            val t = label(ctx, text, 15f, WHITE, W.SEMI).apply { maxLines = 1 }
+            elevation = dp(ctx, 6).toFloat()
+            if (android.os.Build.VERSION.SDK_INT >= 28) outlineSpotShadowColor = 0xFF7B61FF.toInt()
+            val t = label(ctx, text, 15f, GRAD_INK, W.SEMI).apply { maxLines = 1 }
             addView(t)
             val circle = iconCircle(ctx, iconRes, WHITE, META, 40)
             (circle.layoutParams as LinearLayout.LayoutParams).setMargins(dp(ctx, 12), 0, 0, 0)

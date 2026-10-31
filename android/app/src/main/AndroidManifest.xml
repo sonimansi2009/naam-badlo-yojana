@@ -25,6 +25,23 @@
 
         <!-- Long text: paste, open a file, or share text / a file from another app -->
         <activity
+            android:name=".DecodeActivity"
+            android:exported="true"
+            android:label="@string/decode_label"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".DocumentActivity"
             android:exported="true"
             android:label="@string/doc_label"

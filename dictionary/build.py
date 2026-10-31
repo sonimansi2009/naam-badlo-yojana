@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 """Builds names.json from source.json.
 
+Code names are always readable words: nicknames, sound-alikes and emoji versions.
+No letter tricks like B-J-P, M.o.d.i or R3ddy (they look like evasion and are hard to read).
+
 "popular" = how many of the first alternates are hand-picked, recognisable code names.
 "ask" = triggers that are only a first name or a common surname; the app asks before swapping them.
 
 Every entity ends up with exactly 50 alternates:
   1. the hand-picked "curated" list first,
-  2. then generated jumbles of the name (spoonerisms, letter swaps,
-     vowel swaps, look-alike digits, spacing tricks, reversals).
+  2. emoji versions of the curated ones (Kamal Party 🪷), mixed in,
+  3. then sound-alike jumbles of the name (spoonerisms, letter swaps, vowel swaps).
+Acronyms (BJP, ECI, CJP) get no jumbles: only curated names and emoji versions.
 
 Rules applied to every alternate:
   - never equal to, and never containing, any real trigger word
@@ -96,24 +100,7 @@ def name_jumbles(first: str, last: str, key: str = None, with_first: bool = Fals
                 if v != last[b].lower():
                     out.append(cap(last[:b] + v + last[b + 1:]))
 
-    # Look-alike digits and symbols
-    leet = {"o": "0", "i": "1", "e": "3", "a": "4"}
     L = cap(last)
-    for k, v in leet.items():
-        if k in L.lower():
-            out.append(re.sub(k, v, L, count=1, flags=re.I))
-    full_leet = "".join(leet.get(c.lower(), c) for c in L)
-    if full_leet != L:
-        out.append(full_leet)
-    if idx:
-        out.append(L[:idx[0]] + "*" + L[idx[0] + 1:])
-
-    # Spacing tricks
-    out += [".".join(L), "-".join(L), " ".join(L), "_".join(L)]
-    if len(L) >= 4:
-        h = len(L) // 2
-        out.append(L[:h] + "." + L[h:].lower())
-
     # Doubling and stretching
     if len(L) >= 3:
         out.append(L[:-1] + L[-2].lower() + L[-1].lower())   # Moddi
@@ -122,18 +109,10 @@ def name_jumbles(first: str, last: str, key: str = None, with_first: bool = Fals
         a = idx[0]
         out.append(L[:a + 1] + L[a].lower() * 2 + L[a + 1:])  # Mooodi
 
-    # Reverse and half-swap
-    out.append(cap(last[::-1]))
-    if len(last) >= 4:
-        h = len(last) // 2
-        out.append(cap(last[h:] + last[:h]))
-
     # First-name side
     if has_vowel:
         F = cap(first)
-        out.append(f"{F[0]}. {L[0]}.")
         out.append(F[:2] + L[:2].capitalize())               # NaMo-style blend
-        out.append(cap(first[::-1]))
 
     # Honorific suffixes on the swaps, used as top-up
     base = [cap(o + l_rest) for o in SWAP_ONSETS[:8] if o.lower() != l_on.lower()]
@@ -193,10 +172,22 @@ def build():
             seen.add(k)
             alts.append(a)
 
-        for a in e.get("curated", []):
+        curated = e.get("curated", [])
+        emojis = e.get("emoji", [])
+        latin = [c for c in curated if re.search(r"[A-Za-z]", c) and not re.search(r"[^\x00-\x7F]", c)]
+        n_emoji = max(8, TARGET - len(curated) + 4) if "acronym" in e else 8
+        emoji_alts = [f"{latin[i % len(latin)]} {emojis[i % len(emojis)]}" for i in range(min(n_emoji, len(latin)))] if emojis and latin else []
+        # mix: after every third curated name, one emoji version
+        merged, q = [], list(emoji_alts)
+        for i, c in enumerate(curated):
+            merged.append(c)
+            if i % 3 == 2 and q:
+                merged.append(q.pop(0))
+        merged += q
+        for a in merged:
             add(a, False)
         popular = min(len(alts), TARGET)   # hand-picked, recognisable code names come first
-        gen = acronym_jumbles(e["acronym"]) if "acronym" in e else name_jumbles(e["first"], e["last"], e.get("key"), e.get("with_first", False))
+        gen = [] if "acronym" in e else name_jumbles(e["first"], e["last"], e.get("key"), e.get("with_first", False))
         for a in gen:
             if len(alts) >= TARGET:
                 break
