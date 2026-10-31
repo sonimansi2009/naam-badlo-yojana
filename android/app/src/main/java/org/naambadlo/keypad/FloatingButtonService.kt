@@ -104,7 +104,7 @@ class FloatingButtonService : AccessibilityService() {
 
     private fun allowedHere(): Boolean {
         val pkg = currentPkg ?: return false
-        if (pkg == packageName) return true            // the app's own test box
+        if (pkg == packageName) return false           // the app has its own button on Home
         return !Prefs.metaOnly(this) || pkg in Prefs.META_APPS
     }
 

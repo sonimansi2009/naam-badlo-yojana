@@ -25,12 +25,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/** Home (Encode, Long text, Decode), Names, Test and Settings, behind a floating bottom bar. */
+/** Home (one box: Encode or Decode), Names and Settings, behind a floating bottom bar. Reach test sits inside Settings. */
 class MainActivity : Activity() {
 
     private enum class Screen { HOME, NAMES, TEST, SETTINGS }
-    private enum class Way { FLOATING, KEYBOARD, SELECT }
-    private enum class HomeTab { ENCODE, LONG, DECODE }
 
     /** The Lite build has no accessibility service, so no floating button. */
     private val hasFloating = BuildConfig.HAS_FLOATING
@@ -40,10 +38,7 @@ class MainActivity : Activity() {
     private lateinit var statusPill: TextView
     private lateinit var navItems: Map<Screen, LinearLayout>
     private var screen = Screen.HOME
-    private var way = if (BuildConfig.HAS_FLOATING) Way.FLOATING else Way.KEYBOARD
-    private var homeTab = HomeTab.ENCODE
-    private var homeBody: LinearLayout? = null
-    private var stepsOpen = false
+    private lateinit var bench: Workbench
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +53,7 @@ class MainActivity : Activity() {
         }
         column.addView(topBar())
         content = Ui.vertical(this)
+        bench = Workbench(this, Workbench.Mode.ENCODE) { v -> scroll.smoothScrollTo(0, content.top + (v.parent as View).top + v.top - Ui.dp(this, 12)) }
         column.addView(content)
         scroll = ScrollView(this).apply { isVerticalScrollBarEnabled = false; addView(column) }
         root.addView(scroll)
@@ -73,31 +69,24 @@ class MainActivity : Activity() {
     override fun onResume() {
         super.onResume()
         updateStatus()
-        if (screen == Screen.HOME) render(animate = false)
+        if (screen == Screen.SETTINGS) render(animate = false)
     }
 
     // ---- Chrome ----
 
     private fun topBar(): View {
-        val bar = Ui.horizontal(this)
-        bar.addView(Ui.iconCircle(this, R.drawable.ic_sparkle))
         statusPill = Ui.label(this, "", 14f, Ui.INK, Ui.W.MED).apply {
             gravity = Gravity.CENTER
-            setPadding(Ui.dp(context, 14), Ui.dp(context, 9), Ui.dp(context, 14), Ui.dp(context, 9))
+            setPadding(Ui.dp(context, 14), Ui.dp(context, 8), Ui.dp(context, 14), Ui.dp(context, 8))
             background = Ui.rounded(Ui.SURFACE, 20, context)
-            setOnClickListener { openSetup() }
+            setOnClickListener { if (screen != Screen.SETTINGS) { screen = Screen.SETTINGS; render(animate = true) } }
             Ui.pressable(this)
         }
-        bar.addView(FrameLayout(this).apply {
-            addView(statusPill, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
-        }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-        bar.addView(Ui.iconCircle(this, R.drawable.ic_tune) { if (screen != Screen.SETTINGS) { screen = Screen.SETTINGS; render(animate = true) } })
         updateStatus()
-        return bar
-    }
-
-    private fun openSetup() {
-        startActivity(Intent(if (hasFloating) Settings.ACTION_ACCESSIBILITY_SETTINGS else Settings.ACTION_INPUT_METHOD_SETTINGS))
+        return FrameLayout(this).apply {
+            visibility = if (hasFloating) View.VISIBLE else View.GONE
+            addView(statusPill, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
+        }
     }
 
     private fun updateStatus() {
@@ -121,7 +110,6 @@ class MainActivity : Activity() {
         val items = linkedMapOf(
             Screen.HOME to (R.drawable.ic_home to "Home"),
             Screen.NAMES to (R.drawable.ic_list to "Names"),
-            Screen.TEST to (R.drawable.ic_shuffle to "Test"),
             Screen.SETTINGS to (R.drawable.ic_tune to "Settings"),
         )
         val made = HashMap<Screen, LinearLayout>()
@@ -149,7 +137,7 @@ class MainActivity : Activity() {
 
     private fun paintNav() {
         for ((s, item) in navItems) {
-            val active = s == screen
+            val active = s == screen || (s == Screen.SETTINGS && screen == Screen.TEST)
             item.background = if (active) Ui.rounded(Ui.SOFT, 22, this) else null
             (item.getChildAt(0) as? ImageView)?.imageTintList = ColorStateList.valueOf(if (active) Ui.INK else Ui.MUTED)
             (item.getChildAt(1) as? TextView)?.setTextColor(if (active) Ui.INK else Ui.MUTED)
@@ -179,14 +167,14 @@ class MainActivity : Activity() {
         setPadding(0, 0, 0, Ui.dp(context, 20))
     }
 
-    // ---- Home ----
+    // ---- Home: one box ----
 
     private fun home() {
         content.addView(SheenImageView(this, R.drawable.seal_white).apply {
             contentDescription = "Shadowban Suraksha Yojana seal: a chameleon on a lotus"
-            layoutParams = LinearLayout.LayoutParams(Ui.dp(context, 150), Ui.dp(context, 150)).apply {
+            layoutParams = LinearLayout.LayoutParams(Ui.dp(context, 140), Ui.dp(context, 140)).apply {
                 gravity = Gravity.CENTER_HORIZONTAL
-                setMargins(0, Ui.dp(context, 6), 0, 0)
+                setMargins(0, Ui.dp(context, 2), 0, 0)
             }
         })
         content.addView(Ui.label(this, "A government-approved solution\nto government disapproval.", 18f, Ui.INK).apply {
@@ -196,162 +184,50 @@ class MainActivity : Activity() {
             setLineSpacing(0f, 1.08f)
             setPadding(0, Ui.dp(context, 2), 0, Ui.dp(context, 18))
         })
-
-        // Three tabs on top: Encode, Long text, Decode
-        val tabs = Ui.horizontal(this).apply { setPadding(0, 0, 0, Ui.dp(context, 14)) }
-        val tabViews = ArrayList<TextView>()
-        for ((t, label) in listOf(HomeTab.ENCODE to "Encode", HomeTab.LONG to "Long text", HomeTab.DECODE to "Decode")) {
-            val v = Ui.pill(this, label, t == homeTab) {
-                if (homeTab != t) {
-                    homeTab = t
-                    tabViews.forEachIndexed { i, tv -> Ui.stylePill(tv, HomeTab.values()[i] == t) }
-                    fillHomeTab()
-                }
-            }.apply { gravity = Gravity.CENTER }
-            tabViews.add(v)
-            tabs.addView(v, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply {
-                setMargins(if (tabViews.size == 1) 0 else Ui.dp(this@MainActivity, 4), 0, 0, 0)
-            })
-        }
-        content.addView(tabs)
-        homeBody = Ui.vertical(this)
-        content.addView(homeBody)
-        fillHomeTab(animate = false)
-    }
-
-    private fun fillHomeTab(animate: Boolean = true) {
-        val body = homeBody ?: return
-        body.removeAllViews()
-        when (homeTab) {
-            HomeTab.ENCODE -> {
-                body.addView(wayCard())
-                if (!hasFloating) body.addView(liteNote())
-            }
-            HomeTab.LONG -> body.addView(simpleCard(
-                R.drawable.ic_text, "Long text", "Scripts, speeches, notes and documents",
-                "Paste a long piece or upload a .txt, .md or Word file. Each person keeps one code name all the way through, so it stays readable.",
-                "Open long text") { startActivity(Intent(this, DocumentActivity::class.java)) })
-            HomeTab.DECODE -> body.addView(simpleCard(
-                R.drawable.ic_shuffle, "Decode a message", "Code names back to real names",
-                "Paste a message written in code names and read it with the real names. You can also select text in any app and tap “Decode names”.",
-                "Decode message") { startActivity(Intent(this, DecodeActivity::class.java)) })
-        }
-        if (animate) for (i in 0 until body.childCount) Ui.enter(body.getChildAt(i), i * 60L, 8)
+        (bench.view.parent as? ViewGroup)?.removeView(bench.view)
+        content.addView(bench.view)
     }
 
     private fun cardHead(iconRes: Int, title: String, sub: String) = Ui.horizontal(this).apply {
-        setPadding(Ui.dp(context, 4), Ui.dp(context, 4), 0, Ui.dp(context, 12))
-        addView(Ui.iconCircle(context, iconRes, Ui.SOFT, Ui.INK, 44))
+        gravity = Gravity.CENTER_VERTICAL
+        addView(Ui.iconCircle(context, iconRes, Ui.SOFT, Ui.INK, 40))
         addView(Ui.vertical(context).apply {
-            setPadding(Ui.dp(context, 12), 0, 0, 0)
-            addView(Ui.label(context, title, 17f, Ui.INK, Ui.W.SEMI))
+            setPadding(Ui.dp(context, 12), 0, Ui.dp(context, 8), 0)
+            addView(Ui.label(context, title, 16f, Ui.INK, Ui.W.SEMI))
             addView(Ui.label(context, sub, 13f, Ui.MUTED))
-        })
+        }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
     }
 
-    private fun simpleCard(iconRes: Int, title: String, sub: String, body: String, cta: String, go: () -> Unit): View {
-        val card = Ui.card(this, 14)
-        card.addView(cardHead(iconRes, title, sub))
-        card.addView(Ui.label(this, body, 15f, Ui.INK).apply {
-            alpha = 0.9f
-            setPadding(Ui.dp(context, 4), 0, Ui.dp(context, 4), Ui.dp(context, 16))
+    /** Set up once: the ways to use it inside other apps. */
+    private fun waysCard(): View {
+        val card = Ui.card(this, 18)
+        card.addView(Ui.label(this, "Use it in Instagram & WhatsApp", 17f, Ui.INK, Ui.W.SEMI))
+        card.addView(Ui.label(this, "Set up once. Then you never need to open this app.", 13f, Ui.MUTED).apply {
+            setPadding(0, Ui.dp(context, 2), 0, Ui.dp(context, 6))
         })
-        card.addView(Ui.horizontal(this).apply {
-            gravity = Gravity.END
-            setPadding(0, 0, Ui.dp(context, 4), Ui.dp(context, 4))
-            addView(Ui.cta(context, cta) { go() })
-        })
-        return card
-    }
-
-    private fun wayCard(): View {
-        val card = Ui.card(this, 14)
-
-        // Small switch: which way to encode
-        val (row, pills) = Ui.chipRow(this)
-        val ways = buildList {
-            if (hasFloating) add(Way.FLOATING to "Floating button")
-            add(Way.KEYBOARD to "Keyboard")
-            add(Way.SELECT to "Select text")
-        }
-        for ((w, text) in ways) {
-            pills.addView(Ui.pill(this, text, w == way) {
-                if (way != w) { way = w; stepsOpen = false; fillHomeTab() }
+        fun row(icon: Int, title: String, sub: String, action: String?, go: () -> Unit) {
+            card.addView(cardHead(icon, title, sub).apply {
+                setPadding(0, Ui.dp(context, 12), 0, 0)
+                if (action != null) addView(Ui.pill(context, action, false) { go() })
             })
         }
-        card.addView(row.apply { setPadding(0, 0, 0, Ui.dp(context, 14)) })
-
-        val (iconRes, title, sub) = when (way) {
-            Way.FLOATING -> Triple(R.drawable.ic_sparkle, "Floating button", "Works over Instagram, WhatsApp, any app")
-            Way.KEYBOARD -> Triple(R.drawable.ic_keyboard, "Add-on keyboard", "Pick from 50 code names per name")
-            Way.SELECT -> Triple(R.drawable.ic_text, "Select text", "Choose each code name yourself")
-        }
-        card.addView(cardHead(iconRes, title, sub))
-
-        // Setup steps stay folded until asked for
-        val steps = when (way) {
-            Way.FLOATING -> listOf(
-                "Keep your normal keyboard.",
-                "Type a name. The “Make it Meta friendly” button appears.",
-                "Tap it to swap. Tap again for fresh names.",
-                "Changed your mind? Tap Undo right after.",
-            )
-            Way.KEYBOARD -> listOf(
-                "Turn on the Shadowban Suraksha keyboard.",
-                "After typing a name, switch keyboards.",
-                "Tap “Make it Meta friendly” or pick a code name.",
-                "Hold a code name to star it as a favourite.",
-            )
-            Way.SELECT -> listOf(
-                "Select your text in any app.",
-                "Tap ⋮ in the pop-up menu, then Shadowban Suraksha.",
-                "Pick code names or shuffle, then confirm.",
-            )
-        }
-        val panel = Ui.panel(this)
-        val toggle = Ui.horizontal(this).apply {
-            gravity = Gravity.CENTER_VERTICAL
-            addView(Ui.label(context, "How it works", 15f, Ui.INK, Ui.W.SEMI), LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-            addView(Ui.label(context, if (stepsOpen) "Hide" else "Show", 14f, Ui.MUTED, Ui.W.MED))
-            isClickable = true
-            setOnClickListener { stepsOpen = !stepsOpen; fillHomeTab(animate = false) }
-        }
-        panel.addView(toggle)
-        if (stepsOpen) {
-            steps.forEachIndexed { i, st -> panel.addView(step(i + 1, st, first = false)) }
-            if (way == Way.FLOATING && !Prefs.floatingEnabled(this)) {
-                panel.addView(Ui.label(this,
-                    "If Android says “Restricted setting”: open App info → ⋮ → Allow restricted settings, then try again.",
-                    12.5f, Ui.MUTED).apply { setPadding(0, Ui.dp(context, 12), 0, 0) })
+        if (hasFloating) {
+            val on = Prefs.floatingEnabled(this)
+            row(R.drawable.ic_sparkle, "Floating button" + if (on) " · on" else "",
+                "Type a name in any app, tap the button that appears.", if (on) "Settings" else "Turn on") {
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             }
+            if (!on) card.addView(Ui.label(this,
+                "If Android says “Restricted setting”: App info → ⋮ → Allow restricted settings.",
+                12.5f, Ui.MUTED).apply { setPadding(Ui.dp(context, 52), Ui.dp(context, 6), 0, 0) })
         }
-        card.addView(panel)
-
-        val ctaText = when (way) {
-            Way.FLOATING -> if (Prefs.floatingEnabled(this)) "Button settings" else "Turn on"
-            Way.KEYBOARD -> "Turn on"
-            Way.SELECT -> "Try it"
+        row(R.drawable.ic_keyboard, "Keyboard", "After typing a name, switch to it and tap the button.", "Turn on") {
+            startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS))
         }
-        val ctaRow = Ui.horizontal(this).apply {
-            gravity = Gravity.END
-            setPadding(0, Ui.dp(context, 16), Ui.dp(context, 4), Ui.dp(context, 4))
-        }
-        if (way == Way.KEYBOARD) {
-            ctaRow.addView(Ui.lightButton(this, "Switch") {
-                (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker()
-            }.apply {
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                    .apply { setMargins(0, 0, Ui.dp(context, 8), 0) }
-            })
-        }
-        ctaRow.addView(Ui.cta(this, ctaText) {
-            when (way) {
-                Way.FLOATING -> startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                Way.KEYBOARD -> startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS))
-                Way.SELECT -> { screen = Screen.TEST; render(animate = true) }
-            }
-        })
-        card.addView(ctaRow)
+        row(R.drawable.ic_text, "Select text", "Select text in any app → ⋮ → Shadowban Suraksha.", null) {}
+        if (!hasFloating) card.addView(Ui.label(this,
+            "Want the floating button? It needs the full version, which Android allows after you pause Play Protect once during install.",
+            12.5f, Ui.MUTED).apply { setPadding(0, Ui.dp(context, 14), 0, 0) })
         return card
     }
 
@@ -400,41 +276,6 @@ class MainActivity : Activity() {
         return card
     }
 
-    private fun liteNote(): View {
-        val card = Ui.card(this, 18)
-        card.addView(Ui.label(this, "Want the floating button?", 16f, Ui.INK, Ui.W.SEMI))
-        card.addView(Ui.label(this,
-            "This Lite version installs without warnings. The floating button needs the full version, " +
-            "which Android only allows after you pause Play Protect once during install.", 13.5f, Ui.MUTED).apply {
-            setPadding(0, Ui.dp(context, 4), 0, 0)
-        })
-        return card
-    }
-
-    private fun tryCard(): View {
-        val tryCard = Ui.card(this, 18)
-        tryCard.addView(Ui.label(this, "Try it here", 17f, Ui.INK, Ui.W.SEMI))
-        tryCard.addView(Ui.label(this,
-            if (hasFloating) "Type a minister's name. The “Make it Meta friendly” button shows up if it is on."
-            else "Type a minister's name, then switch to the Shadowban Suraksha keyboard.", 13f, Ui.MUTED).apply {
-            setPadding(0, Ui.dp(context, 2), 0, Ui.dp(context, 12))
-        })
-        tryCard.addView(EditText(this).apply {
-            hint = "Modi aur Amit Shah ne kaha…"
-            typeface = Ui.SANS
-            textSize = 16f
-            setHintTextColor(Ui.MUTED)
-            setTextColor(Ui.INK)
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
-            minLines = 3
-            gravity = Gravity.TOP or Gravity.START
-            background = Ui.rounded(Ui.SOFT, 20, this@MainActivity)
-            val p = Ui.dp(this@MainActivity, 16)
-            setPadding(p, p, p, p)
-        })
-        return tryCard
-    }
-
     // ---- Names ----
 
     private fun names() {
@@ -468,9 +309,8 @@ class MainActivity : Activity() {
     // ---- Reach test ----
 
     private fun reachTest() {
-        content.addView(headline("Try *& test*", 44f))
-        content.addView(sub("Practise here, then check if Meta friendly posts reach more people."))
-        content.addView(tryCard())
+        content.addView(headline("Does it *work?*", 44f))
+        content.addView(sub("Post the same thing twice, once plain and once Meta friendly, and compare reach."))
 
         val c1 = Ui.card(this, 18)
         c1.addView(Ui.label(this, "1. Make a test pair", 17f, Ui.INK, Ui.W.SEMI))
@@ -626,7 +466,8 @@ class MainActivity : Activity() {
 
     private fun settings() {
         content.addView(headline("*Settings*", 44f))
-        content.addView(sub("Code name style, sound and privacy."))
+        content.addView(sub("Set up once, then forget about it."))
+        content.addView(waysCard())
         content.addView(styleCard())
 
         val sw = Ui.card(this, 18)
@@ -646,6 +487,11 @@ class MainActivity : Activity() {
         }
         content.addView(sw)
 
+        content.addView(Ui.card(this, 18).apply {
+            addView(cardHead(R.drawable.ic_shuffle, "Does it work?", "Compare the reach of plain and Meta friendly posts.").apply {
+                addView(Ui.pill(context, "Open", false) { screen = Screen.TEST; render(animate = true) })
+            })
+        })
         content.addView(Ui.label(this, "Your privacy", 20f, Ui.INK, Ui.W.SEMI).apply {
             setPadding(Ui.dp(context, 4), Ui.dp(context, 18), 0, Ui.dp(context, 4))
         })
@@ -668,5 +514,12 @@ class MainActivity : Activity() {
             card.addView(row)
             content.addView(card)
         }
+    }
+
+    @Deprecated("Activity result API kept simple for minSdk 24")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        @Suppress("DEPRECATION")
+        super.onActivityResult(requestCode, resultCode, data)
+        bench.onActivityResult(requestCode, resultCode, data)
     }
 }
